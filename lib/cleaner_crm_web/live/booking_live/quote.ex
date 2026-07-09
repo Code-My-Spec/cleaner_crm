@@ -31,7 +31,7 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} variant={:public}>
       <.header>
         Get an Instant Quote
         <:subtitle>

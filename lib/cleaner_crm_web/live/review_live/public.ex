@@ -22,7 +22,7 @@ defmodule CleanerCrmWeb.ReviewLive.Public do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app flash={@flash} variant={:public}>
       <div class="max-w-md mx-auto px-2">
         <div :if={is_nil(@review)} data-test="review-invalid-notice" class="alert alert-error">
           This review link is invalid.

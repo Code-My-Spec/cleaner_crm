@@ -52,7 +52,7 @@ defmodule CleanerCrmWeb.BookingLive.Accept do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} variant={:public}>
       <.header>Confirm your booking</.header>
 
       <p :if={@step == :not_found}>

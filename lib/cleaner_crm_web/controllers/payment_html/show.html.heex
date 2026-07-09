@@ -1,4 +1,4 @@
-<Layouts.app flash={@flash}>
+<Layouts.app flash={@flash} variant={:public}>
   <.header>Pay Invoice</.header>
 
   <p>Amount due: {CleanerCrm.Money.format_cents(@invoice.amount_cents)}</p>

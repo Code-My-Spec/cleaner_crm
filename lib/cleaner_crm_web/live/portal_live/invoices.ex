@@ -20,7 +20,7 @@ defmodule CleanerCrmWeb.PortalLive.Invoices do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} variant={:portal}>
       <.header>
         Invoices
         <:subtitle :if={@client.card_on_file}>

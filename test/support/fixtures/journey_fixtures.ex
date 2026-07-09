@@ -63,7 +63,12 @@ defmodule CleanerCrm.JourneyFixtures do
     a second time as a real native POST (the only way to actually
     write the session cookie) — so this waits for something that only
     exists after that second, real submission lands, not just for the
-    click's own socket round-trip.
+    click's own socket round-trip. A fresh login lands on `/`, the
+    public landing page — it has no account chrome by design, so
+    "Go to app" (shown there for any signed-in `current_scope`,
+    regardless of role) is the thing that only exists post-cookie,
+    not "Log out" (which only renders behind the app nav on an
+    actual app page).
   """
   def log_in(session, user, password) do
     import Wallaby.Query
@@ -75,7 +80,7 @@ defmodule CleanerCrm.JourneyFixtures do
     |> fill_in(css("#login_form_password_email"), with: user.email)
     |> fill_in(css("#user_password"), with: password)
     |> click(button("Log in only this time"))
-    |> assert_has(link("Log out"))
+    |> assert_has(link("Go to app"))
   end
 
   @doc """

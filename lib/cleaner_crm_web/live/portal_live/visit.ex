@@ -22,7 +22,7 @@ defmodule CleanerCrmWeb.PortalLive.Visit do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} variant={:portal}>
       <.header>Visit on {Calendar.strftime(@job.scheduled_date, "%B %-d, %Y")}</.header>
 
       <div class="space-y-1 mb-6">

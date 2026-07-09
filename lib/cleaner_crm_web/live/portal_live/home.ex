@@ -20,7 +20,7 @@ defmodule CleanerCrmWeb.PortalLive.Home do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
+    <Layouts.app flash={@flash} variant={:portal}>
       <.header>My Portal</.header>
 
       <div data-test="upcoming-visits" class="mb-8">
