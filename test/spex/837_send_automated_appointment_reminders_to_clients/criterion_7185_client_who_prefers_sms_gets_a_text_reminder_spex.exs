@@ -27,7 +27,7 @@ defmodule CleanerCrmSpex.Story837.Criterion7185Spex do
       end
 
       given_ "the owner's reminder lead time is set to 24 hours", context do
-        {:ok, reminders_live, _html} = live(context.conn, ~p"/reminders")
+        {:ok, reminders_live, _html} = live(context.conn, ~p"/app/reminders")
 
         reminders_live
         |> form("[data-test='reminder-settings-form']", settings: %{lead_time_hours: "24"})
@@ -60,7 +60,7 @@ defmodule CleanerCrmSpex.Story837.Criterion7185Spex do
       end
 
       then_ "the reminder is delivered as an SMS to the client's phone number", context do
-        {:ok, _reminders_live, html} = live(context.conn, ~p"/reminders")
+        {:ok, _reminders_live, html} = live(context.conn, ~p"/app/reminders")
 
         assert html =~ context.client.phone
         assert html =~ "SMS"

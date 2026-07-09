@@ -32,7 +32,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7153Spex do
       end
 
       when_ "the cleaner marks the job complete", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='mark-complete-button']")
@@ -48,7 +48,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7153Spex do
       end
 
       then_ "an invoice for $150 appears in the owner's billing queue", context do
-        {:ok, _invoices_live, html} = live(context.conn, ~p"/invoices")
+        {:ok, _invoices_live, html} = live(context.conn, ~p"/app/invoices")
 
         assert html =~ context.client.name
         assert html =~ "$150.00"

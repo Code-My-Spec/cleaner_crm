@@ -70,7 +70,7 @@ defmodule CleanerCrmSpex.Story837.Criterion7189Spex do
       end
 
       then_ "the owner is flagged that the SMS did not reach the client", context do
-        {:ok, _reminders_live, html} = live(context.conn, ~p"/reminders")
+        {:ok, _reminders_live, html} = live(context.conn, ~p"/app/reminders")
 
         assert html =~ context.client.phone
         assert html =~ "undeliver"

@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7182Spex do
       end
 
       when_ "Ana files an unsafe-condition report with only a description, no photo", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> form("[data-test='incident-report-form']",
@@ -60,7 +60,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7182Spex do
       end
 
       then_ "the owner sees the unsafe-condition report when reviewing incidents", context do
-        {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+        {:ok, _review_live, html} = live(context.owner_conn, ~p"/app/quality")
 
         assert html =~ "Loose handrail on the exterior stairs"
 

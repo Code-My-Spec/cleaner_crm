@@ -34,7 +34,7 @@ defmodule CleanerCrmSpex.Story853.Criterion7244Spex do
       end
 
       when_ "the cleaner marks the job complete", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='mark-complete-button']")

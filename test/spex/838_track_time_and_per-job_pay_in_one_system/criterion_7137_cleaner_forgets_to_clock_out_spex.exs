@@ -45,7 +45,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7137Spex do
       end
 
       when_ "the cleaner clocks in and then leaves without clocking out", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='clock-in-button']")
@@ -55,7 +55,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7137Spex do
       end
 
       then_ "the owner sees the time entry flagged as missing a clock-out", context do
-        {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/timesheets")
+        {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/app/timesheets")
 
         assert html =~ "Missing clock-out"
 
@@ -68,7 +68,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7137Spex do
       end
 
       then_ "the cleaner is prompted to resolve the missing clock-out", context do
-        {:ok, _job_live, html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, _job_live, html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         assert html =~ "Missing clock-out"
 
@@ -76,7 +76,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7137Spex do
       end
 
       then_ "the flagged entry is excluded from the cleaner's pay total", context do
-        {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/timesheets")
+        {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/app/timesheets")
 
         assert has_element?(
                  timesheet_live,
@@ -88,7 +88,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7137Spex do
       end
 
       when_ "the owner sets the missing clock-out time to resolve the entry", context do
-        {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/timesheets")
+        {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/app/timesheets")
 
         timesheet_live
         |> form("[data-test='resolve-clock-out-form-#{context.job.id}']",

@@ -73,7 +73,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7200Spex do
       end
 
       then_ "the notification is re-sent to me via the fallback channel", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(
                  board_live,

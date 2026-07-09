@@ -1,7 +1,7 @@
 defmodule CleanerCrmTest.Journeys.CleanerDayTest do
   @moduledoc """
   Journey 2 (.code_my_spec/qa/journey_plan.md): a cleaner works an
-  entire day inside `/field` — today's jobs in order, a full
+  entire day inside `/app/field` — today's jobs in order, a full
   get-in-the-door brief, clocking in/out, working a room-by-room
   checklist, filing an incident report, and being fenced out of every
   office-only surface and every other cleaner's job.
@@ -68,13 +68,13 @@ defmodule CleanerCrmTest.Journeys.CleanerDayTest do
     session = log_in(session, cleaner, password)
 
     session
-    |> visit!("/field")
+    |> visit!("/app/field")
     |> assert_has(css("body", text: "12 Field Lane"))
     |> assert_has(css("body", text: "Lockbox on gate"))
     |> assert_has(css("body", text: "7788"))
     |> assert_has(css("body", text: "Two cats, keep indoors"))
     |> refute_has(css("body", text: "13:00"))
-    |> visit!("/field/jobs/#{job.id}")
+    |> visit!("/app/field/jobs/#{job.id}")
     |> click(css("[data-test='clock-in-button']"))
     |> settle()
     |> assert_has(css("[data-test='elapsed-time']"))
@@ -99,15 +99,15 @@ defmodule CleanerCrmTest.Journeys.CleanerDayTest do
     |> settle()
     |> assert_has(css("body", text: "Complete"))
     |> assert_has(css("[data-test='job-earnings']"))
-    |> visit!("/field")
+    |> visit!("/app/field")
     |> assert_has(css("[data-test='pay-period-total']"))
-    |> visit("/field/jobs/#{other_job.id}")
+    |> visit("/app/field/jobs/#{other_job.id}")
     |> settle()
     |> assert_has(css("body", text: "not assigned to you"))
-    |> visit("/schedule")
+    |> visit("/app/schedule")
     |> settle()
     |> assert_has(css("body", text: "don't have access"))
-    |> visit("/timesheets")
+    |> visit("/app/timesheets")
     |> settle()
     |> assert_has(css("body", text: "don't have access"))
   end

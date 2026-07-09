@@ -51,20 +51,20 @@ defmodule CleanerCrmWeb.IntegrationsController do
           {:ok, _integration} ->
             conn
             |> put_flash(:info, "Successfully connected to #{format_provider(provider)}")
-            |> redirect(to: "/integrations")
+            |> redirect(to: "/app/integrations")
 
           {:error, reason} ->
             Logger.error("OAuth callback failed for #{provider}: #{inspect(reason)}")
 
             conn
             |> put_flash(:error, "Failed to complete connection")
-            |> redirect(to: "/integrations")
+            |> redirect(to: "/app/integrations")
         end
 
       error ->
         conn
         |> put_flash(:error, format_oauth_error(error, params))
-        |> redirect(to: "/integrations")
+        |> redirect(to: "/app/integrations")
     end
   end
 
@@ -76,12 +76,12 @@ defmodule CleanerCrmWeb.IntegrationsController do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Disconnected from #{format_provider(provider)}")
-        |> redirect(to: "/integrations")
+        |> redirect(to: "/app/integrations")
 
       {:error, :not_found} ->
         conn
         |> put_flash(:error, "No connection found")
-        |> redirect(to: "/integrations")
+        |> redirect(to: "/app/integrations")
     end
   end
 

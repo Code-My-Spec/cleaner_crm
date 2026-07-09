@@ -8,9 +8,9 @@ defmodule CleanerCrmWeb.QualityLive.Templates do
 
   ## Routes
 
-    * `/quality/templates` (`:index`)
-    * `/quality/templates/new` (`:new`)
-    * `/quality/templates/:id/edit` (`:edit`)
+    * `/app/quality/templates` (`:index`)
+    * `/app/quality/templates/new` (`:new`)
+    * `/app/quality/templates/:id/edit` (`:edit`)
 
   ## Dependencies
 
@@ -33,7 +33,7 @@ defmodule CleanerCrmWeb.QualityLive.Templates do
         Checklist Templates
         <:subtitle>Room-by-room tasks the office has agreed to, per property</:subtitle>
         <:actions>
-          <.button navigate={~p"/quality/templates/new"} variant="primary">
+          <.button navigate={~p"/app/quality/templates/new"} variant="primary">
             <.icon name="hero-plus" class="size-4 mr-1" /> New Template
           </.button>
         </:actions>
@@ -62,7 +62,7 @@ defmodule CleanerCrmWeb.QualityLive.Templates do
         <:col :let={template} label="Tasks">{length(template.items)}</:col>
         <:action :let={template}>
           <.link
-            navigate={~p"/quality/templates/#{template.id}/edit"}
+            navigate={~p"/app/quality/templates/#{template.id}/edit"}
             data-test={"edit-template-#{template.id}"}
             class="btn btn-sm btn-ghost"
           >

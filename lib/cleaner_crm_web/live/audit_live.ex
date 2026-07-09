@@ -7,7 +7,7 @@ defmodule CleanerCrmWeb.AuditLive do
   delete affordance is ever rendered here, regardless of who's
   viewing.
 
-  Route: `/audit`.
+  Route: `/app/audit`.
   """
 
   use CleanerCrmWeb, :live_view

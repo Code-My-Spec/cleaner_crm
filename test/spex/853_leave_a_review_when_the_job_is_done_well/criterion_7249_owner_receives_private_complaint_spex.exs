@@ -5,7 +5,7 @@ defmodule CleanerCrmSpex.Story853.Criterion7249Spex do
 
   The routing decision itself is covered by criterion 7248's spec;
   this spec's subject is the office's own visibility into that
-  complaint, via `ReviewLive.Index` at `/reviews` (route contract:
+  complaint, via `ReviewLive.Index` at `/app/reviews` (route contract:
   "office, owner-only"). Assumes each row is
   `[data-test='review-row-<id>']` and a private review's row carries
   `[data-test='review-<id>-visibility']` reading "Private".
@@ -48,7 +48,7 @@ defmodule CleanerCrmSpex.Story853.Criterion7249Spex do
       end
 
       when_ "I open my review inbox", context do
-        {:ok, reviews_live, _html} = live(context.conn, ~p"/reviews")
+        {:ok, reviews_live, _html} = live(context.conn, ~p"/app/reviews")
 
         {:ok, Map.put(context, :reviews_live, reviews_live)}
       end

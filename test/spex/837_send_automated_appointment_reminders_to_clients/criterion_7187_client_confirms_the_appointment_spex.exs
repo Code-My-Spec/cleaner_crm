@@ -47,7 +47,7 @@ defmodule CleanerCrmSpex.Story837.Criterion7187Spex do
       end
 
       then_ "the owner sees it as confirmed on the schedule board", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(board_live, "[data-test='job-#{context.job.id}']", "Confirmed")
 

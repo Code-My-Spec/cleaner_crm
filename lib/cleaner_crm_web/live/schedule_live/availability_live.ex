@@ -69,7 +69,7 @@ defmodule CleanerCrmWeb.ScheduleLive.AvailabilityLive do
            with_cleaner_id(socket, params)
          ) do
       {:ok, block} ->
-        {:noreply, push_navigate(socket, to: ~p"/schedule/cleaners/#{block.cleaner_id}")}
+        {:noreply, push_navigate(socket, to: ~p"/app/schedule/cleaners/#{block.cleaner_id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset, as: :time_off))}

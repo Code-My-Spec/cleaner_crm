@@ -28,7 +28,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7156Spex do
       end
 
       when_ "the invoice for that job is opened", context do
-        {:ok, invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, invoice_live, html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         {:ok, Map.merge(context, %{invoice_live: invoice_live, invoice_html: html})}
       end

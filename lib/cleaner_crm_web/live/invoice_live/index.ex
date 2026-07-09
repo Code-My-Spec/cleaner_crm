@@ -31,7 +31,7 @@ defmodule CleanerCrmWeb.InvoiceLive.Index do
         <:col :let={invoice} label="Amount">{Money.format_cents(invoice.amount_cents)}</:col>
         <:col :let={invoice} label="Status">{status_label(invoice.status)}</:col>
         <:action :let={invoice}>
-          <.link navigate={~p"/invoices/#{invoice}"} class="btn btn-sm btn-ghost">View</.link>
+          <.link navigate={~p"/app/invoices/#{invoice}"} class="btn btn-sm btn-ghost">View</.link>
         </:action>
       </.table>
     </Layouts.app>

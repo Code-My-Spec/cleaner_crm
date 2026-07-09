@@ -193,7 +193,7 @@ defmodule CleanerCrmWeb.ClientLive.PropertyFormComponent do
   # `to:` string is safe even though it isn't router-verified there.
   defp navigate_to_property(socket, property) do
     if socket.router do
-      push_navigate(socket, to: "/properties/#{property.id}")
+      push_navigate(socket, to: "/app/properties/#{property.id}")
     else
       socket
     end

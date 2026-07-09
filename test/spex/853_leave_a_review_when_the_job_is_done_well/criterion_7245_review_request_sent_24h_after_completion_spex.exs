@@ -34,7 +34,7 @@ defmodule CleanerCrmSpex.Story853.Criterion7245Spex do
         client = Fixtures.client_fixture(context.scope)
         job = Fixtures.job_fixture(context.scope, client, %{status: :scheduled})
 
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{job.id}")
 
         job_live
         |> element("[data-test='mark-complete-button']")

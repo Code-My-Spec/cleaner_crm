@@ -24,7 +24,7 @@ defmodule CleanerCrmWeb.ScheduleLive.CleanerLive do
         {@cleaner.name || @cleaner.email}
         <:subtitle>Cleaner</:subtitle>
         <:actions>
-          <.button navigate={~p"/schedule/cleaners/#{@cleaner.id}/time-off/new"} variant="primary">
+          <.button navigate={~p"/app/schedule/cleaners/#{@cleaner.id}/time-off/new"} variant="primary">
             Add Time Off
           </.button>
         </:actions>
@@ -118,7 +118,7 @@ defmodule CleanerCrmWeb.ScheduleLive.CleanerLive do
   def handle_event("save", %{"cleaner" => %{"name" => name}}, socket) do
     case Scheduling.register_cleaner(socket.assigns.current_scope, name) do
       {:ok, user} ->
-        {:noreply, push_navigate(socket, to: ~p"/schedule/cleaners/#{user.id}")}
+        {:noreply, push_navigate(socket, to: ~p"/app/schedule/cleaners/#{user.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset, as: :cleaner))}

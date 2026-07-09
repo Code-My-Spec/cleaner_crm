@@ -72,11 +72,19 @@ defmodule CleanerCrmWeb.Router do
     end
   end
 
-  ## Authentication routes
+  ## Authenticated app surface
 
-  scope "/", CleanerCrmWeb do
+  # Every LiveView under /app/* is the "app" chrome (drawer + sidebar shell
+  # via Layouts.app). The /app prefix is the source of truth that
+  # distinguishes the app layout from the public/portal layouts (`/`,
+  # `/book`, `/portal`, ...).
+  scope "/app", CleanerCrmWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    # Authenticated, no account required. Account management lives here
+    # (not gated by RequireAccount) so a user with no company yet can
+    # still reach account creation instead of being locked out of the
+    # one page that lets them create one.
     live_session :require_authenticated_user,
       on_mount: [{CleanerCrmWeb.UserAuth, :require_authenticated}] do
       live "/users/settings", UserLive.Settings, :edit
@@ -96,7 +104,7 @@ defmodule CleanerCrmWeb.Router do
 
     # Field surfaces need an active account: every scoped query guards
     # on `active_account_id`, so a freshly-registered user with no
-    # company is funneled to /accounts/new instead of crashing.
+    # company is funneled to /app/accounts/new instead of crashing.
     live_session :require_account,
       on_mount: [
         {CleanerCrmWeb.UserAuth, :require_authenticated},
@@ -107,12 +115,12 @@ defmodule CleanerCrmWeb.Router do
     end
 
     # Office-only surfaces: dispatch, payroll, quality, invoicing,
-    # clients, quotes, reminders, and the audit trail. Gated to
+    # clients, quotes, reviews, reminders, and the audit trail. Gated to
     # owners/admins by `CleanerCrmWeb.RequireOfficeRole` — a cleaner
-    # is redirected to `/field` instead. See that module for why it's
+    # is redirected to `/app/field` instead. See that module for why it's
     # a separate `live_session` from the one above. RequireAccount runs
     # first so an account-less user goes to company creation, not into
-    # RequireOfficeRole's /field redirect (which would also crash).
+    # RequireOfficeRole's /app/field redirect (which would also crash).
     live_session :require_office_role,
       on_mount: [
         {CleanerCrmWeb.UserAuth, :require_authenticated},
@@ -159,23 +167,33 @@ defmodule CleanerCrmWeb.Router do
 
       live "/reminders", ReminderLive, :index
 
+      live "/reviews", ReviewLive.Index, :index
+
       live "/settings/booking", SettingsLive.BookingPolicy, :edit
     end
-
-    post "/users/update-password", UserSessionController, :update_password
   end
 
-  scope "/", CleanerCrmWeb do
+  # Office-only controller route (the payroll CSV export) — layered on
+  # `:require_office_role` since a plug can't gate a live_session.
+  scope "/app", CleanerCrmWeb do
     pipe_through [:browser, :require_authenticated_user, :require_office_role]
 
     get "/timesheets/export", TimesheetExportController, :show
   end
 
-  scope "/integrations/oauth", CleanerCrmWeb do
+  # Authenticated routes that must stay at the root path (not under
+  # /app): the password-update form posts here, and the OAuth
+  # connect/callback URLs are registered with the external provider
+  # (CodeMySpec's redirect URI), so they can't move.
+  scope "/", CleanerCrmWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    get "/:provider", IntegrationsController, :request
-    get "/callback/:provider", IntegrationsController, :callback
+    post "/users/update-password", UserSessionController, :update_password
+
+    scope "/integrations/oauth" do
+      get "/:provider", IntegrationsController, :request
+      get "/callback/:provider", IntegrationsController, :callback
+    end
   end
 
   scope "/", CleanerCrmWeb do
@@ -217,27 +235,15 @@ defmodule CleanerCrmWeb.Router do
 
   # Reviews (story 853): the public token-link review page needs no
   # login — mirrors `/invitations/accept/:token`'s `:current_user`
-  # live_session so `current_scope` still mounts for the root layout —
-  # while the owner's review inbox is office-only, gated the same way
-  # as the other office surfaces above.
+  # live_session so `current_scope` still mounts for the root layout.
+  # No collision with the office inbox at `/app/reviews` — that lives
+  # under the `/app` scope above.
   scope "/", CleanerCrmWeb do
     pipe_through [:browser]
 
     live_session :reviews_public,
       on_mount: [{CleanerCrmWeb.UserAuth, :mount_current_scope}] do
       live "/reviews/:token", ReviewLive.Public, :show
-    end
-  end
-
-  scope "/", CleanerCrmWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live_session :reviews_office,
-      on_mount: [
-        {CleanerCrmWeb.UserAuth, :require_authenticated},
-        {CleanerCrmWeb.RequireOfficeRole, :default}
-      ] do
-      live "/reviews", ReviewLive.Index, :index
     end
   end
 

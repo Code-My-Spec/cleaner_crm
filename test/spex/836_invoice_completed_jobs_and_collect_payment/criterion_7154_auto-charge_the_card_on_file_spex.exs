@@ -45,7 +45,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7154Spex do
       end
 
       when_ "the owner charges the card on file", context do
-        {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, invoice_live, _html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         invoice_live
         |> element("[data-test='charge-card-button']")

@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7178Spex do
       end
 
       when_ "Ana files a damage report with a description and a photo of the damage", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         photo_upload =
           file_input(job_live, "[data-test='incident-photo-upload']", :photo, [
@@ -69,7 +69,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7178Spex do
       end
 
       then_ "the owner sees the filed damage report when reviewing incidents", context do
-        {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+        {:ok, _review_live, html} = live(context.owner_conn, ~p"/app/quality")
 
         assert html =~ "Living room floor lamp is cracked and will not stand upright"
 

@@ -41,7 +41,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7175Spex do
       end
 
       when_ "the owner opens the weekly board", context do
-        {:ok, view, _html} = live(context.conn, ~p"/schedule")
+        {:ok, view, _html} = live(context.conn, ~p"/app/schedule")
 
         {:ok, Map.put(context, :view, view)}
       end

@@ -22,7 +22,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7112Spex do
   spex "owner builds a per-room quote" do
     scenario "the quote is priced per room with no square-footage or hourly inputs requested" do
       given_ "the owner is creating a new quote for a lead", context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         {:ok, Map.put(context, :quote_live, quote_live)}
       end

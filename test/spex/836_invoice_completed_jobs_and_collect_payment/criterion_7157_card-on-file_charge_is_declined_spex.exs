@@ -59,7 +59,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7157Spex do
       end
 
       then_ "the invoice remains unpaid", context do
-        {:ok, _invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, _invoice_live, html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         assert html =~ "Unpaid"
 
@@ -67,7 +67,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7157Spex do
       end
 
       then_ "the owner is alerted to retry the charge or send a payment link", context do
-        {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, invoice_live, _html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         assert has_element?(invoice_live, "[data-test='retry-charge-button']")
         assert has_element?(invoice_live, "[data-test='send-payment-link-button']")

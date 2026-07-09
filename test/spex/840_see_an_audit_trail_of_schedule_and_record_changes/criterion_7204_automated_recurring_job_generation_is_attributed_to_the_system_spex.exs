@@ -8,11 +8,11 @@ defmodule CleanerCrmSpex.Story840.Criterion7204Spex do
   system as actor rather than Dana or a blank author.
 
   Assumes `CleanerCrmWeb.ScheduleLive.PlanFormComponent` (opened from
-  `/schedule/plans/new`, per story 833's own specs) exposes a
+  `/app/schedule/plans/new`, per story 833's own specs) exposes a
   `[data-test='plan-form']` (submitted via `render_change`) and a
   `[data-test='save-plan-button']` that saves the plan and, per
   criterion 7143, materializes its job occurrences immediately.
-  Assumes `CleanerCrmWeb.AuditLive` (`/audit`) renders one entry per
+  Assumes `CleanerCrmWeb.AuditLive` (`/app/audit`) renders one entry per
   materialized job and names its actor "System" when no human made the
   change.
   """
@@ -51,7 +51,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7204Spex do
       end
 
       when_ "Dana creates a weekly recurring plan for that property", context do
-        {:ok, plan_live, _html} = live(context.conn, ~p"/schedule/plans/new")
+        {:ok, plan_live, _html} = live(context.conn, ~p"/app/schedule/plans/new")
 
         plan_live
         |> form("[data-test='plan-form']",
@@ -74,7 +74,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7204Spex do
 
       then_ "the audit trail attributes every materialized job to the System, not Dana",
             context do
-        {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+        {:ok, _audit_live, html} = live(context.conn, ~p"/app/audit")
 
         assert html =~ "Riverside HOA"
         assert length(Regex.scan(~r/System/, html)) >= 3
@@ -88,7 +88,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7204Spex do
   defp id_from_path(path), do: path |> String.split("/") |> List.last()
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -99,9 +99,9 @@ defmodule CleanerCrmSpex.Story840.Criterion7204Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

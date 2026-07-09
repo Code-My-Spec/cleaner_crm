@@ -54,7 +54,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7192Spex do
       end
 
       when_ "I tap acknowledge on it", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         today_live
         |> element("[data-test='schedule-alert-#{context.notification.id}-acknowledge-button']")
@@ -75,7 +75,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7192Spex do
       end
 
       then_ "it stops prompting me", context do
-        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/app/field")
 
         refute html =~ "schedule-alert-#{context.notification.id}"
         assert has_element?(today_live, "[data-test='field-today']")

@@ -72,7 +72,7 @@ defmodule CleanerCrmSpex.Story849.Criterion7236Spex do
 
         assert has_element?(accept_live, "[data-test='booking-confirmed']")
 
-        {:ok, board_live, _html} = live(context.owner_conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.owner_conn, ~p"/app/schedule")
         assert render(board_live) =~ context.lead.client_name
 
         assert_email_sent(fn email ->

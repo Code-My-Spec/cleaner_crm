@@ -26,10 +26,10 @@ defmodule CleanerCrmWeb.AccountLive.Index do
                   {account.slug}
                 </p>
                 <div class="card-actions justify-end mt-4">
-                  <.button navigate={~p"/accounts/#{account}/members"} class="btn-sm btn-ghost">
+                  <.button navigate={~p"/app/accounts/#{account}/members"} class="btn-sm btn-ghost">
                     Members
                   </.button>
-                  <.button navigate={~p"/accounts/#{account}"} class="btn-sm">
+                  <.button navigate={~p"/app/accounts/#{account}"} class="btn-sm">
                     Manage
                   </.button>
                 </div>

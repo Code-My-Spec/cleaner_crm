@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7180Spex do
       end
 
       given_ "Ana has already filed a damage report with a photo", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         photo_upload =
           file_input(job_live, "[data-test='incident-photo-upload']", :photo, [
@@ -60,7 +60,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7180Spex do
       end
 
       when_ "Ana reloads the job screen", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         {:ok, Map.put(context, :job_live, job_live)}
       end
@@ -75,7 +75,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7180Spex do
 
       then_ "no edit or delete affordance is offered for the report when the owner reviews it",
             context do
-        {:ok, review_live, html} = live(context.owner_conn, ~p"/quality")
+        {:ok, review_live, html} = live(context.owner_conn, ~p"/app/quality")
 
         assert html =~ "Living room floor lamp is cracked and will not stand upright"
         refute has_element?(review_live, "[data-test='incident-report-edit-button']")

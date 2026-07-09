@@ -22,9 +22,9 @@ defmodule CleanerCrmSpex.Story832.Criterion7110Spex do
 
       given_ "the owner is adding a property for a client", context do
         client_path = create_client(context.conn, "Priya Nair")
-        "/clients/" <> client_id = client_path
+        "/app/clients/" <> client_id = client_path
 
-        {:ok, new_live, _html} = live(context.conn, ~p"/clients/#{client_id}/properties/new")
+        {:ok, new_live, _html} = live(context.conn, ~p"/app/clients/#{client_id}/properties/new")
 
         {:ok, Map.merge(context, %{client_path: client_path, new_live: new_live})}
       end
@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7110Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

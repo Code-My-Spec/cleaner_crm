@@ -26,8 +26,8 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
 
   ## Route
 
-    * `/quotes/rate-card` (`:edit`) — office-only, gated the same as
-      every other `/quotes` route.
+    * `/app/quotes/rate-card` (`:edit`) — office-only, gated the same as
+      every other `/app/quotes` route.
 
   ## Dependencies
 
@@ -47,7 +47,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
         Booking Rate Card
         <:subtitle>Prices the public instant-quote calculator at <code>/book</code> uses</:subtitle>
         <:actions>
-          <.button navigate={~p"/quotes"} class="btn-sm btn-ghost">Back to Quotes</.button>
+          <.button navigate={~p"/app/quotes"} class="btn-sm btn-ghost">Back to Quotes</.button>
         </:actions>
       </.header>
 

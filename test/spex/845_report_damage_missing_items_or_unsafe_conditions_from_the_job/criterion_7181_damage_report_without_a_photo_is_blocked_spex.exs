@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7181Spex do
       end
 
       when_ "Ana tries to file a damage report with only a description, no photo", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         html =
           job_live
@@ -61,7 +61,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7181Spex do
       end
 
       then_ "the owner never sees a phantom damage report for this job", context do
-        {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+        {:ok, _review_live, html} = live(context.owner_conn, ~p"/app/quality")
 
         assert html =~ context.client.name
         refute html =~ "Living room floor lamp is cracked and won't stand upright"

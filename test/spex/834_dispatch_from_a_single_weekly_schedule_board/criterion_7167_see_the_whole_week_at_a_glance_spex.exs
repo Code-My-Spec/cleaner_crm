@@ -4,7 +4,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7167Spex do
   Criterion 7167 — See the whole week at a glance: the board shows
   every cleaner's jobs for the selected week on one screen.
 
-  Assumes `CleanerCrmWeb.ScheduleLive.Board` (mounted at `/schedule`,
+  Assumes `CleanerCrmWeb.ScheduleLive.Board` (mounted at `/app/schedule`,
   per the project's BDD plan) renders a `[data-test='weekly-board']`
   container with one `[data-test='cleaner-column-<id>']` per cleaner,
   each containing `[data-test='job-<id>']` cards for that cleaner's
@@ -60,7 +60,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7167Spex do
       end
 
       when_ "the owner opens the weekly board for that week", context do
-        {:ok, view, _html} = live(context.conn, ~p"/schedule")
+        {:ok, view, _html} = live(context.conn, ~p"/app/schedule")
 
         {:ok, Map.put(context, :view, view)}
       end

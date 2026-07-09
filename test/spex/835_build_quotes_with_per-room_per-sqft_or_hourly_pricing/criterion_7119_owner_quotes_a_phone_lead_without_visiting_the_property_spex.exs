@@ -23,7 +23,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7119Spex do
     scenario "a complete priced quote is sent without scheduling a site visit" do
       given_ "a lead has given the owner their room count and square footage over the phone",
              context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         quote_live
         |> form("[data-test='rate-card-form']",

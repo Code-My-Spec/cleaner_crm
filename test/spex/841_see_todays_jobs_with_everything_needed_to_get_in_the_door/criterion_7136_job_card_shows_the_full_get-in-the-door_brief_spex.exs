@@ -37,7 +37,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7136Spex do
         client = Fixtures.client_fixture(context.scope)
 
         property_path =
-          create_property(context.conn, "/clients/#{client.id}", %{
+          create_property(context.conn, "/app/clients/#{client.id}", %{
             service_address: "77 Maple Ave",
             parking_notes: "Driveway only, do not block the garage",
             entry_method: "Enter through the side gate keypad",
@@ -57,7 +57,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7136Spex do
       end
 
       when_ "I open the job card", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         {:ok, Map.put(context, :today_live, today_live)}
       end
@@ -96,9 +96,9 @@ defmodule CleanerCrmSpex.Story841.Criterion7136Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

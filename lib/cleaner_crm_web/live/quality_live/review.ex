@@ -5,10 +5,10 @@ defmodule CleanerCrmWeb.QualityLive.Review do
 
   ## Routes
 
-    * `/quality` (`:index`) — every job (for picking one to review) and
+    * `/app/quality` (`:index`) — every job (for picking one to review) and
       the account's incident reports, newest first, as the office's
       notification feed.
-    * `/quality/:job_id` (`:show`) — one job's checklist, its
+    * `/app/quality/:job_id` (`:show`) — one job's checklist, its
       timestamped before/after photos as proof of work, and the
       owner's quality rating.
 
@@ -31,7 +31,7 @@ defmodule CleanerCrmWeb.QualityLive.Review do
         {@job.client && @job.client.name}
         <:subtitle>{@job.scheduled_date}</:subtitle>
         <:actions>
-          <.button navigate={~p"/quality"} class="btn-sm btn-ghost">Back to Quality</.button>
+          <.button navigate={~p"/app/quality"} class="btn-sm btn-ghost">Back to Quality</.button>
         </:actions>
       </.header>
 
@@ -107,7 +107,7 @@ defmodule CleanerCrmWeb.QualityLive.Review do
         Quality
         <:subtitle>Job proof of work and incident reports</:subtitle>
         <:actions>
-          <.button navigate={~p"/quality/scorecards"} class="btn-sm">Scorecards</.button>
+          <.button navigate={~p"/app/quality/scorecards"} class="btn-sm">Scorecards</.button>
         </:actions>
       </.header>
 
@@ -144,7 +144,7 @@ defmodule CleanerCrmWeb.QualityLive.Review do
       <ul :if={Enum.any?(@jobs)} class="list">
         <li :for={job <- @jobs} class="list-row">
           <div class="list-col-grow">
-            <.link navigate={~p"/quality/#{job.id}"} class="font-semibold link">
+            <.link navigate={~p"/app/quality/#{job.id}"} class="font-semibold link">
               {job.client && job.client.name}
             </.link>
             <p class="text-sm text-base-content/70">{job.scheduled_date} &middot; {job.status}</p>

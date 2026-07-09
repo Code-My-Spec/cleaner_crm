@@ -3,8 +3,8 @@ defmodule CleanerCrmWeb.FieldLive.Job do
   A single job workspace: the room-by-room checklist, clock in/out
   with running earnings, and incident reporting.
 
-  Route: `/field/jobs/:id`. A cleaner who opens a job not assigned to
-  them is redirected straight back to `/field` with a flash — the
+  Route: `/app/field/jobs/:id`. A cleaner who opens a job not assigned to
+  them is redirected straight back to `/app/field` with a flash — the
   page exposes entry codes and client details, so an unassigned
   cleaner must never see it render at all (reconciled with story
   838's criterion 7123 and story 844's criterion 7129). Office staff
@@ -120,7 +120,7 @@ defmodule CleanerCrmWeb.FieldLive.Job do
       {:ok,
        socket
        |> put_flash(:error, "This job is not assigned to you.")
-       |> redirect(to: ~p"/field")}
+       |> redirect(to: ~p"/app/field")}
     end
   end
 

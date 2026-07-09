@@ -21,7 +21,7 @@ defmodule CleanerCrmWeb.ClientLive.Index do
         Clients
         <:subtitle>Manage your clients and their properties</:subtitle>
         <:actions>
-          <.button navigate={~p"/clients/new"} variant="primary">
+          <.button navigate={~p"/app/clients/new"} variant="primary">
             <.icon name="hero-plus" class="size-4 mr-1" /> New Client
           </.button>
         </:actions>
@@ -49,7 +49,7 @@ defmodule CleanerCrmWeb.ClientLive.Index do
           {if client.card_on_file, do: "Yes", else: "No"}
         </:col>
         <:action :let={client}>
-          <.link navigate={~p"/clients/#{client}"} class="btn btn-sm btn-ghost">View</.link>
+          <.link navigate={~p"/app/clients/#{client}"} class="btn btn-sm btn-ghost">View</.link>
         </:action>
       </.table>
     </Layouts.app>

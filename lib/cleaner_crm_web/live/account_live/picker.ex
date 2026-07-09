@@ -67,7 +67,7 @@ defmodule CleanerCrmWeb.AccountLive.Picker do
       {:noreply,
        socket
        |> put_flash(:info, "Account selected")
-       |> push_navigate(to: ~p"/accounts/#{account_id}")}
+       |> push_navigate(to: ~p"/app/accounts/#{account_id}")}
     else
       {:noreply, put_flash(socket, :error, "You don't have access to this account")}
     end

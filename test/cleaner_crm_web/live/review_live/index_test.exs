@@ -50,7 +50,7 @@ defmodule CleanerCrmWeb.ReviewLive.IndexTest do
     {:ok, review} = Reviews.submit_review(review, 2, "The bathroom was not cleaned properly.")
 
     conn = log_in_user(conn, owner)
-    {:ok, view, _html} = live(conn, ~p"/reviews")
+    {:ok, view, _html} = live(conn, ~p"/app/reviews")
 
     assert has_element?(
              view,

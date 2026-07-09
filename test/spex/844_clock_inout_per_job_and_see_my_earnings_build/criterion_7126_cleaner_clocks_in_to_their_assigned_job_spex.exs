@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story844.Criterion7126Spex do
       end
 
       when_ "I open that job and tap Clock In", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='clock-in-button']")

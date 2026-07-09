@@ -48,7 +48,7 @@ defmodule CleanerCrmSpex.Story850.Criterion7254Spex do
         cleaner_b =
           Fixtures.cleaner_fixture(context.scope, context.account, %{name: "Sam Okafor"})
 
-        {:ok, board_live, _html} = live(context.owner_conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.owner_conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-cleaner-select']")

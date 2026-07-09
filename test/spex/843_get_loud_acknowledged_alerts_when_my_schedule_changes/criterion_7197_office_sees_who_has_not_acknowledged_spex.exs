@@ -63,7 +63,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7197Spex do
       end
 
       when_ "the office views the change", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         {:ok, Map.put(context, :board_live, board_live)}
       end
@@ -79,7 +79,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7197Spex do
       end
 
       when_ "the cleaner acknowledges the change", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         today_live
         |> element("[data-test='schedule-alert-#{context.notification.id}-acknowledge-button']")
@@ -89,7 +89,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7197Spex do
       end
 
       then_ "once the cleaner acknowledges, the office sees it flip to acknowledged", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(
                  board_live,

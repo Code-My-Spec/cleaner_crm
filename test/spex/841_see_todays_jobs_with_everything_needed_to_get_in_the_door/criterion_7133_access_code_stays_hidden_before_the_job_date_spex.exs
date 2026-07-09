@@ -36,7 +36,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7133Spex do
         client = Fixtures.client_fixture(context.scope)
 
         property_path =
-          create_property(context.conn, "/clients/#{client.id}", %{
+          create_property(context.conn, "/app/clients/#{client.id}", %{
             service_address: "45 Elm St",
             lockbox_code: "9077"
           })
@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7133Spex do
 
       when_ "I view that upcoming job before its scheduled date", context do
         {:ok, today_live, html} =
-          live(context.cleaner_conn, ~p"/field?date=#{context.tomorrow}")
+          live(context.cleaner_conn, ~p"/app/field?date=#{context.tomorrow}")
 
         {:ok, Map.merge(context, %{today_live: today_live, html: html})}
       end
@@ -81,9 +81,9 @@ defmodule CleanerCrmSpex.Story841.Criterion7133Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

@@ -6,7 +6,7 @@ defmodule CleanerCrmWeb.QualityLive.Scorecards do
 
   ## Routes
 
-    * `/quality/scorecards` (`:index`)
+    * `/app/quality/scorecards` (`:index`)
 
   ## Dependencies
 
@@ -27,7 +27,7 @@ defmodule CleanerCrmWeb.QualityLive.Scorecards do
         Scorecards
         <:subtitle>Per-cleaner quality trends</:subtitle>
         <:actions>
-          <.button navigate={~p"/quality"} class="btn-sm btn-ghost">Back to Quality</.button>
+          <.button navigate={~p"/app/quality"} class="btn-sm btn-ghost">Back to Quality</.button>
         </:actions>
       </.header>
 

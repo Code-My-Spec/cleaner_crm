@@ -22,7 +22,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7122Spex do
   spex "rate-card change does not alter an already-sent quote" do
     scenario "the previously sent quote still shows its original total after rates rise" do
       given_ "the owner sent a quote totaling $200 using the current rate card", context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         quote_live
         |> form("[data-test='rate-card-form']", rate_card: %{per_sqft_rate_cents: 10})
@@ -44,7 +44,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7122Spex do
       end
 
       when_ "the owner later raises the rate card rates", context do
-        {:ok, new_quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, new_quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         new_quote_live
         |> form("[data-test='rate-card-form']", rate_card: %{per_sqft_rate_cents: 20})

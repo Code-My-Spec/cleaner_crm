@@ -48,7 +48,7 @@ defmodule CleanerCrmSpex.Story837.Criterion7188Spex do
       end
 
       then_ "the owner is notified to rebook it, protecting route density", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(board_live, "[data-test='job-#{context.job.id}']", "Needs reschedule")
 

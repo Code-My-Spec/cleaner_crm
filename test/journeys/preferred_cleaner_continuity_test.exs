@@ -28,7 +28,7 @@ defmodule CleanerCrmTest.Journeys.PreferredCleanerContinuityTest do
     start_date = Date.utc_today() |> Date.add(7) |> Date.to_iso8601()
 
     session
-    |> visit!("/schedule/plans/new")
+    |> visit!("/app/schedule/plans/new")
     |> set_field("#plan_property_id", property.id)
     |> set_field("#plan_cleaner_id", to_string(preferred.id))
     |> set_field("#plan_recurrence", "weekly")
@@ -45,7 +45,7 @@ defmodule CleanerCrmTest.Journeys.PreferredCleanerContinuityTest do
     [first_visit, second_visit, third_visit] = Enum.sort_by(visits, & &1.scheduled_date)
 
     session
-    |> visit!("/schedule")
+    |> visit!("/app/schedule")
     |> set_field(
       "[data-test='job-#{first_visit.id}-cleaner-select']",
       to_string(other_cleaner.id)
@@ -64,7 +64,7 @@ defmodule CleanerCrmTest.Journeys.PreferredCleanerContinuityTest do
     # Second plan, no preferred cleaner — reassigning a visit warns
     # about nothing.
     session
-    |> visit!("/schedule/plans/new")
+    |> visit!("/app/schedule/plans/new")
     |> set_field("#plan_property_id", property.id)
     |> set_field("#plan_recurrence", "weekly")
     |> set_field("#plan_start_date", Date.utc_today() |> Date.add(60) |> Date.to_iso8601())
@@ -80,7 +80,7 @@ defmodule CleanerCrmTest.Journeys.PreferredCleanerContinuityTest do
     refute second_visit.cleaner_id
 
     session
-    |> visit!("/schedule")
+    |> visit!("/app/schedule")
     |> set_field(
       "[data-test='job-#{second_visit.id}-cleaner-select']",
       to_string(other_cleaner.id)

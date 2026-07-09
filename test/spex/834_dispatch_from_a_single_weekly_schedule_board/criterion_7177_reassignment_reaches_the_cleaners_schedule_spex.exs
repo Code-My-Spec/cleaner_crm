@@ -6,11 +6,11 @@ defmodule CleanerCrmSpex.Story834.Criterion7177Spex do
 
   Story 834's only linked surface is `ScheduleLive.Board`; the
   cleaner-facing `FieldLive` (stories 841-845) is a day view, not a
-  week view, and `/schedule` is an office-only surface a cleaner like
+  week view, and `/app/schedule` is an office-only surface a cleaner like
   Ben cannot open himself. "Ben's schedule reflects the reassignment"
   is modeled here as a second, independent office session (a fresh
   connection, not the reassigning owner's still-open LiveView)
-  reloading `/schedule` and finding the job under Ben's column —
+  reloading `/app/schedule` and finding the job under Ben's column —
   proving the reassignment is durable server-side state rather than
   optimistic UI on the original socket.
   """
@@ -52,7 +52,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7177Spex do
             end_time: ~T[11:00:00]
           })
 
-        {:ok, owner_view, _html} = live(context.conn, ~p"/schedule")
+        {:ok, owner_view, _html} = live(context.conn, ~p"/app/schedule")
 
         owner_view
         |> element("[data-test='job-#{job.id}-cleaner-select']")
@@ -63,7 +63,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7177Spex do
 
       when_ "the board is reloaded in a fresh office session", context do
         second_office_conn = Fixtures.log_in_user(build_conn(), context.user)
-        {:ok, board_view, _html} = live(second_office_conn, ~p"/schedule")
+        {:ok, board_view, _html} = live(second_office_conn, ~p"/app/schedule")
 
         {:ok, Map.put(context, :board_view, board_view)}
       end

@@ -42,7 +42,7 @@ defmodule CleanerCrmWeb.FieldLive.ChecklistComponentTest do
     refute job.agreed_price_cents
 
     conn = log_in_user(build_conn(), owner)
-    {:ok, job_live, _html} = live(conn, ~p"/field/jobs/#{job.id}")
+    {:ok, job_live, _html} = live(conn, ~p"/app/field/jobs/#{job.id}")
 
     job_live
     |> element("[data-test='mark-complete-button']")

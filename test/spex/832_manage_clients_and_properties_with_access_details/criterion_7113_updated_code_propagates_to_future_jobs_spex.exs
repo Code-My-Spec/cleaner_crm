@@ -35,8 +35,8 @@ defmodule CleanerCrmSpex.Story832.Criterion7113Spex do
       end
 
       when_ "the owner changes the property's lockbox code to \"9077\"", context do
-        "/properties/" <> property_id = context.property_path
-        {:ok, edit_live, _html} = live(context.conn, ~p"/properties/#{property_id}/edit")
+        "/app/properties/" <> property_id = context.property_path
+        {:ok, edit_live, _html} = live(context.conn, ~p"/app/properties/#{property_id}/edit")
 
         {:error, {:live_redirect, %{to: _path}}} =
           edit_live
@@ -47,7 +47,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7113Spex do
       end
 
       then_ "the upcoming job's brief shows lockbox code \"9077\"", context do
-        {:ok, _schedule_live, html} = live(context.conn, ~p"/schedule")
+        {:ok, _schedule_live, html} = live(context.conn, ~p"/app/schedule")
 
         assert html =~ "45 Elm St"
         assert html =~ "9077"
@@ -59,7 +59,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7113Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -70,9 +70,9 @@ defmodule CleanerCrmSpex.Story832.Criterion7113Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -83,9 +83,9 @@ defmodule CleanerCrmSpex.Story832.Criterion7113Spex do
   end
 
   defp schedule_job(conn, property_path, scheduled_date) do
-    "/properties/" <> property_id = property_path
+    "/app/properties/" <> property_id = property_path
 
-    {:ok, schedule_live, _html} = live(conn, ~p"/schedule")
+    {:ok, schedule_live, _html} = live(conn, ~p"/app/schedule")
 
     schedule_live
     |> element("[data-test='new-job-button']")

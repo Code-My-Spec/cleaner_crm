@@ -23,7 +23,7 @@ defmodule CleanerCrmSpex.Story850.Criterion7257Spex do
         invoice = Fixtures.invoice_fixture(scope, job, %{amount: job.agreed_price})
 
         owner_conn = Fixtures.log_in_user(Phoenix.ConnTest.build_conn(), user)
-        {:ok, invoice_live, invoice_html} = live(owner_conn, ~p"/invoices/#{invoice.id}")
+        {:ok, invoice_live, invoice_html} = live(owner_conn, ~p"/app/invoices/#{invoice.id}")
         assert has_element?(invoice_live, "[data-test='proof-of-work-photo']")
 
         portal_conn = Fixtures.portal_session_fixture(client)

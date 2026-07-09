@@ -36,7 +36,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7171Spex do
       end
 
       when_ "the owner opens Ana's scorecard", context do
-        {:ok, scorecards_live, _html} = live(context.conn, ~p"/quality/scorecards")
+        {:ok, scorecards_live, _html} = live(context.conn, ~p"/app/quality/scorecards")
 
         html =
           scorecards_live

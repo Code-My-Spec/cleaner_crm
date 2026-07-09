@@ -3,7 +3,7 @@ defmodule CleanerCrmWeb.RequireAccount do
   LiveView `on_mount` hook for surfaces that need an active company
   (account): a freshly-registered user has none, and every scoped
   context function guards on `active_account_id`, so letting them
-  reach `/field` or the office pages crashes with a
+  reach `/app/field` or the office pages crashes with a
   `FunctionClauseError`. Funnel them to account creation instead.
 
   Runs after `CleanerCrmWeb.UserAuth :require_authenticated` (which
@@ -19,7 +19,7 @@ defmodule CleanerCrmWeb.RequireAccount do
         socket =
           socket
           |> Phoenix.LiveView.put_flash(:info, "Create your company to get started.")
-          |> Phoenix.LiveView.redirect(to: ~p"/accounts/new")
+          |> Phoenix.LiveView.redirect(to: ~p"/app/accounts/new")
 
         {:halt, socket}
 

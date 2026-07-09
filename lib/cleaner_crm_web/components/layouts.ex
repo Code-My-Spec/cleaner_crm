@@ -18,18 +18,19 @@ defmodule CleanerCrmWeb.Layouts do
   Renders your app layout.
 
   This function is typically invoked from every template, and it
-  renders the role-aware app chrome: header, nav, and flash group.
+  renders the role-aware app chrome.
 
-  `variant` picks which header chrome to render:
+  `variant` picks which chrome to render:
 
-    * `:app` (default) — the full role-aware nav for every
-      authenticated surface. Office roles (owner/admin) get the
-      grouped office nav; everyone else gets the cleaner's minimal
-      "My Day" link. Reads `current_scope` to tell them apart.
-    * `:portal` — the client portal's minimal Home/Invoices nav.
+    * `:app` (default) — the drawer + sidebar shell for every
+      authenticated surface under `/app`. Office roles (owner/admin)
+      get the full grouped office nav in the sidebar; everyone else
+      gets the cleaner's minimal "My Day" link. Reads `current_scope`
+      to tell them apart.
+    * `:portal` — the client portal's minimal Home/Invoices top bar.
       There's no user login in the portal, so this doesn't touch
       `current_scope` at all.
-    * `:public` — a bare logo + "Client portal" link, for the
+    * `:public` — a bare logo + "Client portal" top bar, for the
       landing page, the public booking funnel, and token-link pages
       that have no session to key a nav off of.
 
@@ -53,147 +54,203 @@ defmodule CleanerCrmWeb.Layouts do
   attr :variant, :atom,
     default: :app,
     values: [:app, :portal, :public],
-    doc: "which header chrome to render — see moduledoc above"
+    doc: "which chrome to render — see moduledoc above"
 
   slot :inner_block, required: true
 
-  def app(assigns) do
+  def app(%{variant: :app} = assigns) do
     role = nav_role(assigns[:current_scope])
     office? = role in [:owner, :admin]
-    signed_in? = match?(%{user: %{}}, assigns[:current_scope])
 
-    office_primary = [
-      {"Schedule", ~p"/schedule"},
-      {"Clients", ~p"/clients"},
-      {"Quotes", ~p"/quotes"},
-      {"Invoices", ~p"/invoices"},
-      {"Timesheets", ~p"/timesheets"},
-      {"Quality", ~p"/quality"},
-      {"Reviews", ~p"/reviews"}
+    office_links = [
+      {"Schedule", ~p"/app/schedule", "hero-calendar-days"},
+      {"Clients", ~p"/app/clients", "hero-user-group"},
+      {"Quotes", ~p"/app/quotes", "hero-document-currency-dollar"},
+      {"Invoices", ~p"/app/invoices", "hero-receipt-percent"},
+      {"Timesheets", ~p"/app/timesheets", "hero-clock"},
+      {"Quality", ~p"/app/quality", "hero-check-badge"},
+      {"Reviews", ~p"/app/reviews", "hero-star"},
+      {"Reminders", ~p"/app/reminders", "hero-bell-alert"},
+      {"Audit", ~p"/app/audit", "hero-clipboard-document-list"}
     ]
 
-    office_more = [{"Reminders", ~p"/reminders"}, {"Audit", ~p"/audit"}]
+    user_settings_link = {"User settings", ~p"/app/users/settings", "hero-cog-6-tooth"}
 
-    office_settings = [
-      {"Rate card", ~p"/quotes/rate-card"},
-      {"Booking policy", ~p"/settings/booking"},
-      {"Accounts", ~p"/accounts"},
-      {"Integrations", ~p"/integrations"},
-      {"User settings", ~p"/users/settings"}
+    office_settings_links = [
+      {"Rate card", ~p"/app/quotes/rate-card", "hero-currency-dollar"},
+      {"Booking policy", ~p"/app/settings/booking", "hero-calendar"},
+      {"Accounts", ~p"/app/accounts", "hero-building-office-2"},
+      {"Integrations", ~p"/app/integrations", "hero-puzzle-piece"}
     ]
+
+    settings_links =
+      if office?, do: office_settings_links ++ [user_settings_link], else: [user_settings_link]
 
     assigns =
       assign(assigns,
-        nav_role: role,
         office?: office?,
-        signed_in?: signed_in?,
-        office_primary: office_primary,
-        office_more: office_more,
-        office_settings: office_settings,
-        office_mobile:
-          office_primary ++ [{"Field view", ~p"/field"}] ++ office_more ++ office_settings
+        office_links: office_links,
+        settings_links: settings_links
       )
 
     ~H"""
+    <div class="drawer lg:drawer-open min-h-screen">
+      <input id="app-drawer-toggle" type="checkbox" class="drawer-toggle" />
+
+      <div class="drawer-content flex flex-col bg-base-100">
+        <header class="navbar bg-base-200 border-b border-base-300 gap-2">
+          <div class="flex-none lg:hidden">
+            <label
+              for="app-drawer-toggle"
+              class="btn btn-square btn-ghost"
+              aria-label="Open navigation"
+            >
+              <.icon name="hero-bars-3" class="size-5" />
+            </label>
+          </div>
+          <div class="flex-1 px-2 lg:px-4 flex items-center gap-3">
+            <div
+              :if={@current_scope && @current_scope.active_account}
+              class="breadcrumbs text-sm py-0"
+              data-test="account-breadcrumb"
+            >
+              <ul>
+                <li>
+                  <.link
+                    navigate={~p"/app/accounts/picker"}
+                    class="link link-hover inline-flex items-center gap-1"
+                    title="Switch account"
+                  >
+                    <.icon name="hero-building-office-2" class="size-4 opacity-70" />
+                    {@current_scope.active_account.name}
+                  </.link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="flex-none px-2">
+            <.theme_toggle />
+          </div>
+        </header>
+
+        <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-5xl space-y-6">
+            {render_slot(@inner_block)}
+          </div>
+        </main>
+      </div>
+
+      <div class="drawer-side z-20">
+        <label for="app-drawer-toggle" aria-label="close navigation" class="drawer-overlay"></label>
+        <aside class="w-64 min-h-full bg-base-200 border-r border-base-300 flex flex-col">
+          <div class="p-6 border-b border-base-300">
+            <a href="/" class="flex w-fit items-center gap-2">
+              <img src={~p"/images/logo.svg"} width="28" />
+              <span class="font-bold tracking-tight">Cleaner CRM</span>
+            </a>
+          </div>
+
+          <ul class="menu p-4 text-base-content flex-1">
+            <li :for={{label, path, icon} <- @office_links} :if={@office?} data-test="office-nav">
+              <.link navigate={path}>
+                <.icon name={icon} class="size-4" /> {label}
+              </.link>
+            </li>
+
+            <li :if={@office?} class="mt-2 border-t border-base-300 pt-2">
+              <.link navigate={~p"/app/field"}>
+                <.icon name="hero-truck" class="size-4" /> Field view
+              </.link>
+            </li>
+
+            <li :if={!@office?}>
+              <.link navigate={~p"/app/field"} data-test="cleaner-nav">
+                <.icon name="hero-sun" class="size-4" /> My Day
+              </.link>
+            </li>
+
+            <li class="mt-2 border-t border-base-300 pt-2">
+              <span class="menu-title px-1">Settings</span>
+              <ul>
+                <li :for={{label, path, icon} <- @settings_links}>
+                  <.link navigate={path}>
+                    <.icon name={icon} class="size-4" /> {label}
+                  </.link>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <div
+            :if={@current_scope && @current_scope.user}
+            class="p-4 border-t border-base-300 flex flex-col gap-2"
+          >
+            <div class="text-xs opacity-60 px-1 truncate" title={@current_scope.user.email}>
+              {@current_scope.user.email}
+            </div>
+            <.link
+              href={~p"/users/log-out"}
+              method="delete"
+              class="btn btn-ghost btn-sm justify-start"
+            >
+              <.icon name="hero-arrow-right-on-rectangle" class="size-4" /> Log out
+            </.link>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <.flash_group flash={@flash} />
+    """
+  end
+
+  def app(%{variant: :portal} = assigns) do
+    ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8 gap-2">
       <div class="flex-1 min-w-0">
-        <.link
-          navigate={brand_href(@variant, @current_scope, @nav_role)}
-          class="flex w-fit items-center gap-2 min-w-0"
-        >
+        <.link navigate={~p"/portal"} class="flex w-fit items-center gap-2 min-w-0">
           <img src={~p"/images/logo.svg"} width="36" />
           <span class="hidden sm:inline text-sm font-semibold truncate">Cleaner CRM</span>
         </.link>
       </div>
 
-      <nav
-        :if={@variant == :app and @office?}
-        data-test="office-nav"
-        class="hidden lg:flex items-center gap-1"
-      >
-        <.link :for={{label, path} <- @office_primary} navigate={path} class="btn btn-ghost btn-sm">
-          {label}
-        </.link>
-
-        <div class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1">
-            More <.icon name="hero-chevron-down-micro" class="size-3" />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-40 p-2 shadow"
-          >
-            <li :for={{label, path} <- @office_more}><.link navigate={path}>{label}</.link></li>
-          </ul>
-        </div>
-
-        <div class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1">
-            Settings <.icon name="hero-chevron-down-micro" class="size-3" />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-48 p-2 shadow"
-          >
-            <li :for={{label, path} <- @office_settings}><.link navigate={path}>{label}</.link></li>
-          </ul>
-        </div>
-
-        <.link navigate={~p"/field"} class="btn btn-ghost btn-sm">Field view</.link>
-      </nav>
-
-      <.link
-        :if={@variant == :app and @signed_in? and not @office?}
-        navigate={~p"/field"}
-        data-test="cleaner-nav"
-        class="btn btn-ghost btn-sm"
-      >
-        My Day
-      </.link>
-
-      <div :if={@variant == :portal} data-test="portal-nav" class="flex items-center gap-1 sm:gap-3">
+      <div data-test="portal-nav" class="flex items-center gap-1 sm:gap-3">
         <span class="hidden sm:inline text-sm font-medium opacity-60">Client Portal</span>
         <.link navigate={~p"/portal"} class="btn btn-ghost btn-sm">Home</.link>
         <.link navigate={~p"/portal/invoices"} class="btn btn-ghost btn-sm">Invoices</.link>
       </div>
 
-      <.link
-        :if={@variant == :public}
-        navigate={~p"/portal"}
-        data-test="public-nav"
-        class="btn btn-ghost btn-sm"
-      >
+      <div class="flex-none flex items-center gap-2">
+        <.theme_toggle />
+      </div>
+    </header>
+
+    <main class="px-4 py-20 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-2xl space-y-4">
+        {render_slot(@inner_block)}
+      </div>
+    </main>
+
+    <.flash_group flash={@flash} />
+    """
+  end
+
+  def app(%{variant: :public} = assigns) do
+    ~H"""
+    <header class="navbar px-4 sm:px-6 lg:px-8 gap-2">
+      <div class="flex-1 min-w-0">
+        <.link navigate={~p"/"} class="flex w-fit items-center gap-2 min-w-0">
+          <img src={~p"/images/logo.svg"} width="36" />
+          <span class="hidden sm:inline text-sm font-semibold truncate">Cleaner CRM</span>
+        </.link>
+      </div>
+
+      <.link navigate={~p"/portal"} data-test="public-nav" class="btn btn-ghost btn-sm">
         Client portal
       </.link>
 
       <div class="flex-none flex items-center gap-2">
         <.theme_toggle />
-
-        <div :if={@variant == :app and @signed_in?} class="dropdown dropdown-end">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-square" aria-label="User menu">
-            <.icon name="hero-user-circle-mini" class="size-6" />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-56 p-2 shadow"
-          >
-            <li class="menu-title truncate">{@current_scope.user.email}</li>
-            <li><.link navigate={~p"/users/settings"}>Settings</.link></li>
-            <li><.link href={~p"/users/log-out"} method="delete">Log out</.link></li>
-          </ul>
-        </div>
-
-        <div :if={@variant == :app and @office?} class="dropdown dropdown-end lg:hidden">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-square" aria-label="More links">
-            <.icon name="hero-bars-3" class="size-5" />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-56 p-2 shadow"
-          >
-            <li :for={{label, path} <- @office_mobile}><.link navigate={path}>{label}</.link></li>
-          </ul>
-        </div>
       </div>
     </header>
 
@@ -225,28 +282,17 @@ defmodule CleanerCrmWeb.Layouts do
   def nav_role(_scope), do: nil
 
   @doc """
-  Where a signed-in `current_scope` lands on "go to app": `/schedule`
-  for office roles, `/field` for cleaners, `/accounts/new` for a
+  Where a signed-in `current_scope` lands on "go to app": `/app/schedule`
+  for office roles, `/app/field` for cleaners, `/app/accounts/new` for a
   fresh signup with no company yet, or `nil` when signed out.
   """
-  def signed_in_home(%Scope{user: %{}, active_account_id: nil}), do: ~p"/accounts/new"
+  def signed_in_home(%Scope{user: %{}, active_account_id: nil}), do: ~p"/app/accounts/new"
 
   def signed_in_home(%Scope{user: %{}} = scope) do
-    if nav_role(scope) in [:owner, :admin], do: ~p"/schedule", else: ~p"/field"
+    if nav_role(scope) in [:owner, :admin], do: ~p"/app/schedule", else: ~p"/app/field"
   end
 
   def signed_in_home(_scope), do: nil
-
-  defp brand_href(:portal, _scope, _role), do: ~p"/portal"
-  defp brand_href(:public, _scope, _role), do: ~p"/"
-
-  defp brand_href(:app, scope, role) do
-    cond do
-      role in [:owner, :admin] -> ~p"/schedule"
-      match?(%{user: %{}}, scope) -> ~p"/field"
-      true -> ~p"/"
-    end
-  end
 
   @doc """
   Shows the flash group with standard titles and content.

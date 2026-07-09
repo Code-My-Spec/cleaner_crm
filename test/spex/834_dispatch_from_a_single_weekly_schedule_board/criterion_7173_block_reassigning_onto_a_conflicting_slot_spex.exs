@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story834.Criterion7173Spex do
       end
 
       when_ "the owner tries to move the 11am Wednesday job onto Ben", context do
-        {:ok, view, _html} = live(context.conn, ~p"/schedule")
+        {:ok, view, _html} = live(context.conn, ~p"/app/schedule")
 
         view
         |> element("[data-test='job-#{context.job.id}-cleaner-select']")

@@ -65,7 +65,7 @@ defmodule CleanerCrmTest.Journeys.PayrollCloseTest do
     session = log_in(session, owner, password)
 
     session
-    |> visit!("/timesheets")
+    |> visit!("/app/timesheets")
     |> assert_has(css("body", text: "$50.00"))
     |> assert_has(css("body", text: "$45.00"))
     |> assert_has(css("body", text: "$95.00"))
@@ -78,7 +78,7 @@ defmodule CleanerCrmTest.Journeys.PayrollCloseTest do
       |> CleanerCrm.Repo.update()
 
     session
-    |> visit!("/timesheets")
+    |> visit!("/app/timesheets")
     |> assert_has(css("body", text: "Missing clock-out"))
     |> assert_has(css("body", text: "Resolve the unresolved time entry before exporting"))
 

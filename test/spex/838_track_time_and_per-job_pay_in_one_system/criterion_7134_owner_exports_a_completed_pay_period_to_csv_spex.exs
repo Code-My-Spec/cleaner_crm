@@ -90,7 +90,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7134Spex do
       end
 
       when_ "the owner exports that closed pay period to CSV", context do
-        {:ok, timesheet_live, _html} = live(context.conn, ~p"/timesheets")
+        {:ok, timesheet_live, _html} = live(context.conn, ~p"/app/timesheets")
 
         timesheet_live
         |> element("[data-test='export-csv-button']")

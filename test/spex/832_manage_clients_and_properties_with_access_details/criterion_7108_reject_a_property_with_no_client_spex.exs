@@ -21,7 +21,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7108Spex do
       end
 
       given_ "the owner is creating a new property", context do
-        {:ok, new_live, _html} = live(context.conn, ~p"/properties/new")
+        {:ok, new_live, _html} = live(context.conn, ~p"/app/properties/new")
         {:ok, Map.put(context, :new_live, new_live)}
       end
 

@@ -131,7 +131,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplateFormComponent do
   defp save_template(socket, :new, params) do
     case Quality.create_checklist_template(socket.assigns.current_scope, params) do
       {:ok, _template} ->
-        {:noreply, push_navigate(socket, to: ~p"/quality/templates")}
+        {:noreply, push_navigate(socket, to: ~p"/app/quality/templates")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}
@@ -145,7 +145,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplateFormComponent do
            params
          ) do
       {:ok, _template} ->
-        {:noreply, push_navigate(socket, to: ~p"/quality/templates")}
+        {:noreply, push_navigate(socket, to: ~p"/app/quality/templates")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}

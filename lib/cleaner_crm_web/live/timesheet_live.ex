@@ -4,7 +4,7 @@ defmodule CleanerCrmWeb.TimesheetLive do
   what each cleaner is owed, which entries still need a clock-out
   before payroll can go out, and the CSV export.
 
-  Route: `/timesheets`.
+  Route: `/app/timesheets`.
   """
 
   use CleanerCrmWeb, :live_view
@@ -122,7 +122,7 @@ defmodule CleanerCrmWeb.TimesheetLive do
     {:noreply,
      redirect(socket,
        to:
-         ~p"/timesheets/export?start_date=#{Date.to_iso8601(start_date)}&end_date=#{Date.to_iso8601(end_date)}"
+         ~p"/app/timesheets/export?start_date=#{Date.to_iso8601(start_date)}&end_date=#{Date.to_iso8601(end_date)}"
      )}
   end
 

@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story842.Criterion7169Spex do
       when_ "Ana checks off only one of the two required tasks", context do
         [first_required | _] = Enum.filter(context.checklist.items, & &1.required)
 
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='checklist-item-#{first_required.id}']")

@@ -46,7 +46,7 @@ defmodule CleanerCrmSpex.Story844.Criterion7131Spex do
 
       given_ "I am already clocked in to the Smith job", context do
         {:ok, smith_job_live, _html} =
-          live(context.conn, ~p"/field/jobs/#{context.smith_job.id}")
+          live(context.conn, ~p"/app/field/jobs/#{context.smith_job.id}")
 
         smith_job_live
         |> element("[data-test='clock-in-button']")
@@ -56,7 +56,8 @@ defmodule CleanerCrmSpex.Story844.Criterion7131Spex do
       end
 
       when_ "I open my 11:00 AM job and tap Clock In", context do
-        {:ok, next_job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.next_job.id}")
+        {:ok, next_job_live, _html} =
+          live(context.conn, ~p"/app/field/jobs/#{context.next_job.id}")
 
         next_job_live
         |> element("[data-test='clock-in-button']")

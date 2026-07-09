@@ -80,7 +80,7 @@ defmodule CleanerCrmWeb.UserLive.Settings do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/users/settings")}
+    {:ok, push_navigate(socket, to: ~p"/app/users/settings")}
   end
 
   def mount(_params, _session, socket) do
@@ -121,7 +121,7 @@ defmodule CleanerCrmWeb.UserLive.Settings do
         Users.deliver_user_update_email_instructions(
           Ecto.Changeset.apply_action!(changeset, :insert),
           user.email,
-          &url(~p"/users/settings/confirm-email/#{&1}")
+          &url(~p"/app/users/settings/confirm-email/#{&1}")
         )
 
         info = "A link to confirm your email change has been sent to the new address."

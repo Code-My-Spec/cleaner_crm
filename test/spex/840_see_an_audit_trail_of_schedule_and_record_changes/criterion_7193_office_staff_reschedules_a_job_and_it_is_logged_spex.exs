@@ -6,11 +6,11 @@ defmodule CleanerCrmSpex.Story840.Criterion7193Spex do
   the timestamp of the change.
 
   Assumes `CleanerCrmWeb.ScheduleLive.JobFormComponent` (per the
-  project's architecture spec, opened from the board at `/schedule`)
+  project's architecture spec, opened from the board at `/app/schedule`)
   exposes a `[data-test='job-<id>-edit-button']` trigger and a
   `[data-test='job-form']` submitted via `render_submit` with
   `scheduled_date`/`start_time`/`end_time` fields. Assumes
-  `CleanerCrmWeb.AuditLive` (`/audit`) renders a
+  `CleanerCrmWeb.AuditLive` (`/app/audit`) renders a
   `[data-test='audit-entries']` list where each entry shows its actor,
   action, one `"<Field label>: <old> → <new>"` line per changed field,
   and today's date as its timestamp.
@@ -49,7 +49,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7193Spex do
       end
 
       when_ "Dana moves the job to Wednesday at 1:00 pm", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-edit-button']")
@@ -69,7 +69,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7193Spex do
       end
 
       then_ "an audit entry names Dana as the one who rescheduled the job", context do
-        {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+        {:ok, _audit_live, html} = live(context.conn, ~p"/app/audit")
 
         assert html =~ context.user.email
         assert html =~ "rescheduled"
@@ -79,7 +79,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7193Spex do
 
       then_ "the audit entry records the old and new times and the timestamp of the change",
             context do
-        {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+        {:ok, _audit_live, html} = live(context.conn, ~p"/app/audit")
 
         assert html =~
                  "Scheduled date: #{Date.to_iso8601(tuesday())} → #{Date.to_iso8601(wednesday())}"

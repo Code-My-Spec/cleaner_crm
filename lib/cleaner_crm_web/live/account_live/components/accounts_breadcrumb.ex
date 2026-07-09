@@ -29,7 +29,7 @@ defmodule CleanerCrmWeb.AccountLive.Components.AccountsBreadcrumb do
     <div class="breadcrumbs text-sm">
       <ul>
         <li>
-          <.link navigate={~p"/accounts/picker"}>
+          <.link navigate={~p"/app/accounts/picker"}>
             <span :if={@current_account}>{@current_account.name}</span>
             <span :if={!@current_account}>Select Account</span>
           </.link>

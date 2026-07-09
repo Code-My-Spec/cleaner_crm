@@ -5,7 +5,7 @@ defmodule CleanerCrmSpex.Story852.Criterion7242Spex do
 
   Route contract: a tip is "recorded per cleaner" and "tips appear in
   cleaner earnings". Observed on `CleanerCrmWeb.FieldLive.EarningsComponent`
-  (`[data-test='pay-period-total']` on `/field`), the same surface
+  (`[data-test='pay-period-total']` on `/app/field`), the same surface
   story 838's time-tracking criteria already read the cleaner's
   earnings from.
   """
@@ -73,7 +73,7 @@ defmodule CleanerCrmSpex.Story852.Criterion7242Spex do
       end
 
       then_ "my tip appears in my cleaner's earnings", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='pay-period-total']", "$10.00")
 

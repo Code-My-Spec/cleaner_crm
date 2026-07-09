@@ -39,7 +39,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7155Spex do
 
       when_ "the owner sends the invoice as a payment link and the client pays it online",
             context do
-        {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, invoice_live, _html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         html_after_send =
           invoice_live

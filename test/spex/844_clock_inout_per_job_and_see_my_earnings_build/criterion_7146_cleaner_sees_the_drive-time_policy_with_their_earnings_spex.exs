@@ -26,7 +26,7 @@ defmodule CleanerCrmSpex.Story844.Criterion7146Spex do
       end
 
       when_ "I view my earnings summary", context do
-        {:ok, field_live, html} = live(context.conn, ~p"/field")
+        {:ok, field_live, html} = live(context.conn, ~p"/app/field")
 
         {:ok, Map.merge(context, %{field_live: field_live, html: html})}
       end

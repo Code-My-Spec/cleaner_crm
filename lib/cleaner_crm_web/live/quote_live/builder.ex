@@ -11,8 +11,8 @@ defmodule CleanerCrmWeb.QuoteLive.Builder do
 
   ## Routes
 
-    * `/quotes/new` (`:new`) — build and send a new quote.
-    * `/quotes/:id` (`:show`) — a previously sent quote, frozen against
+    * `/app/quotes/new` (`:new`) — build and send a new quote.
+    * `/app/quotes/:id` (`:show`) — a previously sent quote, frozen against
       later rate-card changes.
 
   ## Dependencies
@@ -34,7 +34,7 @@ defmodule CleanerCrmWeb.QuoteLive.Builder do
         {@quote.client_name || "Unnamed lead"}
         <:subtitle>{pricing_model_label(@quote.pricing_model)} quote</:subtitle>
         <:actions>
-          <.button navigate={~p"/quotes"} class="btn-sm btn-ghost">Back to Quotes</.button>
+          <.button navigate={~p"/app/quotes"} class="btn-sm btn-ghost">Back to Quotes</.button>
         </:actions>
       </.header>
 
@@ -268,7 +268,7 @@ defmodule CleanerCrmWeb.QuoteLive.Builder do
     %{current_scope: scope, quote_draft: draft, rate_card: rate_card} = socket.assigns
 
     case Quoting.send_quote(scope, draft, rate_card) do
-      {:ok, quote} -> {:noreply, push_patch(socket, to: ~p"/quotes/#{quote}")}
+      {:ok, quote} -> {:noreply, push_patch(socket, to: ~p"/app/quotes/#{quote}")}
       {:error, :not_finalizable} -> {:noreply, socket}
     end
   end

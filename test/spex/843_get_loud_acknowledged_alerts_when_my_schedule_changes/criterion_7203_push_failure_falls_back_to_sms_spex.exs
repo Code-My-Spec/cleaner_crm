@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7203Spex do
       end
 
       when_ "the system sends the change", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-start-time-input']")
@@ -66,7 +66,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7203Spex do
       end
 
       then_ "it falls back to sending me an SMS with the change details", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(
                  board_live,

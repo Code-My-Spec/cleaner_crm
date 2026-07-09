@@ -17,7 +17,7 @@ defmodule CleanerCrmWeb.TimesheetExportController do
   def show(conn, _params) do
     conn
     |> put_flash(:error, "Choose a pay period to export")
-    |> redirect(to: ~p"/timesheets")
+    |> redirect(to: ~p"/app/timesheets")
   end
 
   defp export(conn, start_date, end_date, period) do
@@ -34,7 +34,7 @@ defmodule CleanerCrmWeb.TimesheetExportController do
       {:error, :unresolved_entries} ->
         conn
         |> put_flash(:error, "Resolve the unresolved time entry before exporting")
-        |> redirect(to: ~p"/timesheets")
+        |> redirect(to: ~p"/app/timesheets")
     end
   end
 end

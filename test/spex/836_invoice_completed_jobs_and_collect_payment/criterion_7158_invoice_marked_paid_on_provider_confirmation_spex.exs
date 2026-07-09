@@ -54,7 +54,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7158Spex do
       end
 
       then_ "the invoice is marked paid", context do
-        {:ok, _invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+        {:ok, _invoice_live, html} = live(context.conn, ~p"/app/invoices/#{context.invoice.id}")
 
         assert html =~ "Paid"
 
@@ -62,7 +62,7 @@ defmodule CleanerCrmSpex.Story836.Criterion7158Spex do
       end
 
       then_ "the owner sees it settled in the billing queue", context do
-        {:ok, _invoices_live, html} = live(context.conn, ~p"/invoices")
+        {:ok, _invoices_live, html} = live(context.conn, ~p"/app/invoices")
 
         assert html =~ context.client.name
         assert html =~ "Paid"

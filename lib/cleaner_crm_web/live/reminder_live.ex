@@ -4,7 +4,7 @@ defmodule CleanerCrmWeb.ReminderLive do
   every send and its status — including failed sends the office needs
   to follow up on.
 
-  Route: `/reminders`.
+  Route: `/app/reminders`.
   """
 
   use CleanerCrmWeb, :live_view

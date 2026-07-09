@@ -45,7 +45,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7165Spex do
             context do
         [task | _] = context.checklist.items
 
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         before_upload =
           file_input(
@@ -96,7 +96,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7165Spex do
 
       then_ "the owner sees the timestamped before/after photos when reviewing the job",
             context do
-        {:ok, review_live, _html} = live(context.owner_conn, ~p"/quality/#{context.job.id}")
+        {:ok, review_live, _html} = live(context.owner_conn, ~p"/app/quality/#{context.job.id}")
 
         assert has_element?(review_live, "[data-test='proof-of-work-photo']")
 

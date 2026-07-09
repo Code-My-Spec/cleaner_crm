@@ -5,7 +5,7 @@ defmodule CleanerCrmWeb.FieldLive.Today do
   door, plus any pending schedule-change alerts and the current
   pay-period earnings summary.
 
-  Route: `/field`, with an optional `?date=` query param to look
+  Route: `/app/field`, with an optional `?date=` query param to look
   ahead at a future day. Lockbox/alarm codes unmask only once the
   real calendar date reaches a job's own scheduled date — never
   earlier, regardless of which day is currently being browsed.
@@ -79,7 +79,7 @@ defmodule CleanerCrmWeb.FieldLive.Today do
           <div class="card-body">
             <div class="flex justify-between items-baseline">
               <span class="font-semibold" data-test="job-start-time">{format_time(job.start_time)}</span>
-              <.link navigate={~p"/field/jobs/#{job.id}"} class="link link-primary text-sm">
+              <.link navigate={~p"/app/field/jobs/#{job.id}"} class="link link-primary text-sm">
                 Open job
               </.link>
             </div>

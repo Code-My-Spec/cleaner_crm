@@ -6,10 +6,10 @@ defmodule CleanerCrmSpex.Story840.Criterion7195Spex do
   that did not change out of the entry entirely.
 
   Assumes `CleanerCrmWeb.ScheduleLive.JobFormComponent` (opened from
-  the board at `/schedule`) exposes a `[data-test='job-<id>-edit-button']`
+  the board at `/app/schedule`) exposes a `[data-test='job-<id>-edit-button']`
   trigger and a `[data-test='job-form']` submitted via `render_submit`
   with an `agreed_price` field. Assumes `CleanerCrmWeb.AuditLive`
-  (`/audit`) renders one `"<Field label>: <old> → <new>"` line per
+  (`/app/audit`) renders one `"<Field label>: <old> → <new>"` line per
   changed field on each `[data-test='audit-entries']` entry, omitting
   any field whose value did not change.
   """
@@ -48,7 +48,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7195Spex do
       end
 
       when_ "Dana changes the price to $140", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-edit-button']")
@@ -62,7 +62,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7195Spex do
       end
 
       then_ "the audit entry shows the price changed from $120.00 to $140.00", context do
-        {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+        {:ok, _audit_live, html} = live(context.conn, ~p"/app/audit")
 
         assert html =~ "Price: $120.00 → $140.00"
 
@@ -70,7 +70,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7195Spex do
       end
 
       then_ "the entry leaves the untouched schedule fields out of the entry", context do
-        {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+        {:ok, _audit_live, html} = live(context.conn, ~p"/app/audit")
 
         refute html =~ "Scheduled date:"
         refute html =~ "Start time:"

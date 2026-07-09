@@ -307,7 +307,7 @@ defmodule CleanerCrmWeb.ScheduleLive.JobFormComponent do
 
     case Scheduling.create_job(socket.assigns.current_scope, params) do
       {:ok, job} ->
-        {:noreply, push_navigate(socket, to: ~p"/schedule/jobs/#{job.id}")}
+        {:noreply, push_navigate(socket, to: ~p"/app/schedule/jobs/#{job.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset, as: :job))}

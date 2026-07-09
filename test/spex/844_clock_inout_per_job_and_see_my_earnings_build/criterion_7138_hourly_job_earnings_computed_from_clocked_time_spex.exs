@@ -57,7 +57,7 @@ defmodule CleanerCrmSpex.Story844.Criterion7138Spex do
       end
 
       when_ "I clock out", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='clock-out-button']")

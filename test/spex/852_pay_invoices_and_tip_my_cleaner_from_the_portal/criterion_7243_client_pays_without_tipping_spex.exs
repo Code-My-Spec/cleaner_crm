@@ -77,7 +77,7 @@ defmodule CleanerCrmSpex.Story852.Criterion7243Spex do
       end
 
       then_ "nothing is added to my cleaner's earnings", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='pay-period-total']", "$0.00")
 

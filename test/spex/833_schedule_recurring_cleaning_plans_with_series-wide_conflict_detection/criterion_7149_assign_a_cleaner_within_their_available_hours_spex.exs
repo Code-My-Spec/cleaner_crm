@@ -46,7 +46,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
 
       when_ "the owner assigns that cleaner a Tuesday 9am job", context do
         {:ok, assign_live, _html} =
-          live(context.conn, ~p"/schedule/jobs/#{context.job_id}/assign")
+          live(context.conn, ~p"/app/schedule/jobs/#{context.job_id}/assign")
 
         assign_live
         |> form("[data-test='assignment-form']", assignment: %{cleaner_id: context.cleaner_id})
@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
       end
 
       then_ "the job is assigned without warning", context do
-        {:ok, job_live, html} = live(context.conn, ~p"/schedule/jobs/#{context.job_id}")
+        {:ok, job_live, html} = live(context.conn, ~p"/app/schedule/jobs/#{context.job_id}")
 
         assert has_element?(job_live, "[data-test='job-cleaner']", "Alex Morgan")
         refute html =~ "conflict"
@@ -75,7 +75,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -86,9 +86,9 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -99,7 +99,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
   end
 
   defp create_cleaner(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -110,7 +110,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7149Spex do
   end
 
   defp create_job(conn, attrs) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/jobs/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/jobs/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

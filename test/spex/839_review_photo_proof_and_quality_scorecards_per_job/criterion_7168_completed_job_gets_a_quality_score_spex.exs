@@ -27,7 +27,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7168Spex do
       end
 
       when_ "the owner reviews the job and rates it four out of five", context do
-        {:ok, review_live, _html} = live(context.conn, ~p"/quality/#{context.job.id}")
+        {:ok, review_live, _html} = live(context.conn, ~p"/app/quality/#{context.job.id}")
 
         html =
           review_live

@@ -34,7 +34,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7143Spex do
 
       given_ "the owner creates a weekly cleaning plan for a property running for 8 weeks",
              context do
-        {:ok, plan_live, _html} = live(context.conn, ~p"/schedule/plans/new")
+        {:ok, plan_live, _html} = live(context.conn, ~p"/app/schedule/plans/new")
 
         plan_live
         |> form("[data-test='plan-form']",
@@ -60,7 +60,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7143Spex do
       end
 
       then_ "8 jobs are created, one on each scheduled date", context do
-        {:ok, _board_live, html} = live(context.conn, ~p"/schedule")
+        {:ok, _board_live, html} = live(context.conn, ~p"/app/schedule")
 
         assert html =~ "8 jobs scheduled"
         assert length(Regex.scan(~r/data-test="job-card"/, html)) == 8
@@ -74,7 +74,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7143Spex do
   defp id_from_path(path), do: path |> String.split("/") |> List.last()
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -85,9 +85,9 @@ defmodule CleanerCrmSpex.Story833.Criterion7143Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -98,7 +98,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7143Spex do
   end
 
   defp create_cleaner(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

@@ -21,6 +21,6 @@ defmodule CleanerCrmWeb.PageControllerTest do
     html = html_response(conn, 200)
 
     assert html =~ "Go to app"
-    assert html =~ ~p"/schedule"
+    assert html =~ ~p"/app/schedule"
   end
 end

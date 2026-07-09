@@ -6,9 +6,9 @@ defmodule CleanerCrmSpex.Story840.Criterion7198Spex do
   delete affordance for any entry, and the entry must remain visible.
 
   Assumes `CleanerCrmWeb.ScheduleLive.JobFormComponent` (opened from
-  the board at `/schedule`) exposes a `[data-test='job-<id>-edit-button']`
+  the board at `/app/schedule`) exposes a `[data-test='job-<id>-edit-button']`
   trigger and a `[data-test='job-form']` submitted via `render_submit`.
-  Assumes `CleanerCrmWeb.AuditLive` (`/audit`) renders every entry
+  Assumes `CleanerCrmWeb.AuditLive` (`/app/audit`) renders every entry
   inside a `[data-test='audit-entries']` container and never renders an
   "Edit" or "Delete" button/link for an entry, regardless of who is
   viewing — there being no such control is the entire point of this
@@ -44,7 +44,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7198Spex do
             end_time: ~T[11:00:00]
           })
 
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{job.id}-edit-button']")
@@ -61,7 +61,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7198Spex do
 
       when_ "the owner opens the audit trail looking for a way to edit or delete that entry",
             context do
-        {:ok, audit_live, _html} = live(context.conn, ~p"/audit")
+        {:ok, audit_live, _html} = live(context.conn, ~p"/app/audit")
 
         {:ok, Map.put(context, :audit_live, audit_live)}
       end

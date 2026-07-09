@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7179Spex do
       end
 
       when_ "Ana files a damage report with a description and a photo", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         photo_upload =
           file_input(job_live, "[data-test='incident-photo-upload']", :photo, [
@@ -77,7 +77,7 @@ defmodule CleanerCrmSpex.Story845.Criterion7179Spex do
 
       then_ "the owner sees the same cleaner attribution and timestamp when reviewing incidents",
             context do
-        {:ok, review_live, html} = live(context.owner_conn, ~p"/quality")
+        {:ok, review_live, html} = live(context.owner_conn, ~p"/app/quality")
 
         assert html =~ context.cleaner.email
         assert has_element?(review_live, "[data-test='incident-report-timestamp']")

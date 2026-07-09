@@ -5,7 +5,7 @@ defmodule CleanerCrmWeb.RequireOfficeRole do
   reminders, and the audit trail — to account owners and admins.
 
   A cleaner (or anyone with no office role on the active account) is
-  redirected to `/field`, their own surface, with an error flash.
+  redirected to `/app/field`, their own surface, with an error flash.
 
   ## Usage
 
@@ -19,7 +19,7 @@ defmodule CleanerCrmWeb.RequireOfficeRole do
           {CleanerCrmWeb.UserAuth, :require_authenticated},
           {CleanerCrmWeb.RequireOfficeRole, :default}
         ] do
-        live "/schedule", ScheduleLive.Index, :index
+        live "/app/schedule", ScheduleLive.Index, :index
         ...
       end
 
@@ -50,7 +50,7 @@ defmodule CleanerCrmWeb.RequireOfficeRole do
     else
       conn
       |> put_flash(:error, "You don't have access to that page.")
-      |> redirect(to: ~p"/field")
+      |> redirect(to: ~p"/app/field")
       |> halt()
     end
   end
@@ -64,7 +64,7 @@ defmodule CleanerCrmWeb.RequireOfficeRole do
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "You don't have access to that page.")
-        |> Phoenix.LiveView.redirect(to: ~p"/field")
+        |> Phoenix.LiveView.redirect(to: ~p"/app/field")
 
       {:halt, socket}
     end

@@ -39,7 +39,7 @@ defmodule CleanerCrmSpex.Story842.Criterion7172Spex do
             context do
         [task | _] = context.checklist.items
 
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         upload =
           file_input(

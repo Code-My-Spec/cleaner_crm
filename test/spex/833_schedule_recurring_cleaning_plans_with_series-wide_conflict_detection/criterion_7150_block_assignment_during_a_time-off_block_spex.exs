@@ -50,7 +50,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
 
       when_ "the owner tries to assign that cleaner a Friday job", context do
         {:ok, assign_live, _html} =
-          live(context.conn, ~p"/schedule/jobs/#{context.job_id}/assign")
+          live(context.conn, ~p"/app/schedule/jobs/#{context.job_id}/assign")
 
         html =
           assign_live
@@ -83,7 +83,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -94,9 +94,9 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -107,7 +107,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
   end
 
   defp create_cleaner(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -118,7 +118,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
   end
 
   defp create_time_off(conn, cleaner_id, date) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/#{cleaner_id}/time-off/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/#{cleaner_id}/time-off/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -131,7 +131,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7150Spex do
   end
 
   defp create_job(conn, attrs) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/jobs/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/jobs/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

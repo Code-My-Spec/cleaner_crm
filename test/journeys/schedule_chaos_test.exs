@@ -3,7 +3,7 @@ defmodule CleanerCrmTest.Journeys.ScheduleChaosTest do
   Journey 3 (.code_my_spec/qa/journey_plan.md): reminders, reschedules,
   cancellations, and the audit trail that reconstructs all of it.
   Confirming/rescheduling/cancelling all happen through the real
-  `/schedule` board; the escalation-window backdate is done directly
+  `/app/schedule` board; the escalation-window backdate is done directly
   through `Repo` here (this test's equivalent of the sanctioned psql
   step from manual QA — same idea, same effect, just against the
   sandboxed test DB instead of dev).
@@ -70,7 +70,7 @@ defmodule CleanerCrmTest.Journeys.ScheduleChaosTest do
     owner_session
     |> visit!("/reminders/confirm/#{reminder_token}")
     |> assert_has(css("body", text: "Confirmed"))
-    |> visit!("/schedule")
+    |> visit!("/app/schedule")
     |> assert_has(job_row(reminder_job.id, "Confirmed"))
 
     # Step 2: reschedule a different job's start time via the board's
@@ -87,13 +87,13 @@ defmodule CleanerCrmTest.Journeys.ScheduleChaosTest do
     cleaner_session = log_in(cleaner_session, cleaner, password)
 
     cleaner_session
-    |> visit!("/field")
+    |> visit!("/app/field")
     |> assert_has(css("[data-test='schedule-alert']"))
     |> click(css("[data-test$='-acknowledge-button']"))
     |> settle()
 
     owner_session
-    |> visit!("/schedule")
+    |> visit!("/app/schedule")
     |> assert_has(job_row(reschedule_job.id, "Acknowledged"))
 
     # Step 4: cancel a job — it stays visible with a Cancelled badge
@@ -117,7 +117,7 @@ defmodule CleanerCrmTest.Journeys.ScheduleChaosTest do
       |> CleanerCrm.Repo.update()
 
     owner_session
-    |> visit!("/schedule")
+    |> visit!("/app/schedule")
     |> assert_has(job_row(cancel_job.id, "Escalated"))
 
     # Step 6: the audit trail reconstructs the reschedule and
@@ -125,7 +125,7 @@ defmodule CleanerCrmTest.Journeys.ScheduleChaosTest do
     # select's option value is the user's id, not their email (see
     # `actor_options/1` in audit_live.ex).
     owner_session
-    |> visit!("/audit")
+    |> visit!("/app/audit")
     |> set_field("#filter_actor", to_string(owner.id))
     |> set_field("#filter_subject_type", "Job")
     |> settle()

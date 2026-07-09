@@ -4,7 +4,7 @@ defmodule CleanerCrmWeb.ScheduleLive.Index do
   called out separately, inline reassignment, and inline job
   creation/editing/rescheduling/cancellation per job.
 
-  Route: `/schedule`. Always shows the week containing today — there
+  Route: `/app/schedule`. Always shows the week containing today — there
   is no week navigation yet.
   """
 

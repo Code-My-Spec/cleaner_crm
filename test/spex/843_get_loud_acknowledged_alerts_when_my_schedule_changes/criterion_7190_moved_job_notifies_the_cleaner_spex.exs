@@ -46,7 +46,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7190Spex do
       end
 
       when_ "the office moves that job to 3:00 PM", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-start-time-input']")
@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7190Spex do
       end
 
       then_ "I receive a notification describing the change from 1:00 PM to 3:00 PM", context do
-        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='schedule-alert']")
         assert html =~ "1:00 PM"

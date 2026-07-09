@@ -44,7 +44,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7191Spex do
       end
 
       when_ "the office cancels that job", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-cancel-button']")
@@ -54,7 +54,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7191Spex do
       end
 
       then_ "I receive a notification that the job has been cancelled", context do
-        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='schedule-alert']")
         assert html =~ "Cancelled"

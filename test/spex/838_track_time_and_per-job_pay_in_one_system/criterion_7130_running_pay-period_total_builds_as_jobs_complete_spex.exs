@@ -55,7 +55,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7130Spex do
       end
 
       when_ "the owner opens the timesheet for the current pay period", context do
-        {:ok, timesheet_live, html} = live(context.conn, ~p"/timesheets")
+        {:ok, timesheet_live, html} = live(context.conn, ~p"/app/timesheets")
 
         {:ok, Map.merge(context, %{timesheet_live: timesheet_live, timesheet_html: html})}
       end
@@ -84,7 +84,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7130Spex do
       end
 
       then_ "the running total grows to include the new job", context do
-        {:ok, _timesheet_live, html} = live(context.conn, ~p"/timesheets")
+        {:ok, _timesheet_live, html} = live(context.conn, ~p"/app/timesheets")
 
         assert html =~ "$142.50"
 

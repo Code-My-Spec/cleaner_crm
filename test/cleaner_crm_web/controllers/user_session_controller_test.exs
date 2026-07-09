@@ -23,10 +23,10 @@ defmodule CleanerCrmWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu. "/" is a
       # public marketing page with no account chrome by design, so
       # this checks an authenticated app page instead.
-      conn = get(conn, ~p"/users/settings")
+      conn = get(conn, ~p"/app/users/settings")
       response = html_response(conn, 200)
       assert response =~ user.email
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/app/users/settings"
       assert response =~ ~p"/users/log-out"
     end
 
@@ -89,10 +89,10 @@ defmodule CleanerCrmWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu. "/" is a
       # public marketing page with no account chrome by design, so
       # this checks an authenticated app page instead.
-      conn = get(conn, ~p"/users/settings")
+      conn = get(conn, ~p"/app/users/settings")
       response = html_response(conn, 200)
       assert response =~ user.email
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/app/users/settings"
       assert response =~ ~p"/users/log-out"
     end
 
@@ -115,10 +115,10 @@ defmodule CleanerCrmWeb.UserSessionControllerTest do
       # Now do a logged in request and assert on the menu. "/" is a
       # public marketing page with no account chrome by design, so
       # this checks an authenticated app page instead.
-      conn = get(conn, ~p"/users/settings")
+      conn = get(conn, ~p"/app/users/settings")
       response = html_response(conn, 200)
       assert response =~ user.email
-      assert response =~ ~p"/users/settings"
+      assert response =~ ~p"/app/users/settings"
       assert response =~ ~p"/users/log-out"
     end
 

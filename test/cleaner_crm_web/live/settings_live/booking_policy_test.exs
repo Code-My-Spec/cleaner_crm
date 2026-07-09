@@ -30,7 +30,7 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
   test "renders the account's current policy, defaulting to zero fees when unset", %{conn: conn} do
     scope = scope_fixture()
 
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/settings/booking")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/settings/booking")
 
     assert has_element?(lv, "[data-test='notice-window-input']")
     assert has_element?(lv, "[data-test='late-fee-input']")
@@ -40,7 +40,7 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
 
   test "saves notice window, fees, and policy text, converting dollars to cents", %{conn: conn} do
     scope = scope_fixture()
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/settings/booking")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/settings/booking")
 
     lv
     |> form("[data-test='cancellation-policy-form']",
@@ -71,7 +71,7 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
         same_day_fee_cents: 5_000
       })
 
-    {:ok, lv, html} = live(log_in(conn, scope), ~p"/settings/booking")
+    {:ok, lv, html} = live(log_in(conn, scope), ~p"/app/settings/booking")
 
     assert html =~ "value=\"10\""
     assert html =~ "value=\"50\""
@@ -87,7 +87,7 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
 
   test "rejects a negative notice window", %{conn: conn} do
     scope = scope_fixture()
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/settings/booking")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/settings/booking")
 
     html =
       lv

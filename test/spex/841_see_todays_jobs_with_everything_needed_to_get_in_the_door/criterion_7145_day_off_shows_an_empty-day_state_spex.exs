@@ -36,7 +36,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7145Spex do
       end
 
       when_ "I open the day view", context do
-        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/app/field")
 
         {:ok, Map.merge(context, %{today_live: today_live, html: html})}
       end

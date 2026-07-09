@@ -22,7 +22,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7114Spex do
   spex "switching pricing model clears the other model's inputs" do
     scenario "per-room line items are cleared and the quote is priced only on hours" do
       given_ "the owner has started a per-room quote with rooms entered", context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         quote_live
         |> form("[data-test='quote-form']",

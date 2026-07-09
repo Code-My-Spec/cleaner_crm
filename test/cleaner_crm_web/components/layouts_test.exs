@@ -3,7 +3,7 @@ defmodule CleanerCrmWeb.LayoutsTest do
   Covers the role-aware app nav built for the UI/navigation pass: an
   office role (owner/admin) gets the full grouped nav, everyone else
   signed in gets just "My Day" — and the two must never both render.
-  `/field` is reachable by both roles, so it's the one route these
+  `/app/field` is reachable by both roles, so it's the one route these
   tests can share.
   """
 
@@ -36,20 +36,20 @@ defmodule CleanerCrmWeb.LayoutsTest do
 
     test "an owner sees the office nav, not the cleaner's My Day link",
          %{conn: conn, owner: owner} do
-      {:ok, _view, html} = conn |> log_in_user(owner) |> live(~p"/field")
+      {:ok, _view, html} = conn |> log_in_user(owner) |> live(~p"/app/field")
 
       assert html =~ ~s(data-test="office-nav")
-      assert html =~ ~p"/schedule"
+      assert html =~ ~p"/app/schedule"
       assert html =~ "Field view"
       refute html =~ ~s(data-test="cleaner-nav")
     end
 
     test "a cleaner sees only My Day, no office nav", %{conn: conn, member: member} do
-      {:ok, _view, html} = conn |> log_in_user(member) |> live(~p"/field")
+      {:ok, _view, html} = conn |> log_in_user(member) |> live(~p"/app/field")
 
       assert html =~ ~s(data-test="cleaner-nav")
       refute html =~ ~s(data-test="office-nav")
-      refute html =~ ~p"/schedule"
+      refute html =~ ~p"/app/schedule"
     end
   end
 end

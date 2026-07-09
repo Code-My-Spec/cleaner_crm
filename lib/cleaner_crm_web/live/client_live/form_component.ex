@@ -78,7 +78,7 @@ defmodule CleanerCrmWeb.ClientLive.FormComponent do
   defp save_client(socket, :new, params) do
     case Clients.create_client(socket.assigns.current_scope, params) do
       {:ok, client} ->
-        {:noreply, push_navigate(socket, to: ~p"/clients/#{client}")}
+        {:noreply, push_navigate(socket, to: ~p"/app/clients/#{client}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}
@@ -88,7 +88,7 @@ defmodule CleanerCrmWeb.ClientLive.FormComponent do
   defp save_client(socket, :edit, params) do
     case Clients.update_client(socket.assigns.current_scope, socket.assigns.client, params) do
       {:ok, client} ->
-        {:noreply, push_navigate(socket, to: ~p"/clients/#{client}")}
+        {:noreply, push_navigate(socket, to: ~p"/app/clients/#{client}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :form, to_form(changeset))}

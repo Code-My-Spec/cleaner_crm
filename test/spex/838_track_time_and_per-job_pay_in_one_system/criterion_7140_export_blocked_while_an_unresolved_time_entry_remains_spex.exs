@@ -43,7 +43,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7140Spex do
       given_ "the cleaner clocked in on the job but never clocked out", context do
         cleaner_conn = Fixtures.log_in_user(Phoenix.ConnTest.build_conn(), context.cleaner)
 
-        {:ok, job_live, _html} = live(cleaner_conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(cleaner_conn, ~p"/app/field/jobs/#{context.job.id}")
 
         job_live
         |> element("[data-test='clock-in-button']")
@@ -53,7 +53,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7140Spex do
       end
 
       when_ "the owner attempts to export the pay period containing that job", context do
-        {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/timesheets")
+        {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/app/timesheets")
 
         {:ok, Map.merge(context, %{timesheet_live: timesheet_live, timesheet_html: html})}
       end

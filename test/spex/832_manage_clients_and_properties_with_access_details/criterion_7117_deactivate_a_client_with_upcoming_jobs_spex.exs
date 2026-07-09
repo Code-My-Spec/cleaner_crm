@@ -49,7 +49,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7117Spex do
       end
 
       then_ "the client is marked inactive and hidden from active lists", context do
-        {:ok, _index_live, html} = live(context.conn, ~p"/clients")
+        {:ok, _index_live, html} = live(context.conn, ~p"/app/clients")
         refute html =~ "Morgan Reyes"
 
         {:ok, context}
@@ -67,7 +67,7 @@ defmodule CleanerCrmSpex.Story832.Criterion7117Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -78,9 +78,9 @@ defmodule CleanerCrmSpex.Story832.Criterion7117Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -91,9 +91,9 @@ defmodule CleanerCrmSpex.Story832.Criterion7117Spex do
   end
 
   defp schedule_job(conn, property_path, scheduled_date) do
-    "/properties/" <> property_id = property_path
+    "/app/properties/" <> property_id = property_path
 
-    {:ok, schedule_live, _html} = live(conn, ~p"/schedule")
+    {:ok, schedule_live, _html} = live(conn, ~p"/app/schedule")
 
     schedule_live
     |> element("[data-test='new-job-button']")

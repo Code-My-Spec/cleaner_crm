@@ -71,7 +71,7 @@ defmodule CleanerCrmSpex.Story851.Criterion7225Spex do
       end
 
       then_ "the assigned cleaner receives a schedule-change alert", context do
-        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='schedule-alert']")
         assert html =~ "1:00 PM"
@@ -81,7 +81,7 @@ defmodule CleanerCrmSpex.Story851.Criterion7225Spex do
       end
 
       then_ "the office sees it as unacknowledged on the schedule board", context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         assert has_element?(
                  board_live,

@@ -5,7 +5,7 @@ defmodule CleanerCrmWeb.ReviewLive.Index do
   public or private so a complaint routed away from publication still
   reaches the owner.
 
-  Route: `/reviews`.
+  Route: `/app/reviews`.
 
   ## Dependencies
 

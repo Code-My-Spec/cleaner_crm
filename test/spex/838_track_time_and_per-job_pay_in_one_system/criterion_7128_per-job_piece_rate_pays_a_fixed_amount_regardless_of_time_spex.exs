@@ -54,7 +54,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7128Spex do
       end
 
       when_ "the owner opens the timesheet", context do
-        {:ok, timesheet_live, html} = live(context.conn, ~p"/timesheets")
+        {:ok, timesheet_live, html} = live(context.conn, ~p"/app/timesheets")
 
         {:ok, Map.merge(context, %{timesheet_live: timesheet_live, timesheet_html: html})}
       end

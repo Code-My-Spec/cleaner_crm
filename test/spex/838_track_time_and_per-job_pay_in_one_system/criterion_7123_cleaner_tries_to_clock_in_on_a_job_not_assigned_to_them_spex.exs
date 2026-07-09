@@ -48,13 +48,13 @@ defmodule CleanerCrmSpex.Story838.Criterion7123Spex do
 
       when_ "Ben attempts to open Ana's job to clock in", context do
         {:error, {:redirect, %{to: path, flash: flash}}} =
-          live(context.conn, ~p"/field/jobs/#{context.job.id}")
+          live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         {:ok, Map.merge(context, %{redirect_path: path, redirect_flash: flash})}
       end
 
       then_ "Ben is redirected away with an error explaining the job isn't his", context do
-        assert context.redirect_path == ~p"/field"
+        assert context.redirect_path == ~p"/app/field"
         assert context.redirect_flash["error"] =~ "not assigned"
 
         {:ok, context}
@@ -63,7 +63,7 @@ defmodule CleanerCrmSpex.Story838.Criterion7123Spex do
       then_ "the job still shows no time recorded for its assigned cleaner Ana", context do
         ana_conn = Fixtures.log_in_user(Phoenix.ConnTest.build_conn(), context.ana)
 
-        {:ok, ana_job_live, _html} = live(ana_conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, ana_job_live, _html} = live(ana_conn, ~p"/app/field/jobs/#{context.job.id}")
 
         assert has_element?(ana_job_live, "[data-test='clock-in-button']")
         refute has_element?(ana_job_live, "[data-test='clock-out-button']")

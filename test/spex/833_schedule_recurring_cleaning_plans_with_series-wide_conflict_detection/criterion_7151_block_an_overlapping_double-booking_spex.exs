@@ -56,7 +56,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7151Spex do
       when_ "the owner tries to assign that cleaner another job from 11am to 1pm the same day",
             context do
         {:ok, assign_live, _html} =
-          live(context.conn, ~p"/schedule/jobs/#{context.second_job_id}/assign")
+          live(context.conn, ~p"/app/schedule/jobs/#{context.second_job_id}/assign")
 
         html =
           assign_live
@@ -78,7 +78,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7151Spex do
   defp id_from_path(path), do: path |> String.split("/") |> List.last()
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -89,9 +89,9 @@ defmodule CleanerCrmSpex.Story833.Criterion7151Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -102,7 +102,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7151Spex do
   end
 
   defp create_cleaner(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -113,7 +113,7 @@ defmodule CleanerCrmSpex.Story833.Criterion7151Spex do
   end
 
   defp create_job(conn, attrs) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/jobs/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/jobs/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

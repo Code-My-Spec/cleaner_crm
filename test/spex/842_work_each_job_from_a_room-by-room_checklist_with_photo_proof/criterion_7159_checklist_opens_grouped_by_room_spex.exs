@@ -42,7 +42,7 @@ defmodule CleanerCrmSpex.Story842.Criterion7159Spex do
       end
 
       when_ "Ana opens her job", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         {:ok, Map.put(context, :job_live, job_live)}
       end

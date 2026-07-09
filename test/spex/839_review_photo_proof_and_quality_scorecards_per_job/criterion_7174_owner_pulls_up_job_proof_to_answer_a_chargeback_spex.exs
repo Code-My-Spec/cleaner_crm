@@ -27,7 +27,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7174Spex do
       end
 
       when_ "the owner opens the completed job to answer the chargeback", context do
-        {:ok, review_live, html} = live(context.conn, ~p"/quality/#{context.job.id}")
+        {:ok, review_live, html} = live(context.conn, ~p"/app/quality/#{context.job.id}")
 
         {:ok, Map.merge(context, %{review_live: review_live, review_html: html})}
       end

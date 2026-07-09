@@ -42,7 +42,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7161Spex do
       end
 
       when_ "Ana checks off every task on the checklist, including the optional one", context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         Enum.each(context.checklist.items, fn item ->
           job_live
@@ -68,7 +68,7 @@ defmodule CleanerCrmSpex.Story839.Criterion7161Spex do
       end
 
       then_ "the owner sees every task checked off when reviewing the job", context do
-        {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality/#{context.job.id}")
+        {:ok, _review_live, html} = live(context.owner_conn, ~p"/app/quality/#{context.job.id}")
 
         for item <- context.checklist.items do
           assert html =~ item.task

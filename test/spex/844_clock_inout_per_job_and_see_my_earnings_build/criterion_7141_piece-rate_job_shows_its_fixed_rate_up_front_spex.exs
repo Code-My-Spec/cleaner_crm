@@ -40,7 +40,7 @@ defmodule CleanerCrmSpex.Story844.Criterion7141Spex do
       end
 
       when_ "I open the job before starting", context do
-        {:ok, job_live, html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         {:ok, Map.merge(context, %{job_live: job_live, html: html})}
       end

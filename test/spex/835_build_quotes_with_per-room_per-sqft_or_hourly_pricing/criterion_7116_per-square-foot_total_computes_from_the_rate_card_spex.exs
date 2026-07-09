@@ -22,7 +22,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7116Spex do
   spex "per-square-foot total computes from the rate card" do
     scenario "the quote total is calculated from the saved per-sqft rate" do
       given_ "the owner's rate card has a per-square-foot rate of $0.10", context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         quote_live
         |> form("[data-test='rate-card-form']", rate_card: %{per_sqft_rate_cents: 10})

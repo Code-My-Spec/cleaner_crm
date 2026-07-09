@@ -49,13 +49,13 @@ defmodule CleanerCrmSpex.Story844.Criterion7129Spex do
 
       when_ "I attempt to open that job", context do
         {:error, {:redirect, %{to: path, flash: flash}}} =
-          live(context.conn, ~p"/field/jobs/#{context.job.id}")
+          live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         {:ok, Map.merge(context, %{redirect_path: path, redirect_flash: flash})}
       end
 
       then_ "I am redirected away and cannot see the job at all", context do
-        assert context.redirect_path == ~p"/field"
+        assert context.redirect_path == ~p"/app/field"
         assert context.redirect_flash["error"] =~ "not assigned"
 
         {:ok, context}

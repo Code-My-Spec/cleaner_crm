@@ -86,10 +86,10 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
   end
 
   test "new form saves a template", %{conn: conn, property: property} do
-    {:ok, _index_live, html} = live(conn, ~p"/quality/templates")
+    {:ok, _index_live, html} = live(conn, ~p"/app/quality/templates")
     assert html =~ "No checklist templates yet."
 
-    {:ok, new_live, _html} = live(conn, ~p"/quality/templates/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/quality/templates/new")
 
     submit_result =
       new_live
@@ -98,7 +98,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
       )
       |> render_submit()
 
-    {:ok, _index_live2, html2} = follow_redirect(submit_result, conn, ~p"/quality/templates")
+    {:ok, _index_live2, html2} = follow_redirect(submit_result, conn, ~p"/app/quality/templates")
     assert html2 =~ "Standard Clean"
     assert html2 =~ property.service_address
   end
@@ -108,7 +108,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
     scope: scope,
     property: property
   } do
-    {:ok, new_live, _html} = live(conn, ~p"/quality/templates/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/quality/templates/new")
 
     refute has_element?(new_live, "[data-test='template-item-0']")
 
@@ -135,7 +135,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
       )
       |> render_submit()
 
-    {:ok, _index_live2, _html2} = follow_redirect(submit_result, conn, ~p"/quality/templates")
+    {:ok, _index_live2, _html2} = follow_redirect(submit_result, conn, ~p"/app/quality/templates")
 
     [template] = Quality.list_checklist_templates(scope)
     assert length(template.items) == 1
@@ -157,7 +157,7 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
         }
       })
 
-    {:ok, edit_live, edit_html} = live(conn, ~p"/quality/templates/#{template.id}/edit")
+    {:ok, edit_live, edit_html} = live(conn, ~p"/app/quality/templates/#{template.id}/edit")
     assert edit_html =~ "Wipe counters"
     assert edit_html =~ "Sanitize"
     assert has_element?(edit_live, "[data-test='template-item-0']")
@@ -168,7 +168,8 @@ defmodule CleanerCrmWeb.QualityLive.TemplatesTest do
       |> form("[data-test='checklist-template-form']", template: %{"items_drop" => ["1"]})
       |> render_submit()
 
-    {:ok, _index_live, _html} = follow_redirect(edit_submit_result, conn, ~p"/quality/templates")
+    {:ok, _index_live, _html} =
+      follow_redirect(edit_submit_result, conn, ~p"/app/quality/templates")
 
     reloaded = Quality.get_checklist_template!(scope, template.id)
 

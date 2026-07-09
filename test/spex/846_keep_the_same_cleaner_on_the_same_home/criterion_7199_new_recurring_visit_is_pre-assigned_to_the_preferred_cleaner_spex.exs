@@ -7,7 +7,7 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
   manually assigning each one.
 
   Assumes `CleanerCrmWeb.ScheduleLive.PlanFormComponent` (opened from
-  `/schedule/plans/new`, per story 833's own specs) exposes a
+  `/app/schedule/plans/new`, per story 833's own specs) exposes a
   `[data-test='plan-form']` whose `cleaner_id` field designates the
   plan's preferred cleaner and a `[data-test='save-plan-button']` that
   saves the plan and materializes every occurrence immediately, per
@@ -43,7 +43,7 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
 
       when_ "the owner creates a 3-visit weekly recurring plan without assigning each visit",
             context do
-        {:ok, plan_live, _html} = live(context.conn, ~p"/schedule/plans/new")
+        {:ok, plan_live, _html} = live(context.conn, ~p"/app/schedule/plans/new")
 
         plan_live
         |> form("[data-test='plan-form']",
@@ -65,7 +65,7 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
       end
 
       then_ "all 3 generated visits are pre-assigned to Alex Morgan", context do
-        {:ok, board_live, html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, html} = live(context.conn, ~p"/app/schedule")
 
         visit_job_ids = job_ids(html)
 
@@ -94,7 +94,7 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
   end
 
   defp create_client(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/clients/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -105,9 +105,9 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live
@@ -118,7 +118,7 @@ defmodule CleanerCrmSpex.Story846.Criterion7199Spex do
   end
 
   defp create_cleaner(conn, name) do
-    {:ok, new_live, _html} = live(conn, ~p"/schedule/cleaners/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/schedule/cleaners/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

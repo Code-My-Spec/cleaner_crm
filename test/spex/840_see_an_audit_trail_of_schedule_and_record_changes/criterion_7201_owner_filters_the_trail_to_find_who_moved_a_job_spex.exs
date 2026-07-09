@@ -5,9 +5,9 @@ defmodule CleanerCrmSpex.Story840.Criterion7201Spex do
   owner narrows the audit trail to one record over a date range and
   sees which user deleted or moved it, and when.
 
-  Assumes `CleanerCrmWeb.ScheduleLive.Board` (`/schedule`) exposes a
+  Assumes `CleanerCrmWeb.ScheduleLive.Board` (`/app/schedule`) exposes a
   `[data-test='job-<id>-delete-button']` per job card. Assumes
-  `CleanerCrmWeb.AuditLive` (`/audit`) renders a
+  `CleanerCrmWeb.AuditLive` (`/app/audit`) renders a
   `[data-test='audit-filter-form']` with `subject_id`, `date_from`, and
   `date_to` fields (submitted via `render_change`) that narrows the
   `[data-test='audit-entries']` list to matching entries.
@@ -47,7 +47,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7201Spex do
 
       given_ "the client complains the job vanished, because Dana deleted it from the board",
              context do
-        {:ok, board_live, _html} = live(context.conn, ~p"/schedule")
+        {:ok, board_live, _html} = live(context.conn, ~p"/app/schedule")
 
         board_live
         |> element("[data-test='job-#{context.job.id}-delete-button']")
@@ -57,7 +57,7 @@ defmodule CleanerCrmSpex.Story840.Criterion7201Spex do
       end
 
       when_ "the owner filters the audit trail to that job over the past week", context do
-        {:ok, audit_live, _html} = live(context.conn, ~p"/audit")
+        {:ok, audit_live, _html} = live(context.conn, ~p"/app/audit")
 
         audit_live
         |> form("[data-test='audit-filter-form']",

@@ -18,7 +18,7 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
 
   ## Route
 
-    * `/settings/booking` (`:edit`) — office-only, gated the same as
+    * `/app/settings/booking` (`:edit`) — office-only, gated the same as
       every other office surface (`CleanerCrmWeb.RequireOfficeRole`).
 
   ## Dependencies

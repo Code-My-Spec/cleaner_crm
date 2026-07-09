@@ -19,13 +19,13 @@ defmodule CleanerCrmWeb.QuoteLive.Index do
         Quotes
         <:subtitle>Price and send quotes from your rate card</:subtitle>
         <:actions>
-          <.button navigate={~p"/quotes/rate-card"} class="btn-sm btn-ghost">
+          <.button navigate={~p"/app/quotes/rate-card"} class="btn-sm btn-ghost">
             Rate Card
           </.button>
-          <.button navigate={~p"/settings/booking"} class="btn-sm btn-ghost">
+          <.button navigate={~p"/app/settings/booking"} class="btn-sm btn-ghost">
             Cancellation Policy
           </.button>
-          <.button navigate={~p"/quotes/new"} variant="primary">
+          <.button navigate={~p"/app/quotes/new"} variant="primary">
             <.icon name="hero-plus" class="size-4 mr-1" /> New Quote
           </.button>
         </:actions>
@@ -43,7 +43,7 @@ defmodule CleanerCrmWeb.QuoteLive.Index do
           <span class="badge" data-test="quote-status">{status_label(quote.status)}</span>
         </:col>
         <:action :let={quote}>
-          <.link navigate={~p"/quotes/#{quote}"} class="btn btn-sm btn-ghost">View</.link>
+          <.link navigate={~p"/app/quotes/#{quote}"} class="btn btn-sm btn-ghost">View</.link>
         </:action>
       </.table>
     </Layouts.app>

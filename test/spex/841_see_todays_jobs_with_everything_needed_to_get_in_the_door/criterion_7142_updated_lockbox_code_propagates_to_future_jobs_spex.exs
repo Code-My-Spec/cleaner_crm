@@ -42,7 +42,7 @@ defmodule CleanerCrmSpex.Story841.Criterion7142Spex do
         client = Fixtures.client_fixture(context.scope)
 
         property_path =
-          create_property(context.conn, "/clients/#{client.id}", %{
+          create_property(context.conn, "/app/clients/#{client.id}", %{
             service_address: "45 Elm St",
             lockbox_code: "4821"
           })
@@ -86,7 +86,8 @@ defmodule CleanerCrmSpex.Story841.Criterion7142Spex do
       end
 
       when_ "the office updates that property's lockbox code", context do
-        {:ok, edit_live, _html} = live(context.conn, ~p"/properties/#{context.property_id}/edit")
+        {:ok, edit_live, _html} =
+          live(context.conn, ~p"/app/properties/#{context.property_id}/edit")
 
         {:error, {:live_redirect, %{to: _path}}} =
           edit_live
@@ -98,13 +99,13 @@ defmodule CleanerCrmSpex.Story841.Criterion7142Spex do
 
       then_ "today's job reveals the new code and future jobs carry it forward without exposing any code early",
             context do
-        {:ok, today_live, today_html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, today_html} = live(context.cleaner_conn, ~p"/app/field")
 
         {:ok, _monday_live, monday_html} =
-          live(context.cleaner_conn, ~p"/field?date=#{context.next_monday}")
+          live(context.cleaner_conn, ~p"/app/field?date=#{context.next_monday}")
 
         {:ok, _thursday_live, thursday_html} =
-          live(context.cleaner_conn, ~p"/field?date=#{context.next_thursday}")
+          live(context.cleaner_conn, ~p"/app/field?date=#{context.next_thursday}")
 
         assert has_element?(today_live, "[data-test='job-lockbox-code']", "9077")
         refute today_html =~ "4821"
@@ -119,9 +120,9 @@ defmodule CleanerCrmSpex.Story841.Criterion7142Spex do
   end
 
   defp create_property(conn, client_path, attrs) do
-    "/clients/" <> client_id = client_path
+    "/app/clients/" <> client_id = client_path
 
-    {:ok, new_live, _html} = live(conn, ~p"/clients/#{client_id}/properties/new")
+    {:ok, new_live, _html} = live(conn, ~p"/app/clients/#{client_id}/properties/new")
 
     {:error, {:live_redirect, %{to: path}}} =
       new_live

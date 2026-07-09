@@ -42,7 +42,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
         add_on_rates_cents: %{"inside_fridge" => 1500}
       })
 
-    {:ok, lv, html} = live(log_in(conn, scope), ~p"/quotes/rate-card")
+    {:ok, lv, html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
 
     assert html =~ "35"
     assert has_element?(lv, "[data-test='per-room-bedroom-rate-input']")
@@ -53,7 +53,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
 
   test "saves base rates and frequency discounts, converting dollars to cents", %{conn: conn} do
     scope = scope_fixture()
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/quotes/rate-card")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
 
     lv
     |> form("[data-test='rate-card-form']",
@@ -84,7 +84,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
     conn: conn
   } do
     scope = scope_fixture()
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/quotes/rate-card")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
 
     refute has_element?(lv, "[data-test='add-on-row-0']")
 
@@ -110,7 +110,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
         add_on_rates_cents: %{"inside_fridge" => 1500}
       })
 
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/quotes/rate-card")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
     assert has_element?(lv, "[data-test='add-on-row-0']")
 
     lv |> element("[data-test='remove-add-on-0']") |> render_click()
@@ -126,7 +126,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
 
   test "rejects a named add-on left unpriced", %{conn: conn} do
     scope = scope_fixture()
-    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/quotes/rate-card")
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
 
     lv |> element("[data-test='add-add-on-button']") |> render_click()
 

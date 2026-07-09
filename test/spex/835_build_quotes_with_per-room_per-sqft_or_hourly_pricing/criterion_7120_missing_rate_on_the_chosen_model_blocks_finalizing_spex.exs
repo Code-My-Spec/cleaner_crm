@@ -22,7 +22,7 @@ defmodule CleanerCrmSpex.Story835.Criterion7120Spex do
   spex "missing rate on the chosen model blocks finalizing" do
     scenario "finalizing is blocked and the owner is prompted to set the missing rate" do
       given_ "the owner's rate card has no rate configured for the hourly model", context do
-        {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+        {:ok, quote_live, _html} = live(context.conn, ~p"/app/quotes/new")
 
         {:ok, Map.put(context, :quote_live, quote_live)}
       end

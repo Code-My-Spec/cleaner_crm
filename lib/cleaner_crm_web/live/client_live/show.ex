@@ -9,12 +9,12 @@ defmodule CleanerCrmWeb.ClientLive.Show do
 
   ## Routes
 
-    * `/clients/:id` (`:show`) and `/clients/:id/edit` (`:edit`) — the
+    * `/app/clients/:id` (`:show`) and `/app/clients/:id/edit` (`:edit`) — the
       client and its properties.
-    * `/clients/:id/properties/new` (`:new_client_property`) and
-      `/properties/new` (`:new_property`) — add a property, with or
+    * `/app/clients/:id/properties/new` (`:new_client_property`) and
+      `/app/properties/new` (`:new_property`) — add a property, with or
       without a preselected client.
-    * `/properties/:id` (`:show_property`) and `/properties/:id/edit`
+    * `/app/properties/:id` (`:show_property`) and `/app/properties/:id/edit`
       (`:edit_property`) — a single property's access details and
       change history.
 
@@ -37,7 +37,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
         {@client.name}
         <:subtitle :if={!@client.active}>Inactive</:subtitle>
         <:actions>
-          <.button navigate={~p"/clients/#{@client}/edit"} class="btn-sm btn-ghost">Edit</.button>
+          <.button navigate={~p"/app/clients/#{@client}/edit"} class="btn-sm btn-ghost">Edit</.button>
           <.button
             :if={@client.active}
             phx-click={show_confirm("deactivate-client-dialog")}
@@ -91,7 +91,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
       <.header>
         Properties
         <:actions>
-          <.button navigate={~p"/clients/#{@client}/properties/new"} class="btn-sm">
+          <.button navigate={~p"/app/clients/#{@client}/properties/new"} class="btn-sm">
             <.icon name="hero-plus" class="size-4 mr-1" /> Add Property
           </.button>
         </:actions>
@@ -104,7 +104,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
       <ul :if={Enum.any?(@properties)} class="list">
         <li :for={property <- @properties} class="list-row">
           <div class="list-col-grow">
-            <.link navigate={~p"/properties/#{property}"} class="font-semibold link">
+            <.link navigate={~p"/app/properties/#{property}"} class="font-semibold link">
               {property.service_address}
             </.link>
           </div>
@@ -133,7 +133,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
         <p>
           <span class="text-base-content/70">Client:</span>
           <.link
-            navigate={~p"/clients/#{@client}"}
+            navigate={~p"/app/clients/#{@client}"}
             data-test="property-client"
             class="link font-semibold"
           >
@@ -166,7 +166,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
         </div>
 
         <div class="flex justify-end">
-          <.button navigate={~p"/properties/#{@property}/edit"} class="btn-sm">
+          <.button navigate={~p"/app/properties/#{@property}/edit"} class="btn-sm">
             Edit Property
           </.button>
         </div>
@@ -281,7 +281,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
         {:noreply,
          socket
          |> put_flash(:info, "Client deleted successfully")
-         |> push_navigate(to: ~p"/clients")}
+         |> push_navigate(to: ~p"/app/clients")}
 
       {:error, :has_upcoming_jobs} ->
         {:noreply,
@@ -295,7 +295,7 @@ defmodule CleanerCrmWeb.ClientLive.Show do
 
   @impl true
   def handle_info({PropertyFormComponent, {:saved, property}}, socket) do
-    {:noreply, push_navigate(socket, to: ~p"/properties/#{property}")}
+    {:noreply, push_navigate(socket, to: ~p"/app/properties/#{property}")}
   end
 
   defp property_header(:new_client_property, %{client: client}),

@@ -54,13 +54,13 @@ defmodule CleanerCrmSpex.Story843.Criterion7194Spex do
       end
 
       when_ "I close the app without acknowledging it", context do
-        {:ok, _today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, _today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         {:ok, context}
       end
 
       then_ "the change remains pending", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='schedule-alert-#{context.notification.id}']")
 
@@ -68,7 +68,7 @@ defmodule CleanerCrmSpex.Story843.Criterion7194Spex do
       end
 
       then_ "I am prompted about it again when I next open the app", context do
-        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+        {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/app/field")
 
         assert has_element?(today_live, "[data-test='schedule-alert-#{context.notification.id}']")
 

@@ -37,7 +37,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
 
     owner_session =
       owner_session
-      |> visit!("/clients/new")
+      |> visit!("/app/clients/new")
       |> set_field("#client_name", "Journey1 QA Client")
       |> check_field("#client_card_on_file")
       |> click(button("Save Client"))
@@ -56,7 +56,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
 
     owner_session =
       owner_session
-      |> visit!("/quality/templates/new")
+      |> visit!("/app/quality/templates/new")
       |> set_field("#template_name", "Journey1 Standard Clean")
       |> set_field("#template_property_id", property_id)
       |> check_field("[data-test='add-template-item-button'] input")
@@ -68,7 +68,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
       |> assert_has(css("table", text: "Journey1 Standard Clean"))
 
     owner_session
-    |> visit!("/quotes/new")
+    |> visit!("/app/quotes/new")
     |> set_field("#rate_card_per_room_bedroom_rate_cents", "5000")
     |> set_field("#rate_card_per_room_bathroom_rate_cents", "3000")
     |> click(button("Save Rate Card"))
@@ -86,7 +86,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
     today = Date.utc_today() |> Date.to_iso8601()
 
     owner_session
-    |> visit!("/schedule/jobs/new")
+    |> visit!("/app/schedule/jobs/new")
     |> set_field("select[name='job[property_id]']", property_id)
     |> set_field("input[name='job[date]']", today)
     |> set_field("input[name='job[start_time]']", "09:00:00")
@@ -104,7 +104,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
 
     cleaner_session
     |> log_in(cleaner, password)
-    |> visit!("/field/jobs/#{job.id}")
+    |> visit!("/app/field/jobs/#{job.id}")
     |> click(css("[data-test='clock-in-button']"))
     |> settle()
     |> attach_file(css("input[name='after_photo']"),
@@ -131,7 +131,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
     invoice = Billing.list_invoices(scope) |> hd()
 
     owner_session
-    |> visit!("/invoices/#{invoice.id}")
+    |> visit!("/app/invoices/#{invoice.id}")
     |> assert_has(css("body", text: "Proof of Work"))
     |> assert_has(css("body", text: "Wipe countertops"))
     |> click(button("Charge card on file"))
@@ -148,7 +148,7 @@ defmodule CleanerCrmTest.Journeys.NewClientToPaidInvoiceTest do
     )
 
     owner_session
-    |> visit!("/invoices/#{invoice.id}")
+    |> visit!("/app/invoices/#{invoice.id}")
     |> assert_has(css("body", text: "Paid"))
   end
 

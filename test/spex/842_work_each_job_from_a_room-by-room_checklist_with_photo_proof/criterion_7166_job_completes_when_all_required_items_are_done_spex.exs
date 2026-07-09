@@ -38,7 +38,7 @@ defmodule CleanerCrmSpex.Story842.Criterion7166Spex do
 
       when_ "Ana checks off both required tasks but leaves the optional task unchecked",
             context do
-        {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+        {:ok, job_live, _html} = live(context.conn, ~p"/app/field/jobs/#{context.job.id}")
 
         context.checklist.items
         |> Enum.filter(& &1.required)
