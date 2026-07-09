@@ -87,4 +87,78 @@ defmodule CleanerCrmWeb.BookingLive.AcceptTest do
 
     assert has_element?(accept_live, "[data-test='confirmation-form']")
   end
+
+  describe "card capture fallback (no STRIPE_PUBLISHABLE_KEY configured)" do
+    test "the confirmation form still carries the hidden test-card field, and submitting it goes straight to payment_pending",
+         %{conn: conn} do
+      refute Application.get_env(:cleaner_crm, :stripe_publishable_key)
+
+      scope = scope_fixture()
+      lead = lead_fixture(scope)
+
+      {:ok, accept_live, _html} = live(conn, ~p"/book/accept/#{lead.acceptance_token}")
+
+      accept_live
+      |> form("[data-test='slot-form']",
+        booking: %{
+          scheduled_date: Date.to_iso8601(Date.add(Date.utc_today(), 10)),
+          start_time: "09:00"
+        }
+      )
+      |> render_submit()
+
+      html = render(accept_live)
+      assert html =~ ~s(name="booking[payment_method]")
+      assert html =~ "pm_card_visa"
+      refute has_element?(accept_live, "[data-test='stripe-payment-form']")
+
+      accept_live
+      |> form("[data-test='confirmation-form']", booking: %{policy_agreed: "true"})
+      |> render_submit()
+
+      assert has_element?(accept_live, "[data-test='payment-pending']")
+    end
+  end
+
+  describe "card capture with Stripe Elements (STRIPE_PUBLISHABLE_KEY configured)" do
+    setup do
+      Application.put_env(:cleaner_crm, :stripe_publishable_key, "pk_test_fake")
+      on_exit(fn -> Application.delete_env(:cleaner_crm, :stripe_publishable_key) end)
+      :ok
+    end
+
+    test "the confirmation form omits the hidden test-card field, and agreeing to the policy mounts the Payment Element",
+         %{conn: conn} do
+      scope = scope_fixture()
+      lead = lead_fixture(scope)
+
+      {:ok, accept_live, _html} = live(conn, ~p"/book/accept/#{lead.acceptance_token}")
+
+      accept_live
+      |> form("[data-test='slot-form']",
+        booking: %{
+          scheduled_date: Date.to_iso8601(Date.add(Date.utc_today(), 10)),
+          start_time: "09:00"
+        }
+      )
+      |> render_submit()
+
+      html = render(accept_live)
+      refute html =~ ~s(name="booking[payment_method]")
+
+      accept_live
+      |> form("[data-test='confirmation-form']", booking: %{policy_agreed: "true"})
+      |> render_submit()
+
+      assert has_element?(accept_live, "[data-test='stripe-payment-form']")
+      assert has_element?(accept_live, "[data-test='stripe-payment-element']")
+
+      html = render(accept_live)
+      assert html =~ "pk_test_fake"
+
+      reloaded = Booking.get_lead_by_token(lead.acceptance_token)
+      assert reloaded.status == :payment_pending
+      assert reloaded.stripe_payment_intent_id != nil
+    end
+  end
 end

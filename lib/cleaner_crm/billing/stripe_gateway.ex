@@ -17,13 +17,24 @@ defmodule CleanerCrm.Billing.StripeGateway do
 
   @type charge_params :: %{
           required(:amount_cents) => pos_integer(),
-          required(:payment_method) => String.t(),
+          optional(:payment_method) => String.t(),
+          optional(:confirm) => boolean(),
           optional(:off_session) => boolean(),
           optional(:metadata) => map()
         }
 
+  @doc """
+  `confirm: false` (or simply omitting `:payment_method`) leaves the
+  intent unconfirmed — the booking-acceptance page's Stripe Elements
+  flow (`CleanerCrmWeb.BookingLive.Accept`) needs the returned
+  `client_secret` to confirm the card client-side. Every other caller
+  (card-on-file charges, `/pay/:token`) still passes a
+  `:payment_method` and gets a synchronously confirmed intent, exactly
+  as before.
+  """
   @callback create_payment_intent(charge_params()) ::
-              {:ok, %{id: String.t(), status: String.t()}} | {:error, map()}
+              {:ok, %{id: String.t(), status: String.t(), client_secret: String.t() | nil}}
+              | {:error, map()}
 
   @callback verify_webhook_event(Plug.Conn.t()) :: {:ok, map()} | {:error, atom()}
 

@@ -162,6 +162,52 @@ defmodule CleanerCrm.BookingTest do
     end
   end
 
+  describe "confirm_booking/3 (Stripe Elements — no payment_method yet)" do
+    test "creates an unconfirmed intent, moves the lead to payment_pending, and returns a client_secret for the browser to finish" do
+      scope = scope_fixture()
+      lead = lead_fixture(scope)
+
+      {:ok, slotted} =
+        Booking.select_slot(lead, %{
+          "scheduled_date" => Date.to_iso8601(Date.add(Date.utc_today(), 10)),
+          "start_time" => "09:00"
+        })
+
+      assert {:ok, %{lead: updated, client_secret: client_secret}} =
+               Booking.confirm_booking(slotted, %{"policy_agreed" => "true"})
+
+      assert updated.status == :payment_pending
+      assert updated.stripe_payment_intent_id != nil
+      assert is_binary(client_secret)
+    end
+
+    test "still refuses without a client_secret when the policy isn't agreed to" do
+      scope = scope_fixture()
+      lead = lead_fixture(scope)
+
+      {:ok, slotted} =
+        Booking.select_slot(lead, %{
+          "scheduled_date" => Date.to_iso8601(Date.add(Date.utc_today(), 10)),
+          "start_time" => "09:00"
+        })
+
+      assert {:error, :policy_required} = Booking.confirm_booking(slotted, %{})
+    end
+
+    test "still refuses a past slot without ever touching Stripe" do
+      scope = scope_fixture()
+      lead = lead_fixture(scope)
+      past_lead = %{lead | scheduled_date: ~D[2020-01-01], start_time: ~T[09:00:00]}
+
+      assert {:error, :slot_in_past} =
+               Booking.confirm_booking(past_lead, %{"policy_agreed" => "true"})
+
+      reloaded = Booking.get_lead_by_token(lead.acceptance_token)
+      assert reloaded.status == :accepted
+      assert reloaded.stripe_payment_intent_id == nil
+    end
+  end
+
   describe "public_scope/0" do
     test "resolves nil when no account exists at all" do
       assert Booking.public_scope().active_account_id == nil

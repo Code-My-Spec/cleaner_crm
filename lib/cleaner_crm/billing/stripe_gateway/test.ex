@@ -12,7 +12,8 @@ defmodule CleanerCrm.Billing.StripeGateway.Test do
 
   @impl true
   def create_payment_intent(_params) do
-    {:ok, %{id: "pi_test_#{System.unique_integer([:positive])}", status: "succeeded"}}
+    id = "pi_test_#{System.unique_integer([:positive])}"
+    {:ok, %{id: id, status: "succeeded", client_secret: "#{id}_secret_test"}}
   end
 
   @impl true

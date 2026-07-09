@@ -168,11 +168,25 @@ defmodule CleanerCrm.Booking do
   The confirmation step. Refuses without charging anything when the
   cancellation policy isn't agreed to, the selected slot has already
   passed, or the slot's been claimed by another booking since it was
-  selected — otherwise submits the card and moves the lead to
-  `:payment_pending`. Only the Stripe webhook
+  selected — otherwise moves the lead to `:payment_pending` and
+  submits the card. Only the Stripe webhook
   (`receive_payment_webhook/1`) ever confirms or declines it from
   there, per the same webhook-confirms-everything rule
   `CleanerCrm.Billing` follows for invoice payments.
+
+  Two shapes of `params` reach this function, depending on whether
+  `CleanerCrmWeb.BookingLive.Accept` has a Stripe publishable key
+  configured (see `config/runtime.exs`):
+
+    * `"payment_method"` present — the dev/test fallback (a hidden
+      `pm_card_visa` field until real keys exist anywhere but UAT):
+      the intent is confirmed synchronously and this returns
+      `{:ok, %Lead{}}`, exactly as before.
+    * `"payment_method"` absent — the Stripe Elements flow: the intent
+      is created *unconfirmed* so the client can finish it in the
+      browser with its own `client_secret`, returned here as
+      `{:ok, %{lead: %Lead{}, client_secret: String.t()}}` for the
+      LiveView to mount the Payment Element.
 
   The past-slot check (issue 4e985412) is defense in depth alongside
   `Lead.slot_changeset/3`'s own form-level validation: a slot picked
@@ -184,18 +198,23 @@ defmodule CleanerCrm.Booking do
   def confirm_booking(lead, params, now \\ DateTime.utc_now())
 
   def confirm_booking(%Lead{} = lead, %{"payment_method" => payment_method} = params, now) do
+    with :ok <- validate_confirmation(lead, params, now) do
+      submit_payment(lead, payment_method)
+    end
+  end
+
+  def confirm_booking(%Lead{} = lead, params, now) do
+    with :ok <- validate_confirmation(lead, params, now) do
+      submit_unconfirmed_payment(lead)
+    end
+  end
+
+  defp validate_confirmation(lead, params, now) do
     cond do
-      Map.get(params, "policy_agreed") not in [true, "true"] ->
-        {:error, :policy_required}
-
-      not Lead.slot_in_future?(lead, now) ->
-        {:error, :slot_in_past}
-
-      not slot_available?(lead) ->
-        {:error, :slot_unavailable}
-
-      true ->
-        submit_payment(lead, payment_method)
+      Map.get(params, "policy_agreed") not in [true, "true"] -> {:error, :policy_required}
+      not Lead.slot_in_future?(lead, now) -> {:error, :slot_in_past}
+      not slot_available?(lead) -> {:error, :slot_unavailable}
+      true -> :ok
     end
   end
 
@@ -207,22 +226,42 @@ defmodule CleanerCrm.Booking do
              off_session: false,
              metadata: %{lead_id: lead.id}
            }) do
-      lead
-      |> Lead.changeset(%{
-        policy_agreed_at: DateTime.utc_now(),
-        status: :payment_pending,
-        stripe_payment_intent_id: intent_id
-      })
-      # `select_slot/2` never touches the database (see its doc) — the
-      # slot lives only on this in-memory `lead` struct until now, so
-      # `cast/3` (which diffs against the struct's own field, not the
-      # row) would otherwise see "no change" and silently leave the
-      # database's scheduled_date/start_time/end_time at `nil`.
-      |> Ecto.Changeset.force_change(:scheduled_date, lead.scheduled_date)
-      |> Ecto.Changeset.force_change(:start_time, lead.start_time)
-      |> Ecto.Changeset.force_change(:end_time, lead.end_time)
-      |> Repo.update()
+      mark_payment_pending(lead, intent_id)
     end
+  end
+
+  # Stripe Elements flow: no payment method yet, so no `confirm` — the
+  # client finishes this intent in the browser (see the
+  # ".StripePaymentElement" hook in `CleanerCrmWeb.BookingLive.Accept`)
+  # using the `client_secret` handed back here.
+  defp submit_unconfirmed_payment(%Lead{} = lead) do
+    with {:ok, %{id: intent_id, client_secret: client_secret}} <-
+           StripeGateway.create_payment_intent(%{
+             amount_cents: lead.total_cents,
+             confirm: false,
+             metadata: %{lead_id: lead.id}
+           }),
+         {:ok, updated} <- mark_payment_pending(lead, intent_id) do
+      {:ok, %{lead: updated, client_secret: client_secret}}
+    end
+  end
+
+  defp mark_payment_pending(%Lead{} = lead, intent_id) do
+    lead
+    |> Lead.changeset(%{
+      policy_agreed_at: DateTime.utc_now(),
+      status: :payment_pending,
+      stripe_payment_intent_id: intent_id
+    })
+    # `select_slot/2` never touches the database (see its doc) — the
+    # slot lives only on this in-memory `lead` struct until now, so
+    # `cast/3` (which diffs against the struct's own field, not the
+    # row) would otherwise see "no change" and silently leave the
+    # database's scheduled_date/start_time/end_time at `nil`.
+    |> Ecto.Changeset.force_change(:scheduled_date, lead.scheduled_date)
+    |> Ecto.Changeset.force_change(:start_time, lead.start_time)
+    |> Ecto.Changeset.force_change(:end_time, lead.end_time)
+    |> Repo.update()
   end
 
   ## Webhook

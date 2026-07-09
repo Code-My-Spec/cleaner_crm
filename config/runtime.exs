@@ -58,6 +58,15 @@ if System.get_env("STRIPE_ADAPTER") == "test" do
     adapter: CleanerCrm.Billing.StripeGateway.Test
 end
 
+# Stripe *publishable* key — safe to ship to the browser, unlike the
+# secret/webhook config above. Only prod ever sets it (already seeded
+# in SSM on UAT); dev/test leave it unconfigured (`nil`), which is how
+# `CleanerCrmWeb.BookingLive.Accept` decides whether to mount real
+# Stripe Elements or fall back to today's hidden test-card field.
+if config_env() == :prod do
+  config :cleaner_crm, :stripe_publishable_key, System.get_env("STRIPE_PUBLISHABLE_KEY")
+end
+
 # Twilio — SMS delivery per the sms-delivery ADR. Unconditional (like
 # the Stripe block above), not `:prod`-only: `CleanerCrm.Notifications.
 # Delivery.Twilio` must always have *some* config to read. Missing

@@ -27,22 +27,19 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
   @base_url "https://api.stripe.com/v1"
 
   @impl true
-  def create_payment_intent(
-        %{amount_cents: amount_cents, payment_method: payment_method} = params
-      ) do
+  def create_payment_intent(%{amount_cents: amount_cents} = params) do
     with {:ok, key} <- fetch_secret_key() do
       body =
         %{
           "amount" => amount_cents,
           "currency" => "usd",
-          "payment_method" => payment_method,
-          "confirm" => true,
-          "off_session" => Map.get(params, :off_session, false),
-          # Card-only, no redirect-based methods: confirming
-          # server-side without a return_url requires redirects off.
+          # Card-only, no redirect-based methods: confirming without a
+          # return_url (server-side here, or the client-side Elements
+          # flow's own `redirect: "if_required"`) requires redirects off.
           "automatic_payment_methods[enabled]" => true,
           "automatic_payment_methods[allow_redirects]" => "never"
         }
+        |> put_confirmation(params)
         |> put_metadata(Map.get(params, :metadata, %{}))
 
       @base_url
@@ -50,6 +47,18 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
       |> Req.post(form: body, auth: {:bearer, key})
       |> handle_response()
     end
+  end
+
+  # `confirm: false` — the Stripe Elements flow (see
+  # `CleanerCrm.Booking.confirm_booking/3`) — leaves the intent
+  # unconfirmed for the client to finish with its own `client_secret`.
+  defp put_confirmation(body, %{confirm: false}), do: body
+
+  defp put_confirmation(body, %{payment_method: payment_method} = params) do
+    body
+    |> Map.put("payment_method", payment_method)
+    |> Map.put("confirm", true)
+    |> Map.put("off_session", Map.get(params, :off_session, false))
   end
 
   # A misconfigured deploy (secret unset) is a recoverable operational
@@ -66,9 +75,11 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
     end
   end
 
-  defp handle_response({:ok, %{status: status, body: %{"id" => id, "status" => stripe_status}}})
+  defp handle_response(
+         {:ok, %{status: status, body: %{"id" => id, "status" => stripe_status} = body}}
+       )
        when status in 200..299 do
-    {:ok, %{id: id, status: stripe_status}}
+    {:ok, %{id: id, status: stripe_status, client_secret: Map.get(body, "client_secret")}}
   end
 
   defp handle_response({:ok, %{body: %{"error" => error}}}), do: {:error, error}
