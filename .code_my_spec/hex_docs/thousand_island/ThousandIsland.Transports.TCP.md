@@ -1,0 +1,35 @@
+# ThousandIsland.Transports.TCP
+
+Defines a `ThousandIsland.Transport` implementation based on clear TCP sockets
+as provided by Erlang's `:gen_tcp` module. For the most part, users of Thousand
+Island will only ever need to deal with this module via `transport_options`
+passed to `ThousandIsland` at startup time. A complete list of such options
+is defined via the `t::gen_tcp.listen_option/0` type. This list can be somewhat
+difficult to decipher; by far the most common value to pass to this transport
+is the following:
+
+* `ip`:  The IP to listen on. Can be specified as:
+  * `{1, 2, 3, 4}` for IPv4 addresses
+  * `{1, 2, 3, 4, 5, 6, 7, 8}` for IPv6 addresses
+  * `:loopback` for local loopback
+  * `:any` for all interfaces (i.e.: `0.0.0.0`)
+  * `{:local, "/path/to/socket"}` for a Unix domain socket. If this option is used,
+    the `port` option *must* be set to `0`
+
+Unless overridden, this module uses the following default options:
+
+```elixir
+backlog: 1024,
+nodelay: true,
+send_timeout: 30_000,
+send_timeout_close: true,
+reuseaddr: true
+```
+
+The following options are required for the proper operation of Thousand Island
+and cannot be overridden:
+
+```elixir
+mode: :binary,
+active: false
+```

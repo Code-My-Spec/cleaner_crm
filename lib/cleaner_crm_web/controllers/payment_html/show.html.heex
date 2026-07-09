@@ -1,0 +1,13 @@
+<Layouts.app flash={@flash}>
+  <.header>Pay Invoice</.header>
+
+  <p>Amount due: {CleanerCrm.Money.format_cents(@invoice.amount_cents)}</p>
+
+  <form method="post" action={~p"/pay/#{@invoice.payment_token}"}>
+    <input type="hidden" name="payment_method" value="pm_card_visa" />
+    <label class="label">
+      <input type="checkbox" name="save_card" value="true" /> Save my card for next time
+    </label>
+    <.button type="submit">Pay {CleanerCrm.Money.format_cents(@invoice.amount_cents)}</.button>
+  </form>
+</Layouts.app>

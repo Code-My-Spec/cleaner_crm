@@ -1,0 +1,47 @@
+# Wallaby.Helpers.KeyCodes
+
+Shortcuts for various keys.
+
+- :null
+- :cancel
+- :help
+- :backspace
+- :tab
+- :clear
+- :return
+- :enter
+- :shift
+- :control
+- :alt
+- :pause
+- :escape
+- :space
+- :pageup
+- :pagedown
+- :end
+- :home
+- :left_arrow
+- :up_arrow
+- :right_arrow
+- :down_arrow
+- :insert
+- :delete
+- :semicolon
+- :equals
+- :num0
+- :num1
+- :num2
+- :num3
+- :num4
+- :num5
+- :num6
+- :num7
+- :num8
+- :num9
+- :multiply
+- :add
+- :seperator
+- :subtract
+- :decimal
+- :divide
+- :command

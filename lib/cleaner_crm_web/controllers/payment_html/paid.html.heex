@@ -1,0 +1,6 @@
+<Layouts.app flash={@flash}>
+  <.header>Payment received</.header>
+
+  <p>Thank you for your payment of {CleanerCrm.Money.format_cents(@invoice.amount_cents)}.</p>
+  <p :if={@save_card}>We'll save your card for next time.</p>
+</Layouts.app>

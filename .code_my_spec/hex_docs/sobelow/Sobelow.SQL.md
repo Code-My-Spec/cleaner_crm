@@ -1,0 +1,22 @@
+# Sobelow.SQL
+
+# SQL Injection
+
+SQL Injection occurs when untrusted input is interpolated
+directly into a SQL query. In a typical Phoenix application,
+this would mean using the `Ecto.Adapters.SQL.query` method
+and not using the parameterization feature.
+
+Read more about SQL injection here:
+https://www.owasp.org/index.php/SQL_Injection
+
+If you wish to learn more about the specific vulnerabilities
+found within the SQL Injection category, you may run the
+following commands to find out more:
+
+          $ mix sobelow -d SQL.Query
+          $ mix sobelow -d SQL.Stream
+
+SQL Injection checks of all types can be ignored with the following command:
+
+    $ mix sobelow -i SQL
