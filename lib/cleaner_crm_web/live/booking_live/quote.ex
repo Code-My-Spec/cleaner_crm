@@ -145,19 +145,26 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
             </div>
           </.form>
 
-          <div :if={@summary.priceable?}>
+          <div :if={@priceable?}>
             <p class="text-2xl font-semibold mt-4">
               Total: <span data-test="quote-total">{Money.format_cents(@summary.total_cents)}</span>
             </p>
             <p :if={@summary.discount_percent > 0} class="text-sm text-success">
               Includes your {@summary.discount_percent}% {frequency_label(@pricing_model_frequency)} discount.
             </p>
+            <p
+              :if={@summary.minimum_applied?}
+              data-test="minimum-visit-price-note"
+              class="text-sm text-base-content/70"
+            >
+              Includes our minimum visit price.
+            </p>
           </div>
 
           <.unsupported_message :if={@pricing_model && not @summary.priceable?} />
 
           <.form
-            :if={@summary.priceable?}
+            :if={@priceable?}
             for={@contact_form}
             id="lead-contact-form"
             data-test="lead-contact-form"
@@ -263,6 +270,13 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
     |> assign(:pricing_model, draft.pricing_model)
     |> assign(:pricing_model_frequency, draft.frequency)
     |> assign(:summary, summary)
+    # `apply_changes/1` applies an out-of-bounds value (e.g. a 1-sqft
+    # entry) right along with a valid one — `summary.priceable?` alone
+    # can't tell the difference, since it only checks for a positive
+    # quantity. Gating the displayed total/contact-form on the
+    # changeset's own validity too means an input the field's own error
+    # rejects never gets to show a price for it, live or otherwise.
+    |> assign(:priceable?, changeset.valid? and summary.priceable?)
   end
 
   # `Phoenix.LiveViewTest.render/1` reparses a connected view's HTML

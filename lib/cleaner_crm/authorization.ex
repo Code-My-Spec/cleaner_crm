@@ -19,6 +19,14 @@ defmodule CleanerCrm.Authorization do
         user_role = MembersRepository.get_user_role(scope.user.id, account_id)
         user_role == :owner
 
+      # Owner-only, not admin: flipping the public booking storefront
+      # can silently steal `/book` from another account (the whole
+      # reason this flag exists), a bigger blast radius than the
+      # admin-level settings `:manage_account` gates.
+      {:manage_storefront, account_id} when is_binary(account_id) ->
+        user_role = MembersRepository.get_user_role(scope.user.id, account_id)
+        user_role == :owner
+
       _ ->
         false
     end

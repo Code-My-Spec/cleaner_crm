@@ -264,6 +264,17 @@ defmodule CleanerCrmWeb.Router do
       live "/portal/visits/:id", PortalLive.Visit, :show
       live "/portal/invoices", PortalLive.Invoices, :index
     end
+
+    # "I lost/never got my link" — its own `live_session` (not the
+    # `:portal` one above) since it must be reachable with *no*
+    # `portal_client_id` session; `CleanerCrmWeb.PortalAuth` redirects
+    # here instead of dead-ending. `on_mount UserAuth :mount_current_scope`
+    # mirrors the other public live routes above so `current_scope`
+    # still mounts for the root layout.
+    live_session :portal_request_link,
+      on_mount: [{CleanerCrmWeb.UserAuth, :mount_current_scope}] do
+      live "/portal/request-link", PortalLive.RequestLink, :new
+    end
   end
 
   # Public booking funnel (stories 848/849) — no user auth, plain

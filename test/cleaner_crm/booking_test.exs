@@ -16,6 +16,13 @@ defmodule CleanerCrm.BookingTest do
   No spex/BDD story owns this surface, so it's covered here instead,
   mirroring `CleanerCrmWeb.QualityLive.TemplatesTest`'s precedent for
   issue-only coverage.
+
+  Also covers the live UAT regression where `public_scope/0` resolved
+  the *newest* account unconditionally: three UAT accounts named
+  "Desert First Cleaning" existed, and the newest — with a blank rate
+  card — silently became the `/book` storefront. `describe
+  "public_scope/0"` below drives the fix (the `storefront` flag, with
+  an exactly-one-account fallback and `nil` otherwise) directly.
   """
 
   use CleanerCrmTest.DataCase, async: true
@@ -152,6 +159,69 @@ defmodule CleanerCrm.BookingTest do
                })
 
       assert updated.status == :payment_pending
+    end
+  end
+
+  describe "public_scope/0" do
+    test "resolves nil when no account exists at all" do
+      assert Booking.public_scope().active_account_id == nil
+    end
+
+    test "resolves the only account when exactly one exists and none is flagged" do
+      scope = scope_fixture()
+
+      assert Booking.public_scope().active_account_id == scope.active_account_id
+    end
+
+    test "resolves nil when multiple accounts exist and none is flagged as the storefront" do
+      scope_fixture()
+      scope_fixture()
+
+      assert Booking.public_scope().active_account_id == nil
+    end
+
+    test "resolves the storefront-flagged account even though a newer account exists" do
+      older = scope_fixture()
+      {:ok, _updated} = Accounts.set_storefront(older, true)
+      _newer = scope_fixture()
+
+      assert Booking.public_scope().active_account_id == older.active_account_id
+    end
+
+    test "moving the storefront flag to a different account changes which one resolves" do
+      first = scope_fixture()
+      second = scope_fixture()
+
+      {:ok, _} = Accounts.set_storefront(first, true)
+      assert Booking.public_scope().active_account_id == first.active_account_id
+
+      {:ok, _} = Accounts.set_storefront(second, true)
+      assert Booking.public_scope().active_account_id == second.active_account_id
+
+      reloaded_first = Accounts.get_account!(first, first.active_account_id)
+      refute reloaded_first.storefront
+    end
+
+    test "only an owner may set the storefront flag" do
+      owner_scope = scope_fixture()
+      admin_user = user_fixture()
+
+      {:ok, _member} =
+        Accounts.add_user_to_account(
+          owner_scope,
+          admin_user.id,
+          owner_scope.active_account_id,
+          :admin
+        )
+
+      admin_scope = %{
+        Scope.for_user(admin_user)
+        | active_account_id: owner_scope.active_account_id
+      }
+
+      assert_raise RuntimeError, ~r/Unauthorized/, fn ->
+        Accounts.set_storefront(admin_scope, true)
+      end
     end
   end
 end

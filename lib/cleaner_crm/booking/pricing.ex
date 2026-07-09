@@ -23,6 +23,7 @@ defmodule CleanerCrm.Booking.Pricing do
           subtotal_cents: integer(),
           discount_percent: integer(),
           total_cents: integer(),
+          minimum_applied?: boolean(),
           priceable?: boolean()
         }
 
@@ -39,13 +40,18 @@ defmodule CleanerCrm.Booking.Pricing do
       QuotingPricing.total_cents(line_items) + QuotingPricing.total_cents(add_on_items)
 
     discount_percent = discount_percent(rate_card, lead)
+    discounted_cents = apply_discount(subtotal_cents, discount_percent)
+
+    {total_cents, minimum_applied?} =
+      apply_minimum(discounted_cents, rate_card.minimum_visit_cents)
 
     %{
       line_items: line_items,
       add_on_items: add_on_items,
       subtotal_cents: subtotal_cents,
       discount_percent: discount_percent,
-      total_cents: apply_discount(subtotal_cents, discount_percent),
+      total_cents: total_cents,
+      minimum_applied?: minimum_applied?,
       priceable?: priceable_from_items?(line_items, add_on_items)
     }
   end
@@ -118,6 +124,17 @@ defmodule CleanerCrm.Booking.Pricing do
     |> Decimal.round(0, :half_up)
     |> Decimal.to_integer()
   end
+
+  # Kills the "1-sqft, $0.12 quote" class outright, ahead of (and
+  # independent from) `Lead.quote_changeset/2`'s own input bounds — a
+  # `nil` rate-card minimum means no floor, matching the "unset means
+  # not configured" rule the rest of the rate card follows.
+  defp apply_minimum(total_cents, nil), do: {total_cents, false}
+
+  defp apply_minimum(total_cents, minimum_cents) when total_cents < minimum_cents,
+    do: {minimum_cents, true}
+
+  defp apply_minimum(total_cents, _minimum_cents), do: {total_cents, false}
 
   defp humanize(key) do
     key

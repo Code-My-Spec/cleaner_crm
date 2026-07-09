@@ -16,6 +16,14 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
   hands the portal itself — the portal keeps working with those
   defaults whether or not this page has ever been visited.
 
+  Also hosts the public booking storefront toggle
+  (`CleanerCrm.Accounts.set_storefront/2`) — the account
+  `CleanerCrm.Booking.public_scope/0` prices `/book` against. Unlike
+  the cancellation policy above, this is owner-only (see
+  `CleanerCrm.Authorization`): flipping it can silently steal the
+  public storefront from another account, so an admin viewing this
+  page sees its current value but can't change it.
+
   ## Route
 
     * `/app/settings/booking` (`:edit`) — office-only, gated the same as
@@ -23,11 +31,13 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
 
   ## Dependencies
 
+  - `CleanerCrm.Accounts`
   - `CleanerCrm.Portal`
   """
 
   use CleanerCrmWeb, :live_view
 
+  alias CleanerCrm.Accounts
   alias CleanerCrm.Portal
   alias CleanerCrm.Portal.CancellationPolicy
 
@@ -41,6 +51,38 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
           Notice window and fees enforced on self-service reschedule/cancel in the client portal
         </:subtitle>
       </.header>
+
+      <div class="card bg-base-100 border border-base-300 mb-6">
+        <div class="card-body">
+          <h2 class="card-title">Public Booking Storefront</h2>
+          <p class="text-sm text-base-content/70">
+            Only one company can be the public <code>/book</code> storefront at a time.
+          </p>
+
+          <label class="label cursor-pointer justify-start gap-3">
+            <input
+              type="checkbox"
+              class="toggle toggle-primary"
+              checked={@account.storefront}
+              disabled={!@is_owner}
+              phx-click="toggle_storefront"
+              data-test="storefront-toggle"
+            />
+            <span>Use this company as the public booking storefront</span>
+          </label>
+
+          <p
+            :if={@account.storefront}
+            data-test="storefront-active-note"
+            class="text-sm text-success"
+          >
+            This company is currently the public <code>/book</code> storefront.
+          </p>
+          <p :if={!@is_owner} class="text-sm text-base-content/70">
+            Only the account owner can change this.
+          </p>
+        </div>
+      </div>
 
       <.form
         for={@form}
@@ -115,13 +157,33 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
   def mount(_params, _session, socket) do
     scope = socket.assigns.current_scope
     policy = Portal.get_cancellation_policy(scope.active_account_id)
+    account = Accounts.get_account!(scope, scope.active_account_id)
+    is_owner = Accounts.get_user_role(scope, scope.user.id, scope.active_account_id) == :owner
 
     {:ok,
      socket
      |> assign(:page_title, "Cancellation Policy")
      |> assign(:policy, policy)
      |> assign(:fee_inputs, fee_inputs(policy))
+     |> assign(:account, account)
+     |> assign(:is_owner, is_owner)
      |> assign(:form, to_form(Portal.change_cancellation_policy(scope, policy), as: :policy))}
+  end
+
+  @impl true
+  def handle_event("toggle_storefront", _params, socket) do
+    scope = socket.assigns.current_scope
+
+    case Accounts.set_storefront(scope, !socket.assigns.account.storefront) do
+      {:ok, updated} ->
+        {:noreply,
+         socket
+         |> assign(:account, updated)
+         |> put_flash(:info, storefront_flash(updated))}
+
+      {:error, _changeset} ->
+        {:noreply, put_flash(socket, :error, "Couldn't update the storefront setting.")}
+    end
   end
 
   @impl true
@@ -182,6 +244,12 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicy do
 
     {attrs, fee_inputs}
   end
+
+  defp storefront_flash(%{storefront: true}),
+    do: "This company is now the public booking storefront."
+
+  defp storefront_flash(%{storefront: false}),
+    do: "This company is no longer the public booking storefront."
 
   defp fee_inputs(%CancellationPolicy{} = policy) do
     %{

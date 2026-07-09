@@ -21,12 +21,18 @@ defmodule CleanerCrm.Portal do
   alias CleanerCrm.Clients
   alias CleanerCrm.Clients.Client
   alias CleanerCrm.Notifications
-  alias CleanerCrm.Portal.{CancellationPolicy, PortalSession, Tip}
+  alias CleanerCrm.Portal.{CancellationPolicy, Notifier, PortalSession, Tip}
   alias CleanerCrm.Quality
   alias CleanerCrm.Repo
   alias CleanerCrm.Scheduling
   alias CleanerCrm.Scheduling.Job
   alias CleanerCrm.Users.Scope
+
+  # A repeat "email me a link" request for the same client inside this
+  # window is a no-op — no fresh session, no resent email — so a client
+  # mashing submit (or a script probing addresses) can't flood an inbox
+  # or spin up unbounded portal sessions.
+  @link_request_cooldown_seconds 60
 
   ## Magic-link sessions
 
@@ -40,6 +46,50 @@ defmodule CleanerCrm.Portal do
     client
     |> PortalSession.build_changeset(attrs)
     |> Repo.insert()
+  end
+
+  @doc """
+  Handles a "request a login link" submission from
+  `CleanerCrmWeb.PortalLive.RequestLink`: mails a fresh magic link to
+  every client, across every account, whose address matches `email` —
+  the same client can be a customer of more than one cleaning
+  company, and each relationship gets its own link to its own
+  account's portal.
+
+  Always returns `:ok`, whether or not `email` matches anyone, so the
+  caller can show one generic "check your email" message without ever
+  revealing which addresses belong to real clients. Matches skipped
+  by the cooldown (see `@link_request_cooldown_seconds`) are silently
+  treated the same as a match with nothing new to send.
+  """
+  def request_login_link(email) when is_binary(email) do
+    email
+    |> String.trim()
+    |> clients_by_email()
+    |> Enum.reject(&recently_sent_link?/1)
+    |> Enum.each(&issue_and_deliver_link/1)
+
+    :ok
+  end
+
+  defp clients_by_email(""), do: []
+
+  defp clients_by_email(email) do
+    Repo.all(from(c in Client, where: c.email == ^email))
+  end
+
+  defp recently_sent_link?(%Client{id: client_id}) do
+    cutoff = DateTime.add(DateTime.utc_now(), -@link_request_cooldown_seconds, :second)
+
+    Repo.exists?(
+      from(s in PortalSession, where: s.client_id == ^client_id and s.inserted_at >= ^cutoff)
+    )
+  end
+
+  defp issue_and_deliver_link(%Client{} = client) do
+    with {:ok, session} <- create_portal_session(client, %{}) do
+      Notifier.deliver_login_link(client, portal_url(session))
+    end
   end
 
   @doc """
@@ -309,6 +359,12 @@ defmodule CleanerCrm.Portal do
   end
 
   ## Shared helpers
+
+  # `CleanerCrmWeb.Endpoint.url()` is the standard phx.gen.auth-style
+  # exception for building absolute links in outbound messages — see
+  # the `dirty_xrefs` note on the `CleanerCrm` boundary. Mirrors
+  # `CleanerCrm.Booking`'s own `portal_url/1`.
+  defp portal_url(session), do: CleanerCrmWeb.Endpoint.url() <> "/portal/access/#{session.token}"
 
   defp account_scope(%Client{account_id: account_id}), do: system_scope(account_id)
 

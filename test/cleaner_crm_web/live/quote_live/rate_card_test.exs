@@ -80,6 +80,41 @@ defmodule CleanerCrmWeb.QuoteLive.RateCardTest do
     assert rate_card.monthly_discount_percent == 15
   end
 
+  test "saves a minimum visit price, converting dollars to cents", %{conn: conn} do
+    scope = scope_fixture()
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
+
+    lv
+    |> form("[data-test='rate-card-form']", rate_card: %{minimum_visit_rate: "89.00"})
+    |> render_submit()
+
+    assert Quoting.get_or_create_rate_card(scope).minimum_visit_cents == 8_900
+  end
+
+  test "leaves the minimum visit price unset (no floor) when left blank", %{conn: conn} do
+    scope = scope_fixture()
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
+
+    lv
+    |> form("[data-test='rate-card-form']", rate_card: %{minimum_visit_rate: ""})
+    |> render_submit()
+
+    assert Quoting.get_or_create_rate_card(scope).minimum_visit_cents == nil
+  end
+
+  test "rejects a negative minimum visit price", %{conn: conn} do
+    scope = scope_fixture()
+    {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/quotes/rate-card")
+
+    html =
+      lv
+      |> form("[data-test='rate-card-form']", rate_card: %{minimum_visit_rate: "-10.00"})
+      |> render_submit()
+
+    assert html =~ "must be greater than or equal to"
+    assert Quoting.get_or_create_rate_card(scope).minimum_visit_cents == nil
+  end
+
   test "Add add-on control appends a blank row that can be named, priced, and saved", %{
     conn: conn
   } do

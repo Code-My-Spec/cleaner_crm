@@ -23,8 +23,11 @@ defmodule CleanerCrmWeb.PortalAuth do
       nil ->
         socket =
           socket
-          |> Phoenix.LiveView.put_flash(:error, "Please use your portal link to sign in.")
-          |> Phoenix.LiveView.redirect(to: ~p"/")
+          |> Phoenix.LiveView.put_flash(
+            :error,
+            "Please use your portal link to sign in, or request a new one below."
+          )
+          |> Phoenix.LiveView.redirect(to: ~p"/portal/request-link")
 
         {:halt, socket}
 

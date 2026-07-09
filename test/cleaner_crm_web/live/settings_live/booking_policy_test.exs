@@ -4,6 +4,11 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
   `CleanerCrm.Portal.CancellationPolicy` — only a direct database edit
   reached the notice-window hours, late/same-day fees, or policy text
   the client portal enforces and displays.
+
+  Also covers the public booking storefront toggle
+  (`CleanerCrm.Accounts.set_storefront/2`) this page hosts — the live
+  UAT regression where any new signup's account could silently steal
+  the `/book` storefront from an existing one.
   """
 
   use CleanerCrmTest.ConnCase, async: true
@@ -98,5 +103,60 @@ defmodule CleanerCrmWeb.SettingsLive.BookingPolicyTest do
 
     assert html =~ "must be greater than or equal to"
     assert Portal.get_cancellation_policy(scope.active_account_id).notice_window_hours == 24
+  end
+
+  describe "storefront toggle" do
+    test "an owner can turn the storefront on, which unsets any other account's flag", %{
+      conn: conn
+    } do
+      owner_scope = scope_fixture()
+      other_scope = scope_fixture()
+      {:ok, _} = Accounts.set_storefront(other_scope, true)
+
+      {:ok, lv, _html} = live(log_in(conn, owner_scope), ~p"/app/settings/booking")
+
+      refute has_element?(lv, "[data-test='storefront-active-note']")
+
+      lv |> element("[data-test='storefront-toggle']") |> render_click()
+
+      assert has_element?(lv, "[data-test='storefront-active-note']")
+
+      assert Accounts.get_account!(owner_scope, owner_scope.active_account_id).storefront
+      refute Accounts.get_account!(other_scope, other_scope.active_account_id).storefront
+    end
+
+    test "an owner can turn the storefront back off", %{conn: conn} do
+      scope = scope_fixture()
+      {:ok, _} = Accounts.set_storefront(scope, true)
+
+      {:ok, lv, _html} = live(log_in(conn, scope), ~p"/app/settings/booking")
+      assert has_element?(lv, "[data-test='storefront-active-note']")
+
+      lv |> element("[data-test='storefront-toggle']") |> render_click()
+
+      refute has_element?(lv, "[data-test='storefront-active-note']")
+      refute Accounts.get_account!(scope, scope.active_account_id).storefront
+    end
+
+    test "an admin sees the toggle disabled and cannot flip it", %{conn: conn} do
+      owner_scope = scope_fixture()
+      admin_user = user_fixture()
+
+      {:ok, _member} =
+        Accounts.add_user_to_account(
+          owner_scope,
+          admin_user.id,
+          owner_scope.active_account_id,
+          :admin
+        )
+
+      {:ok, lv, html} = live(log_in_user(conn, admin_user), ~p"/app/settings/booking")
+
+      assert html =~ "Only the account owner can change this."
+
+      assert lv
+             |> element("[data-test='storefront-toggle']")
+             |> render() =~ "disabled"
+    end
   end
 end

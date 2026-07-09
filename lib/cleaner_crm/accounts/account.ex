@@ -7,6 +7,7 @@ defmodule CleanerCrm.Accounts.Account do
           name: String.t(),
           slug: String.t() | nil,
           drive_time_policy: :unpaid | :paid,
+          storefront: boolean(),
           members: [CleanerCrm.Accounts.Member.t()] | Ecto.Association.NotLoaded.t(),
           users: [CleanerCrm.Users.User.t()] | Ecto.Association.NotLoaded.t(),
           inserted_at: DateTime.t() | nil,
@@ -25,6 +26,15 @@ defmodule CleanerCrm.Accounts.Account do
     # cleaner's earnings, set here rather than on a separate settings
     # table since it's the account's only pay policy so far.
     field :drive_time_policy, Ecto.Enum, values: [:unpaid, :paid], default: :unpaid
+
+    # Which account's rate card and quote calculator the public `/book`
+    # funnel prices against — at most one row ever has this set (see
+    # the partial unique index in the `add_storefront_to_accounts`
+    # migration). Never cast through the generic `changeset/2` below;
+    # only `CleanerCrm.Accounts.set_storefront/2` ever writes it, since
+    # flipping it also has to unset any other account's flag in the
+    # same transaction.
+    field :storefront, :boolean, default: false
 
     has_many :members, CleanerCrm.Accounts.Member, on_delete: :delete_all
     has_many :users, through: [:members, :user]

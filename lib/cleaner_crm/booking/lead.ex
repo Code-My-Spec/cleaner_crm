@@ -116,10 +116,18 @@ defmodule CleanerCrm.Booking.Lead do
   def quote_changeset(lead, attrs) do
     lead
     |> cast(normalize_add_ons(attrs), @quote_fields)
-    |> validate_number(:bedroom_count, greater_than_or_equal_to: 0)
-    |> validate_number(:bathroom_count, greater_than_or_equal_to: 0)
-    |> validate_number(:square_feet, greater_than_or_equal_to: 0)
-    |> validate_number(:hours, greater_than_or_equal_to: 0)
+    |> validate_number(:bedroom_count, greater_than_or_equal_to: 0, less_than_or_equal_to: 20)
+    |> validate_number(:bathroom_count, greater_than_or_equal_to: 0, less_than_or_equal_to: 20)
+    |> validate_number(:square_feet,
+      greater_than_or_equal_to: 200,
+      less_than_or_equal_to: 20_000,
+      message: "must be between 200 and 20,000 sq ft"
+    )
+    |> validate_number(:hours,
+      greater_than_or_equal_to: 1,
+      less_than_or_equal_to: 12,
+      message: "must be between 1 and 12 hours"
+    )
   end
 
   @doc """
@@ -148,6 +156,9 @@ defmodule CleanerCrm.Booking.Lead do
       :recurring_plan_id
     ])
     |> validate_required([:client_name, :client_email, :client_phone], message: "is required")
+    |> validate_format(:client_email, ~r/^[^@,;\s]+@[^@,;\s]+$/,
+      message: "must have the @ sign and no spaces"
+    )
     |> validate_number(:total_cents, greater_than_or_equal_to: 0)
     |> unique_constraint(:acceptance_token)
   end

@@ -18,16 +18,25 @@ defmodule CleanerCrm.Booking do
   are reachable from a logged-in user, so there's no caller `Scope` to
   receive from a plug.
 
-  ## Single-tenant storefront (known MVP limitation)
+  ## Single-tenant storefront
 
   `/book` carries no account identifier — no slug, no subdomain — so
-  `public_scope/0` resolves to the *most recently created* account
-  rather than *the right* one, matching the single-account assumption
-  every story-848 spec drives (each spec's own account is the newest
-  one the moment it hits `/book`, so this holds even alongside stray
-  older rows). A multi-tenant deployment needs its own story to give
-  each business a distinct public booking URL (e.g. `/book/:slug`)
-  before this holds up outside a single-account deployment or test.
+  `public_scope/0` needs some other way to pick which account it prices
+  against. It resolves, in order: the account with
+  `CleanerCrm.Accounts.Account.storefront` set (an owner opts an
+  account in from `/app/settings/booking`, via
+  `CleanerCrm.Accounts.set_storefront/2`); otherwise the only account
+  that exists, if there's exactly one; otherwise `nil` (see
+  `CleanerCrmWeb.BookingLive.Quote`'s `unavailable` state).
+
+  Before the `storefront` flag existed (issue: three UAT accounts all
+  named "Desert First Cleaning", the newest with a blank rate card),
+  this resolved to the *most recently created* account unconditionally
+  — any new signup creating a company silently stole the public `/book`
+  storefront out from under the real one. A multi-tenant deployment
+  still needs its own story to give each business a distinct public
+  booking URL (e.g. `/book/:slug`) instead of one shared, opt-in
+  storefront per deployment.
   """
 
   import Ecto.Query, warn: false
@@ -61,11 +70,22 @@ defmodule CleanerCrm.Booking do
   def get_rate_card(%Scope{} = scope), do: Quoting.get_or_create_rate_card(scope)
 
   defp resolve_public_account_id do
-    Account
-    |> order_by(desc: :inserted_at)
-    |> limit(1)
-    |> select([a], a.id)
-    |> Repo.one()
+    case Repo.one(from a in Account, where: a.storefront == true, select: a.id, limit: 1) do
+      nil -> resolve_single_account_id()
+      account_id -> account_id
+    end
+  end
+
+  # No account has opted in as the storefront yet — fall back to "the"
+  # account only when there's unambiguously just one (a fresh
+  # deployment, or a test's own sandboxed transaction). Two or more
+  # accounts with no flag set means there's no right answer, so `/book`
+  # renders the `unavailable` state rather than guessing.
+  defp resolve_single_account_id do
+    case Repo.all(from a in Account, select: a.id, limit: 2) do
+      [account_id] -> account_id
+      _zero_or_many -> nil
+    end
   end
 
   ## Instant quote (calculator)

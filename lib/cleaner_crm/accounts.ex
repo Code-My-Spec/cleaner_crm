@@ -2,6 +2,7 @@ defmodule CleanerCrm.Accounts do
   alias CleanerCrm.Accounts.{Account, AccountsRepository, MembersRepository}
   alias CleanerCrm.Accounts.{InvitationRepository, InvitationNotifier}
   alias CleanerCrm.Authorization
+  alias CleanerCrm.Repo
   alias CleanerCrm.Users
   alias CleanerCrm.Users.Scope
 
@@ -76,6 +77,32 @@ defmodule CleanerCrm.Accounts do
   def change_account(%Scope{} = scope, %Account{} = account, attrs \\ %{}) do
     Authorization.authorize!(:manage_account, scope, account.id)
     Account.changeset(account, attrs)
+  end
+
+  @doc """
+  Sets (or clears) the account as the public `/book` storefront —
+  `CleanerCrm.Booking.public_scope/0` prices the calculator against
+  whichever account has this flag. Setting it `true` unsets any other
+  account's flag first, in the same transaction, so at most one
+  account is ever the storefront (also enforced by a partial unique
+  index at the database level). Owner-only (see `Authorization`) — a
+  bigger blast radius than the admin-level account settings the rest
+  of `/app/settings/booking` gates.
+  """
+  def set_storefront(%Scope{active_account_id: account_id} = scope, storefront?)
+      when is_boolean(storefront?) and not is_nil(account_id) do
+    Authorization.authorize!(:manage_storefront, scope, account_id)
+
+    Repo.transact(fn ->
+      if storefront?, do: AccountsRepository.clear_other_storefronts(account_id)
+
+      account = AccountsRepository.get_account!(account_id)
+
+      with {:ok, updated} <- AccountsRepository.set_storefront(account, storefront?) do
+        broadcast_account(scope, {:updated, updated})
+        {:ok, updated}
+      end
+    end)
   end
 
   def list_account_members(%Scope{} = scope, account_id) do

@@ -35,6 +35,18 @@ defmodule CleanerCrm.Accounts.AccountsRepository do
   def by_slug(slug), do: from(a in Account, where: a.slug == ^slug)
   def with_preloads(preloads), do: preload(Account, ^preloads)
 
+  # Bypasses `Account.changeset/2` (which never casts `:storefront`,
+  # see the field's own doc) — this is the one writer allowed to touch
+  # the column.
+  def set_storefront(%Account{} = account, storefront?) when is_boolean(storefront?) do
+    account |> Ecto.Changeset.change(storefront: storefront?) |> Repo.update()
+  end
+
+  def clear_other_storefronts(except_account_id) do
+    from(a in Account, where: a.storefront == true and a.id != ^except_account_id)
+    |> Repo.update_all(set: [storefront: false])
+  end
+
   defp create_member(attrs) do
     %Member{}
     |> Member.changeset(attrs)

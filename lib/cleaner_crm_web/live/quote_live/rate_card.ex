@@ -106,6 +106,20 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
               errors={field_errors(@form[:hourly_rate_cents])}
               data-test="hourly-rate-input"
             />
+            <.input
+              type="number"
+              step="0.01"
+              min="0"
+              name="rate_card[minimum_visit_rate]"
+              id={@form[:minimum_visit_cents].id}
+              label="Minimum visit price ($)"
+              value={@rate_inputs.minimum_visit_rate}
+              errors={field_errors(@form[:minimum_visit_cents])}
+              data-test="minimum-visit-rate-input"
+            />
+            <p class="text-sm text-base-content/70">
+              The lowest total the instant-quote calculator will ever show. Leave blank for no floor.
+            </p>
           </div>
         </div>
 
@@ -293,7 +307,8 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
       per_room_bedroom_rate: Map.get(params, "per_room_bedroom_rate", ""),
       per_room_bathroom_rate: Map.get(params, "per_room_bathroom_rate", ""),
       per_sqft_rate: Map.get(params, "per_sqft_rate", ""),
-      hourly_rate: Map.get(params, "hourly_rate", "")
+      hourly_rate: Map.get(params, "hourly_rate", ""),
+      minimum_visit_rate: Map.get(params, "minimum_visit_rate", "")
     }
 
     add_on_rows = sync_add_on_rows(socket.assigns.add_on_rows, Map.get(params, "add_ons", %{}))
@@ -303,6 +318,7 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
       "per_room_bathroom_rate_cents" => dollars_to_cents(rate_inputs.per_room_bathroom_rate),
       "per_sqft_rate_cents" => dollars_to_cents(rate_inputs.per_sqft_rate),
       "hourly_rate_cents" => dollars_to_cents(rate_inputs.hourly_rate),
+      "minimum_visit_cents" => dollars_to_cents(rate_inputs.minimum_visit_rate),
       "weekly_discount_percent" => Map.get(params, "weekly_discount_percent"),
       "biweekly_discount_percent" => Map.get(params, "biweekly_discount_percent"),
       "monthly_discount_percent" => Map.get(params, "monthly_discount_percent"),
@@ -337,7 +353,8 @@ defmodule CleanerCrmWeb.QuoteLive.RateCard do
       per_room_bedroom_rate: cents_to_dollars(rate_card.per_room_bedroom_rate_cents),
       per_room_bathroom_rate: cents_to_dollars(rate_card.per_room_bathroom_rate_cents),
       per_sqft_rate: cents_to_dollars(rate_card.per_sqft_rate_cents),
-      hourly_rate: cents_to_dollars(rate_card.hourly_rate_cents)
+      hourly_rate: cents_to_dollars(rate_card.hourly_rate_cents),
+      minimum_visit_rate: cents_to_dollars(rate_card.minimum_visit_cents)
     }
   end
 

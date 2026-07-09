@@ -14,6 +14,10 @@ defmodule CleanerCrm.Quoting.RateCard do
   named add-on (e.g. `"inside_fridge" => 1500`). Unset (`nil`) means no
   discount; an add-on key missing from the map means it isn't priced
   yet, same "never guess a price" rule as the base rates.
+
+  `minimum_visit_cents` is a floor `CleanerCrm.Booking.Pricing.summarize/2`
+  clamps a lead's computed total up to when it's set (e.g. a 1-sqft
+  per-sqft quote pricing out at $0.12) — `nil` means no floor.
   """
 
   use Ecto.Schema
@@ -30,6 +34,7 @@ defmodule CleanerCrm.Quoting.RateCard do
           biweekly_discount_percent: integer() | nil,
           monthly_discount_percent: integer() | nil,
           add_on_rates_cents: %{optional(String.t()) => integer()},
+          minimum_visit_cents: integer() | nil,
           inserted_at: DateTime.t() | nil,
           updated_at: DateTime.t() | nil
         }
@@ -44,6 +49,7 @@ defmodule CleanerCrm.Quoting.RateCard do
     field :biweekly_discount_percent, :integer
     field :monthly_discount_percent, :integer
     field :add_on_rates_cents, :map, default: %{}
+    field :minimum_visit_cents, :integer
 
     belongs_to :account, CleanerCrm.Accounts.Account, type: :binary_id
 
@@ -52,7 +58,8 @@ defmodule CleanerCrm.Quoting.RateCard do
 
   @rate_fields ~w(per_room_bedroom_rate_cents per_room_bathroom_rate_cents
                   per_sqft_rate_cents hourly_rate_cents weekly_discount_percent
-                  biweekly_discount_percent monthly_discount_percent add_on_rates_cents)a
+                  biweekly_discount_percent monthly_discount_percent add_on_rates_cents
+                  minimum_visit_cents)a
 
   @discount_fields ~w(weekly_discount_percent biweekly_discount_percent monthly_discount_percent)a
 
@@ -63,6 +70,7 @@ defmodule CleanerCrm.Quoting.RateCard do
     |> validate_number(:per_room_bathroom_rate_cents, greater_than_or_equal_to: 0)
     |> validate_number(:per_sqft_rate_cents, greater_than_or_equal_to: 0)
     |> validate_number(:hourly_rate_cents, greater_than_or_equal_to: 0)
+    |> validate_number(:minimum_visit_cents, greater_than_or_equal_to: 0)
     |> validate_discount_percents()
     |> validate_add_on_rates()
   end

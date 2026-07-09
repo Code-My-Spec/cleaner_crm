@@ -94,7 +94,7 @@ defmodule CleanerCrmWeb.PortalLive.HomeTest do
            )
   end
 
-  test "redirects home when there is no portal session" do
-    assert {:error, {:redirect, %{to: "/"}}} = live(build_conn(), ~p"/portal")
+  test "redirects to request-link when there is no portal session" do
+    assert {:error, {:redirect, %{to: "/portal/request-link"}}} = live(build_conn(), ~p"/portal")
   end
 end

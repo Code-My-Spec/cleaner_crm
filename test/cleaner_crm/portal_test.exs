@@ -9,6 +9,7 @@ defmodule CleanerCrm.PortalTest do
   alias CleanerCrm.Users.Scope
 
   import CleanerCrm.UsersFixtures
+  import Swoosh.TestAssertions
 
   setup do
     owner = user_fixture()
@@ -43,6 +44,59 @@ defmodule CleanerCrm.PortalTest do
 
       assert {:ok, client_id} = Portal.access_portal(session.token)
       assert client_id == client.id
+    end
+  end
+
+  describe "request_login_link/1" do
+    test "an existing client's email gets a fresh session and an email", %{
+      scope: scope,
+      client: client
+    } do
+      {:ok, client} = Clients.update_client(scope, client, %{email: "morgan@example.com"})
+
+      assert :ok = Portal.request_login_link("morgan@example.com")
+
+      assert_email_sent(to: "morgan@example.com")
+      assert Portal.get_client!(client.id)
+    end
+
+    test "an unknown email sends nothing but still returns :ok" do
+      assert :ok = Portal.request_login_link("nobody@example.com")
+
+      assert_no_email_sent()
+    end
+
+    test "sends one link per matching client across different accounts", %{
+      scope: scope,
+      client: client
+    } do
+      {:ok, _client} = Clients.update_client(scope, client, %{email: "shared@example.com"})
+
+      other_owner = user_fixture()
+      other_owner_scope = Scope.for_user(other_owner)
+      {:ok, other_account} = Accounts.create_account(other_owner_scope, %{name: "Shine Co"})
+      other_scope = %{other_owner_scope | active_account_id: other_account.id}
+
+      {:ok, _other_client} =
+        Clients.create_client(other_scope, %{name: "Other Client", email: "shared@example.com"})
+
+      assert :ok = Portal.request_login_link("shared@example.com")
+
+      assert_email_sent(to: "shared@example.com")
+      assert_email_sent(to: "shared@example.com")
+    end
+
+    test "a second request within the cooldown window sends no new email", %{
+      scope: scope,
+      client: client
+    } do
+      {:ok, _client} = Clients.update_client(scope, client, %{email: "morgan@example.com"})
+
+      assert :ok = Portal.request_login_link("morgan@example.com")
+      assert_email_sent(to: "morgan@example.com")
+
+      assert :ok = Portal.request_login_link("morgan@example.com")
+      assert_no_email_sent()
     end
   end
 
