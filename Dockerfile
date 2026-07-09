@@ -13,7 +13,7 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 # ---- Build stage ----
 FROM ${BUILDER_IMAGE} AS builder
 
-RUN apt-get update -y && apt-get install -y build-essential git curl \
+RUN apt-get update -y && apt-get install -y build-essential git curl nodejs npm \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 WORKDIR /app
@@ -38,7 +38,10 @@ COPY assets assets
 COPY config/runtime.exs config/
 COPY rel rel
 
-# Compile and build assets (tailwind/esbuild via hex packages, no npm)
+# Install npm dependencies (html-to-image for the feedback widget)
+RUN cd assets && npm ci && cd ..
+
+# Compile and build assets (tailwind/esbuild binaries via hex packages)
 RUN mix assets.setup
 RUN mix compile
 RUN mix assets.deploy
