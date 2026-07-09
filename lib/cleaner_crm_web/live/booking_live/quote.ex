@@ -29,6 +29,24 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
   @impl true
   def render(%{live_action: :accept} = assigns), do: Accept.render(assigns)
 
+  # A fresh instance with no business account yet (or a wiped UAT DB)
+  # has nothing to price against — friendly empty state, not a crash.
+  def render(%{unavailable: true} = assigns) do
+    ~H"""
+    <Layouts.app flash={@flash} variant={:public}>
+      <div class="mx-auto max-w-md py-24 text-center space-y-4">
+        <.icon name="hero-sparkles" class="size-10 opacity-40" />
+        <h1 class="text-xl font-semibold">Online quotes are not open yet</h1>
+        <p class="opacity-70">
+          This cleaning business has not finished setting up instant quotes.
+          Check back soon.
+        </p>
+        <a href="/" class="btn btn-ghost">Back to home</a>
+      </div>
+    </Layouts.app>
+    """
+  end
+
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} variant={:public}>
@@ -172,6 +190,19 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
 
   defp apply_action(socket, :new, _params) do
     scope = Booking.public_scope()
+
+    if is_nil(scope.active_account_id) do
+      socket
+      |> assign(:page_title, "Get an Instant Quote")
+      |> assign(:unavailable, true)
+    else
+      do_apply_new(socket, scope)
+    end
+  end
+
+  defp apply_action(socket, :accept, %{"token" => token}), do: Accept.mount(token, socket)
+
+  defp do_apply_new(socket, scope) do
     rate_card = Booking.get_rate_card(scope)
 
     socket
@@ -181,8 +212,6 @@ defmodule CleanerCrmWeb.BookingLive.Quote do
     |> assign(:contact_form, to_form(%{"name" => nil, "email" => nil, "phone" => nil}, as: :lead))
     |> recalculate(Booking.change_lead(%Lead{}))
   end
-
-  defp apply_action(socket, :accept, %{"token" => token}), do: Accept.mount(token, socket)
 
   @impl true
   def handle_event(event, params, %{assigns: %{live_action: :accept}} = socket) do
