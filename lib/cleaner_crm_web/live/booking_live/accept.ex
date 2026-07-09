@@ -19,6 +19,8 @@ defmodule CleanerCrmWeb.BookingLive.Accept do
 
   use CleanerCrmWeb, :html
 
+  require Logger
+
   alias CleanerCrm.Booking
   alias CleanerCrm.Booking.Lead
   alias CleanerCrm.Money
@@ -195,8 +197,23 @@ defmodule CleanerCrmWeb.BookingLive.Accept do
            "That time has already passed — please pick another slot."
          )}
 
-      {:error, _reason} ->
-        {:noreply, socket |> assign(:slot_unavailable, true) |> assign(:policy_required, false)}
+      # Anything else is a payment/system failure, NOT a slot conflict —
+      # mislabeling it as "someone else booked this" sends the client
+      # hunting for a new time that will fail identically.
+      {:error, reason} ->
+        Logger.error(
+          "Booking confirmation failed for lead #{socket.assigns.lead.id}: " <>
+            inspect(reason)
+        )
+
+        {:noreply,
+         socket
+         |> assign(:policy_required, false)
+         |> assign(:slot_unavailable, false)
+         |> Phoenix.LiveView.put_flash(
+           :error,
+           "We could not process your payment. Please try again, or contact us to finish booking."
+         )}
     end
   end
 

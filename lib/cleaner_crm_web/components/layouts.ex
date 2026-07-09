@@ -226,9 +226,11 @@ defmodule CleanerCrmWeb.Layouts do
 
   @doc """
   Where a signed-in `current_scope` lands on "go to app": `/schedule`
-  for office roles, `/field` for everyone else signed in, or `nil`
-  when signed out.
+  for office roles, `/field` for cleaners, `/accounts/new` for a
+  fresh signup with no company yet, or `nil` when signed out.
   """
+  def signed_in_home(%Scope{user: %{}, active_account_id: nil}), do: ~p"/accounts/new"
+
   def signed_in_home(%Scope{user: %{}} = scope) do
     if nav_role(scope) in [:owner, :admin], do: ~p"/schedule", else: ~p"/field"
   end

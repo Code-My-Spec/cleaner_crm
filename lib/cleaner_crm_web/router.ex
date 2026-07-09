@@ -92,7 +92,16 @@ defmodule CleanerCrmWeb.Router do
       live "/accounts/:id/invitations", AccountLive.Invitations, :show
 
       live "/integrations", IntegrationLive.Index, :index
+    end
 
+    # Field surfaces need an active account: every scoped query guards
+    # on `active_account_id`, so a freshly-registered user with no
+    # company is funneled to /accounts/new instead of crashing.
+    live_session :require_account,
+      on_mount: [
+        {CleanerCrmWeb.UserAuth, :require_authenticated},
+        {CleanerCrmWeb.RequireAccount, :default}
+      ] do
       live "/field", FieldLive.Today, :index
       live "/field/jobs/:id", FieldLive.Job, :show
     end
@@ -101,10 +110,13 @@ defmodule CleanerCrmWeb.Router do
     # clients, quotes, reminders, and the audit trail. Gated to
     # owners/admins by `CleanerCrmWeb.RequireOfficeRole` — a cleaner
     # is redirected to `/field` instead. See that module for why it's
-    # a separate `live_session` from the one above.
+    # a separate `live_session` from the one above. RequireAccount runs
+    # first so an account-less user goes to company creation, not into
+    # RequireOfficeRole's /field redirect (which would also crash).
     live_session :require_office_role,
       on_mount: [
         {CleanerCrmWeb.UserAuth, :require_authenticated},
+        {CleanerCrmWeb.RequireAccount, :default},
         {CleanerCrmWeb.RequireOfficeRole, :default}
       ] do
       live "/clients", ClientLive.Index, :index

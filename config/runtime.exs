@@ -50,6 +50,14 @@ config :cleaner_crm, CleanerCrm.Billing.StripeGateway,
   secret_key: System.get_env("STRIPE_SECRET_KEY"),
   webhook_secret: System.get_env("STRIPE_WEBHOOK_SECRET")
 
+# STRIPE_ADAPTER=test swaps in the no-network fake gateway — for UAT
+# until real Stripe test keys are seeded. Anything else keeps the
+# compile-time default (Live in prod, Test in dev — see config files).
+if System.get_env("STRIPE_ADAPTER") == "test" do
+  config :cleaner_crm, CleanerCrm.Billing.StripeGateway,
+    adapter: CleanerCrm.Billing.StripeGateway.Test
+end
+
 # Twilio — SMS delivery per the sms-delivery ADR. Unconditional (like
 # the Stripe block above), not `:prod`-only: `CleanerCrm.Notifications.
 # Delivery.Twilio` must always have *some* config to read. Missing
