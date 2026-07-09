@@ -37,7 +37,11 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
           "currency" => "usd",
           "payment_method" => payment_method,
           "confirm" => true,
-          "off_session" => Map.get(params, :off_session, false)
+          "off_session" => Map.get(params, :off_session, false),
+          # Card-only, no redirect-based methods: confirming
+          # server-side without a return_url requires redirects off.
+          "automatic_payment_methods[enabled]" => true,
+          "automatic_payment_methods[allow_redirects]" => "never"
         }
         |> put_metadata(Map.get(params, :metadata, %{}))
 
