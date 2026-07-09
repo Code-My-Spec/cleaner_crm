@@ -16,7 +16,7 @@ defmodule CleanerCrm.Billing.ReceiptNotifier do
     message =
       new()
       |> to(email)
-      |> from({"CleanerCrm", "contact@example.com"})
+      |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
       |> subject("Your receipt")
       |> text_body("""
       Thanks! We've charged #{Money.format_cents(invoice.amount_cents)} for your recent cleaning.

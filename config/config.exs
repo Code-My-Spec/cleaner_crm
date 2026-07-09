@@ -49,6 +49,11 @@ config :phoenix_live_view,
 # at the `config/runtime.exs`.
 config :cleaner_crm, CleanerCrm.Mailer, adapter: Swoosh.Adapters.Local
 
+# Sender identity for every outbound email (reminders, receipts, review
+# requests, magic links, booking confirmations). Overridden at runtime
+# in prod from MAILER_FROM_NAME / MAILER_FROM_EMAIL.
+config :cleaner_crm, :mailer_from, {"Cleaner CRM", "contact@example.com"}
+
 config :cleaner_crm, CleanerCrm.Billing.StripeGateway,
   adapter: CleanerCrm.Billing.StripeGateway.Live
 

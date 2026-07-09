@@ -17,7 +17,7 @@ defmodule CleanerCrm.Booking.Notifier do
     message =
       new()
       |> to(email)
-      |> from({"CleanerCrm", "contact@example.com"})
+      |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
       |> subject("Your cleaning is booked!")
       |> html_body("""
       <p>Thanks#{name_suffix(lead)}! Your cleaning is booked for #{format_visit(lead)}.</p>

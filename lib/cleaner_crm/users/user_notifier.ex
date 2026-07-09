@@ -9,7 +9,7 @@ defmodule CleanerCrm.Users.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"CleanerCrm", "contact@example.com"})
+      |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
       |> subject(subject)
       |> text_body(body)
 

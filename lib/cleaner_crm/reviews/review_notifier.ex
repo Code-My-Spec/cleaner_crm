@@ -27,7 +27,7 @@ defmodule CleanerCrm.Reviews.ReviewNotifier do
   defp thank_you_email(to, job) do
     new()
     |> to(to)
-    |> from({"CleanerCrm", "contact@example.com"})
+    |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
     |> subject("Thank you for choosing us! A review request will follow soon")
     |> html_body("""
     <p>Thank you for having us clean on #{job.scheduled_date}. We hope it was a great visit!</p>
@@ -43,7 +43,7 @@ defmodule CleanerCrm.Reviews.ReviewNotifier do
   defp review_request_email(to, job, review_url) do
     new()
     |> to(to)
-    |> from({"CleanerCrm", "contact@example.com"})
+    |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
     |> subject("How was your cleaning on #{job.scheduled_date}? Leave a review")
     |> html_body("""
     <p>We'd love to hear how your recent cleaning visit went.</p>

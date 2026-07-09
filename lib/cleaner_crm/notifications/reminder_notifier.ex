@@ -21,7 +21,7 @@ defmodule CleanerCrm.Notifications.ReminderNotifier do
   defp reminder_email(to, job, confirm_url, reschedule_url) do
     new()
     |> to(to)
-    |> from({"CleanerCrm", "contact@example.com"})
+    |> from(Application.fetch_env!(:cleaner_crm, :mailer_from))
     |> subject("Reminder: your cleaning appointment on #{job.scheduled_date}")
     |> html_body("""
     <p>This is a reminder about your cleaning appointment on \
