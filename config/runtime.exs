@@ -20,6 +20,19 @@ if System.get_env("PHX_SERVER") do
   config :cleaner_crm, CleanerCrmWeb.Endpoint, server: true
 end
 
+# === Secret loading ==========================================================
+#
+# Deployed containers (UAT + prod, both MIX_ENV=prod) carry only AWS
+# bootstrap creds + APP_ENV; every app secret is fetched from SSM
+# Parameter Store (/cleaner_crm/<APP_ENV>/*) into System env here,
+# BEFORE any config below reads it. Local dev/test never set APP_ENV.
+if config_env() == :prod do
+  case System.get_env("APP_ENV") do
+    nil -> :ok
+    app_env -> CleanerCrm.Secrets.load!(app_env)
+  end
+end
+
 config :cleaner_crm, CleanerCrmWeb.Endpoint,
   http: [port: String.to_integer(System.get_env("PORT", "4100"))]
 

@@ -1,0 +1,50 @@
+# Kamal config for cleaner_crm PROD on the Hetzner prod box (Ashburn x86).
+# Run with: scripts/deploy
+#
+# NOTE: no prod DNS/host exists yet — UAT (config/deploy.uat.yml) is the
+# live environment. Update `proxy.host` before the first prod deploy.
+#
+# Notes:
+# - kamal-proxy serves traffic on :80/:443 directly.
+# - db_net is pre-attached so the container can reach infra-postgres-1 at start.
+# - App secrets are fetched at container boot from AWS SSM
+#   (`/cleaner_crm/prod/*`) by CleanerCrm.Secrets.load!/1 in
+#   config/runtime.exs. Kamal carries only the AWS bootstrap credentials
+#   listed under env.secret below — never app secrets.
+
+service: cleaner-crm
+image: johns10/cleaner_crm
+
+servers:
+  web:
+    hosts:
+      - 178.156.143.212
+    options:
+      network: db_net
+
+proxy:
+  ssl: true
+  host: crm.desertfirstcleaning.com
+  app_port: 4000
+
+registry:
+  server: ghcr.io
+  username: johns10
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+  local: true
+
+env:
+  clear:
+    APP_ENV: prod
+    AWS_REGION: us-east-1
+    PORT: "4000"
+  secret:
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+
+ssh:
+  user: root
