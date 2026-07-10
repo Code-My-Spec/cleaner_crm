@@ -12,17 +12,22 @@ defmodule CleanerCrm.Secrets.ReqClient do
   @behaviour ExAws.Request.HttpClient
 
   @impl true
-  def request(method, url, body, headers, _http_opts) do
-    # Retries are handled by CleanerCrm.Secrets' own bounded retry loop;
-    # decompression is off because ExAws signs/parses the raw body.
+  def request(method, url, body, headers, http_opts) do
+    # Retries are handled by CleanerCrm.Secrets' own bounded retry loop.
+    # `decode_body: false` hands ExAws the body as a binary to parse
+    # itself — but decompression must stay ON (`raw: true` would skip
+    # it): req 0.5 requests gzip by default, and a still-gzipped body
+    # crashes ExAws's JSON parse at boot (0x1F magic byte).
+    # `http_opts` (ExAws's passthrough) lets tests inject `plug:`.
     case Req.request(
-           method: method,
-           url: url,
-           body: body || "",
-           headers: headers,
-           retry: false,
-           decode_body: false,
-           raw: true
+           [
+             method: method,
+             url: url,
+             body: body || "",
+             headers: headers,
+             retry: false,
+             decode_body: false
+           ] ++ (http_opts || [])
          ) do
       {:ok, %Req.Response{status: status, headers: resp_headers, body: resp_body}} ->
         {:ok, %{status_code: status, headers: flatten_headers(resp_headers), body: resp_body}}
