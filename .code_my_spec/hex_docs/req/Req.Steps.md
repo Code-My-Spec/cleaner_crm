@@ -90,9 +90,6 @@ Sets request authentication.
 
 Asks the server to return compressed response.
 
-This step also enables the [`decompress_body`](`Req.Steps.decompress_body/1`) step, which
-decompresses the response body. Both steps are off by default; set `compressed: true` to opt in.
-
 Supported formats:
 
   * `gzip`
@@ -101,39 +98,32 @@ Supported formats:
 
   * `zstd` (if [ezstd] is installed)
 
-> #### Only enable compression for trusted servers {: .info}
->
-> The `decompress_body/1` step decompresses the whole response body into memory with no size
-> limit, so a small response can expand into many gigabytes. A malicious or compromised server
-> can exploit this to exhaust memory and crash the client (a decompression bomb / denial of
-> service). For this reason compression is off by default; only set `compressed: true` for
-> endpoints you trust.
-
 ## Request Options
 
   * `:compressed` - if set to `true`, sets the `accept-encoding` header with compression
-    algorithms that Req supports and decompresses the response body. Defaults to `false`.
+    algorithms that Req supports. Defaults to `true`.
 
-    This option has no effect when streaming the response body (`into: fun | collectable`).
+    When streaming response body (`into: fun | collectable`), `compressed` defaults to `false`.
 
 ## Examples
 
-By default, Req does not ask for a compressed response. Pass `compressed: true` to request one
-and have Req decompress the body, so we get back the decompressed content:
+Req automatically decompresses response body (`decompress_body/1` step) so let's disable that by
+passing `raw: true`.
 
-    iex> response = Req.get!("https://elixir-lang.org", compressed: true)
-    iex> response.body |> binary_part(0, 15)
-    "<!DOCTYPE html>"
+By default, we ask the server to send compressed response. Let's look at the headers and the raw
+body. Notice the body starts with `<<31, 139>>` (`<<0x1F, 0x8B>>`), the "magic bytes" for gzip:
 
-To inspect the raw compressed bytes the server sent, additionally pass `raw: true`, which
-disables decompression. Notice the body now starts with `<<31, 139>>`, the "magic bytes"
-for gzip:
-
-    iex> response = Req.get!("https://elixir-lang.org", compressed: true, raw: true)
+    iex> response = Req.get!("https://elixir-lang.org", raw: true)
     iex> Req.Response.get_header(response, "content-encoding")
     ["gzip"]
     iex> response.body |> binary_part(0, 2)
     <<31, 139>>
+
+Now, let's pass `compressed: false` and notice the raw body was not compressed:
+
+    iex> response = Req.get!("https://elixir-lang.org", raw: true, compressed: false)
+    iex> response.body |> binary_part(0, 15)
+    "<!DOCTYPE html>"
 
 The Brotli and Zstandard compression algorithms are also supported if the optional
 packages are installed:
@@ -144,7 +134,7 @@ packages are installed:
       {:ezstd, "~> 1.0"}
     ])
 
-    response = Req.get!("https://httpbin.org/anything", compressed: true)
+    response = Req.get!("https://httpbin.org/anything")
     response.body["headers"]["Accept-Encoding"]
     #=> "zstd, br, gzip"
 
@@ -514,10 +504,6 @@ See `checksum/1` for more information.
 
 Decompresses the response body based on the `content-encoding` header.
 
-This step only runs when the `:compressed` option is set to `true` (see the `compressed/1`
-step); otherwise the body is left as is. This guards against decompression bombs, where a
-small compressed response expands into a much larger body in memory.
-
 This step is disabled on response body streaming. If response body is not a binary, in other
 words it has been transformed by another step, it is left as is.
 
@@ -537,16 +523,13 @@ This step updates the following headers to reflect the changes:
 
 ## Options
 
-  * `:compressed` - if set to `true`, decompresses the response body. Defaults to `false`.
-    See also the `compressed/1` step.
-
   * `:raw` - if set to `true`, disables response body decompression. Defaults to `false`.
 
     Note: setting `raw: true` also disables response body decoding in the `decode_body/1` step.
 
 ## Examples
 
-    iex> response = Req.get!("https://httpbin.org/gzip", compressed: true)
+    iex> response = Req.get!("https://httpbin.org/gzip")
     iex> response.body["gzipped"]
     true
 
@@ -557,7 +540,7 @@ If the [brotli] package is installed, Brotli is also supported:
       {:brotli, "~> 0.3.0"}
     ])
 
-    response = Req.get!("https://httpbin.org/brotli", compressed: true)
+    response = Req.get!("https://httpbin.org/brotli")
     Req.Response.get_header(response, "content-encoding")
     #=> ["br"]
     response.body["brotli"]
@@ -570,58 +553,27 @@ If the [brotli] package is installed, Brotli is also supported:
 
 Decodes response body based on the detected format.
 
-By default, only JSON responses are decoded. To decode other formats, or to add support for
-custom ones, use the `:decoders` option.
+Supported formats:
 
-## Built-in decoders
+| Format       | Decoder                                                           |
+| ------------ | ----------------------------------------------------------------- |
+| `json`       | `Jason.decode/2`                                                  |
+| `tar`, `tgz` | `:erl_tar.extract/2`                                              |
+| `zip`        | `:zip.unzip/2`                                                    |
+| `gzip`       | `:zlib.gunzip/1`                                                  |
+| `zst`        | `:ezstd.decompress/1` (if [ezstd] is installed)                   |
+| `csv`        | `NimbleCSV.RFC4180.parse_string/2` (if [nimble_csv] is installed) |
 
-| Format               | Decoder                                                     |
-| -------------------- | ----------------------------------------------------------- |
-| `:json`, `:json_api` | `Jason.decode(term)` (enabled by default)                   |
-| `:zip`               | `Req.ZIP.decode(term)`                                      |
-| `:tar`, `:tgz`       | `Req.Tar.decode(term)`                                      |
-| `:gz`                | `:zlib.gunzip(term)`                                        |
-| `:zst`               | `:ezstd.decompress(term)` ([ezstd] must be installed to use this format) |
-| `:csv`               | `NimbleCSV.RFC4180.parse_string(term)` ([nimble_csv] must be installed to use this format) |
-
-The format is determined by the response `content-type` header. See `MIME` for registering
-content-type/format mapping.
+The format is determined based on the `content-type` header of the response. For example,
+if the `content-type` is `application/json`, the response body is decoded as JSON. The built-in
+decoders also understand format extensions, such as decoding as JSON for a content-type of
+`application/vnd.api+json`. To do this, Req falls back to `MIME.extensions/1`; check the
+documentation for that function for more information.
 
 This step is disabled on response body streaming. If response body is not a binary, in other
 words it has been transformed by another step, it is left as is.
 
-> #### Decompression Bombs {: .warning}
->
-> The archive and compression decoders (`:zip`, `:tar`, `:tgz`, `:gz`, and `:zst`) decompress
-> the whole response body into memory with no size limit, so a small response can expand to
-> many gigabytes. For this reason they are **not** enabled by default; only opt into them via
-> the `:decoders` option for endpoints you trust.
-
 ## Request Options
-
-  * `:decoders` - the list of decoders to use. Defaults to `[:json, :json_api]`.
-
-    Each element is either:
-
-      * a format (atom) handled by a [built-in decoder](#decode_body/1-built-in-decoders),
-        e.g. `:json` or `:zip`;
-
-      * a `{format, codec}` tuple, where `format` is an atom and `codec` is one of:
-
-          * another format (atom), to reuse a built-in decoder, e.g. `{:json5, :json}`;
-
-          * a module exporting `decode/1` that returns `{:ok, term}` or `{:error, exception}`;
-
-          * a 1-arity function that returns `{:ok, term}` or `{:error, exception}`.
-
-    Setting `:decoders` replaces the default, so include `:json` if you still want JSON decoded:
-
-        # handles json, zip, and tar:
-        Req.new(decoders: [:json, :zip, :tar])
-
-    Set `:decoders` to `false` to disable all decoding, including JSON. A custom decoder:
-
-        Req.get!(url, decoders: [ics: &{:ok, ICal.from_ics(&1)}])
 
   * `:decode_body` - if set to `false`, disables automatic response body decoding.
     Defaults to `true`.
@@ -641,11 +593,11 @@ Decode JSON:
     ...> response.body["slideshow"]["title"]
     "Sample Slide Show"
 
-Decode a ZIP archive (opt-in):
+Decode gzip:
 
-    iex> response = Req.get!("https://example.com/archive.zip", decoders: [:zip])
-    ...> response.body["file.txt"]
-    "contents"
+    iex> response = Req.get!("https://httpbin.org/gzip")
+    ...> response.body["gzipped"]
+    true
 
 [nimble_csv]: https://hex.pm/packages/nimble_csv
 [ezstd]: https://hex.pm/packages/ezstd
@@ -747,7 +699,7 @@ This function can be used as either or both response and error step.
 
           * `Req.TransportError` with `reason: :timeout | :econnrefused | :closed`
 
-          * `Req.HTTPError` with `protocol: :http2, reason: :unprocessed | :pool_not_available`
+          * `Req.HTTPError` with `protocol: :http2, reason: :unprocessed`
 
       * `:transient` - same as `:safe_transient` except retries all HTTP methods (POST, DELETE, etc.)
 

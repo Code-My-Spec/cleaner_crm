@@ -1,0 +1,171 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2026-07-10T01:01:09.890914Z",
+      "request": {
+        "body": "amount=1500&automatic_payment_methods%5Ballow_redirects%5D=never&automatic_payment_methods%5Benabled%5D=true&currency=usd&metadata%5Blead_id%5D=45a59446-0ca8-4ada-9fd7-819a9fae7087",
+        "body_type": "text",
+        "headers": {
+          "accept-encoding": [
+            "gzip"
+          ],
+          "content-type": [
+            "application/x-www-form-urlencoded"
+          ],
+          "user-agent": [
+            "req/0.5.17"
+          ]
+        },
+        "method": "POST",
+        "query_string": "",
+        "uri": "https://api.stripe.com/v1/payment_intents"
+      },
+      "response": {
+        "body_json": {
+          "managed_payments": {
+            "enabled": false
+          },
+          "canceled_at": null,
+          "shipping": null,
+          "livemode": false,
+          "customer": null,
+          "statement_descriptor": null,
+          "amount_capturable": 0,
+          "capture_method": "automatic_async",
+          "receipt_email": null,
+          "processing": null,
+          "amount_details": {
+            "tip": {}
+          },
+          "payment_method": null,
+          "created": 1783645269,
+          "transfer_data": null,
+          "source": null,
+          "application": null,
+          "latest_charge": null,
+          "statement_descriptor_suffix": null,
+          "status": "requires_payment_method",
+          "description": null,
+          "id": "pi_3TrSoTRRknCxCwAx0JYBR4JH",
+          "customer_account": null,
+          "application_fee_amount": null,
+          "payment_method_options": {
+            "card": {
+              "installments": null,
+              "mandate_options": null,
+              "network": null,
+              "request_three_d_secure": "automatic"
+            },
+            "link": {
+              "persistent_token": null
+            }
+          },
+          "currency": "usd",
+          "object": "payment_intent",
+          "on_behalf_of": null,
+          "cancellation_reason": null,
+          "client_secret": "pi_3TrSoTRRknCxCwAx0JYBR4JH_secret_AwR3KT79Zow7dhUBcpLD5L9GK",
+          "payment_method_types": [
+            "card",
+            "link"
+          ],
+          "automatic_payment_methods": {
+            "allow_redirects": "never",
+            "enabled": true
+          },
+          "next_action": null,
+          "transfer_group": null,
+          "amount_received": 0,
+          "review": null,
+          "shared_payment_granted_token": null,
+          "amount": 1500,
+          "metadata": {
+            "lead_id": "45a59446-0ca8-4ada-9fd7-819a9fae7087"
+          },
+          "excluded_payment_method_types": null,
+          "setup_future_usage": null,
+          "last_payment_error": null,
+          "payment_method_configuration_details": {
+            "id": "pmc_1TrLLkRRknCxCwAxdltZURJq",
+            "parent": null
+          },
+          "confirmation_method": "automatic"
+        },
+        "body_type": "json",
+        "headers": {
+          "access-control-allow-credentials": [
+            "true"
+          ],
+          "access-control-allow-methods": [
+            "GET, HEAD, PUT, PATCH, POST, DELETE"
+          ],
+          "access-control-allow-origin": [
+            "*"
+          ],
+          "access-control-expose-headers": [
+            "Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required"
+          ],
+          "access-control-max-age": [
+            "300"
+          ],
+          "cache-control": [
+            "no-cache, no-store"
+          ],
+          "connection": [
+            "keep-alive"
+          ],
+          "content-security-policy": [
+            "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr; report-to csp"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "date": [
+            "Fri, 10 Jul 2026 01:01:09 GMT"
+          ],
+          "idempotency-key": [
+            "c7ff7abd-e9c1-4876-9e24-573517bb7cd0"
+          ],
+          "original-request": [
+            "req_mpmrLFRp0Ntcoz"
+          ],
+          "report-to": [
+            "{\"group\":\"csp\",\"max_age\":8640,\"endpoints\":[{\"url\":\"https://q.stripe.com/csp-report-v2?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr&t=1\"}],\"include_subdomains\":true}"
+          ],
+          "reporting-endpoints": [
+            "csp=\"https://q.stripe.com/csp-report-v2?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr&t=1\""
+          ],
+          "request-id": [
+            "req_mpmrLFRp0Ntcoz"
+          ],
+          "server": [
+            "nginx"
+          ],
+          "strict-transport-security": [
+            "max-age=63072000; includeSubDomains; preload"
+          ],
+          "stripe-should-retry": [
+            "false"
+          ],
+          "stripe-version": [
+            "2026-06-24.dahlia"
+          ],
+          "vary": [
+            "Origin"
+          ],
+          "x-stripe-priority-routing-enabled": [
+            "true"
+          ],
+          "x-stripe-routing-context-priority-tier": [
+            "api-testmode"
+          ],
+          "x-wc": [
+            "3c3"
+          ]
+        },
+        "status": 200
+      }
+    }
+  ],
+  "version": "2.0"
+}

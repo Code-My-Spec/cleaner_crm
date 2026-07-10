@@ -1,0 +1,108 @@
+{
+  "interactions": [
+    {
+      "recorded_at": "2026-07-10T01:01:11.130089Z",
+      "request": {
+        "body": "amount=0&automatic_payment_methods%5Ballow_redirects%5D=never&automatic_payment_methods%5Benabled%5D=true&currency=usd",
+        "body_type": "text",
+        "headers": {
+          "accept-encoding": [
+            "gzip"
+          ],
+          "content-type": [
+            "application/x-www-form-urlencoded"
+          ],
+          "user-agent": [
+            "req/0.5.17"
+          ]
+        },
+        "method": "POST",
+        "query_string": "",
+        "uri": "https://api.stripe.com/v1/payment_intents"
+      },
+      "response": {
+        "body_json": {
+          "error": {
+            "code": "parameter_invalid_integer",
+            "doc_url": "https://stripe.com/docs/error-codes/parameter-invalid-integer",
+            "message": "The amount must be greater than or equal to the minimum charge amount allowed for your account and the currency set (https://docs.stripe.com/currencies#minimum-and-maximum-charge-amounts).  If you want to save a Payment Method for future use without an immediate payment, use a Setup Intent instead: https://docs.stripe.com/payments/setup-intents",
+            "param": "amount",
+            "request_log_url": "https://dashboard.stripe.com/acct_1TrLLDRRknCxCwAx/test/workbench/logs?object=req_QlhSmSLd1NEoTi",
+            "type": "invalid_request_error"
+          }
+        },
+        "body_type": "json",
+        "headers": {
+          "access-control-allow-credentials": [
+            "true"
+          ],
+          "access-control-allow-methods": [
+            "GET, HEAD, PUT, PATCH, POST, DELETE"
+          ],
+          "access-control-allow-origin": [
+            "*"
+          ],
+          "access-control-expose-headers": [
+            "Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required"
+          ],
+          "access-control-max-age": [
+            "300"
+          ],
+          "cache-control": [
+            "no-cache, no-store"
+          ],
+          "connection": [
+            "keep-alive"
+          ],
+          "content-security-policy": [
+            "base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr; report-to csp"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "date": [
+            "Fri, 10 Jul 2026 01:01:11 GMT"
+          ],
+          "idempotency-key": [
+            "333b1454-72c4-40bf-9a5a-37403a555ff2"
+          ],
+          "original-request": [
+            "req_QlhSmSLd1NEoTi"
+          ],
+          "report-to": [
+            "{\"group\":\"csp\",\"max_age\":8640,\"endpoints\":[{\"url\":\"https://q.stripe.com/csp-report-v2?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr&t=1\"}],\"include_subdomains\":true}"
+          ],
+          "reporting-endpoints": [
+            "csp=\"https://q.stripe.com/csp-report-v2?q=6w9uOZ0dxRqdw6kDj2cUqBv7BdyHDwOOmt2HT_mlSWQBScW7Iyvekehoi5BfHRVV4AZdyCK_OqocQJBr&t=1\""
+          ],
+          "request-id": [
+            "req_QlhSmSLd1NEoTi"
+          ],
+          "server": [
+            "nginx"
+          ],
+          "strict-transport-security": [
+            "max-age=63072000; includeSubDomains; preload"
+          ],
+          "stripe-version": [
+            "2026-06-24.dahlia"
+          ],
+          "vary": [
+            "Origin"
+          ],
+          "x-stripe-priority-routing-enabled": [
+            "true"
+          ],
+          "x-stripe-routing-context-priority-tier": [
+            "api-testmode"
+          ],
+          "x-wc": [
+            "3c3"
+          ]
+        },
+        "status": 400
+      }
+    }
+  ],
+  "version": "2.0"
+}

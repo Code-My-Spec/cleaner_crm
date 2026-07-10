@@ -44,10 +44,16 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
 
       @base_url
       |> Kernel.<>("/payment_intents")
-      |> Req.post(form: body, auth: {:bearer, key})
+      |> Req.post([form: body, auth: {:bearer, key}] ++ req_http_options())
       |> handle_response()
     end
   end
+
+  # Test-only seam: ReqCassette tests inject `plug: cassette_plug` here via
+  # `Application.put_env(:cleaner_crm, :req_http_options, plug: plug)` so
+  # requests are recorded/replayed instead of hitting the network. Empty in
+  # every other environment, so this changes nothing outside tests.
+  defp req_http_options, do: Application.get_env(:cleaner_crm, :req_http_options, [])
 
   # `confirm: false` — the Stripe Elements flow (see
   # `CleanerCrm.Booking.confirm_booking/3`) — leaves the intent
@@ -93,16 +99,28 @@ defmodule CleanerCrm.Billing.StripeGateway.Live do
     end)
   end
 
+  # Stripe's recommended tolerance: a validly-signed payload older than
+  # this is rejected to close the replay window.
+  @webhook_tolerance_seconds 300
+
   @impl true
   def verify_webhook_event(conn) do
     with {:ok, secret} <- fetch_webhook_secret(),
          [signature_header] <- Plug.Conn.get_req_header(conn, "stripe-signature"),
          raw_body when is_binary(raw_body) <- conn.assigns[:raw_body],
          {:ok, timestamp, expected_signature} <- parse_signature_header(signature_header),
+         true <- fresh_timestamp?(timestamp),
          true <- Plug.Crypto.secure_compare(sign(secret, timestamp, raw_body), expected_signature) do
       {:ok, conn.params}
     else
       _ -> {:error, :invalid_signature}
+    end
+  end
+
+  defp fresh_timestamp?(timestamp) do
+    case Integer.parse(to_string(timestamp)) do
+      {unix, ""} -> abs(System.system_time(:second) - unix) <= @webhook_tolerance_seconds
+      _ -> false
     end
   end
 

@@ -93,7 +93,8 @@ defmodule CleanerCrm.MixProject do
       {:ex_aws_ssm, "~> 2.1"},
       {:boundary, "~> 0.10", runtime: false},
       {:code_my_spec_generators, "~> 0.1", only: :dev},
-      {:wallaby, "~> 0.30", only: :test}
+      {:wallaby, "~> 0.30", only: :test},
+      {:req_cassette, "~> 0.5", only: :test}
     ]
   end
 
