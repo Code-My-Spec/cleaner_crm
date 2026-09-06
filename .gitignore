@@ -38,6 +38,7 @@ npm-debug.log
 # CodeMySpec
 .code_my_spec/internal/
 /diagnostics.jsonl
+/.cms_harness.json
 
 
 # QA/runtime uploads and local env
