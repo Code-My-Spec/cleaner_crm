@@ -1,0 +1,751 @@
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 25 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7112_owner_builds_a_per-room_quote_spex.exs:25: CleanerCrmSpex.Story835.Criterion7112Spex."test Spex: owner builds a per-room quote"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 25 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7114_switching_pricing_model_clears_the_other_models_inputs_spex.exs:25: CleanerCrmSpex.Story835.Criterion7114Spex."test Spex: switching pricing model clears the other model's inputs"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 25 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7116_per-square-foot_total_computes_from_the_rate_card_spex.exs:25: CleanerCrmSpex.Story835.Criterion7116Spex."test Spex: per-square-foot total computes from the rate card"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 26 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7119_owner_quotes_a_phone_lead_without_visiting_the_property_spex.exs:26: CleanerCrmSpex.Story835.Criterion7119Spex."test Spex: owner quotes a phone lead without visiting the property"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 25 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7120_missing_rate_on_the_chosen_model_blocks_finalizing_spex.exs:25: CleanerCrmSpex.Story835.Criterion7120Spex."test Spex: missing rate on the chosen model blocks finalizing"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 47 │         {:ok, new_quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                             ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7122_rate-card_change_does_not_alter_an_already-sent_quote_spex.exs:47: CleanerCrmSpex.Story835.Criterion7122Spex."test Spex: rate-card change does not alter an already-sent quote"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quotes/new"
+    │
+ 25 │         {:ok, quote_live, _html} = live(context.conn, ~p"/quotes/new")
+    │                                                         ~
+    │
+    └─ test/spex/835_build_quotes_with_per-room_per-sqft_or_hourly_pricing/criterion_7122_rate-card_change_does_not_alter_an_already-sent_quote_spex.exs:25: CleanerCrmSpex.Story835.Criterion7122Spex."test Spex: rate-card change does not alter an already-sent quote"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices"
+    │
+ 51 │         {:ok, _invoices_live, html} = live(context.conn, ~p"/invoices")
+    │                                                            ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7153_completing_a_job_generates_its_invoice_spex.exs:51: CleanerCrmSpex.Story836.Criterion7153Spex."test Spex: marking a job complete generates its invoice"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 35 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7153_completing_a_job_generates_its_invoice_spex.exs:35: CleanerCrmSpex.Story836.Criterion7153Spex."test Spex: marking a job complete generates its invoice"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 48 │         {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                           ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7154_auto-charge_the_card_on_file_spex.exs:48: CleanerCrmSpex.Story836.Criterion7154Spex."test Spex: charging the client's card on file for a generated invoice"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 41 │         {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                           ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7155_client_with_no_card_on_file_pays_via_payment_link_spex.exs:41: CleanerCrmSpex.Story836.Criterion7155Spex."test Spex: collecting payment via a payment link when no card is on file"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 31 │         {:ok, invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                          ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7156_invoice_shows_the_jobs_proof-of-work_spex.exs:31: CleanerCrmSpex.Story836.Criterion7156Spex."test Spex: attaching a completed job's proof-of-work to its invoice"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 70 │         {:ok, invoice_live, _html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                           ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7157_card-on-file_charge_is_declined_spex.exs:70: CleanerCrmSpex.Story836.Criterion7157Spex."test Spex: handling a declined card-on-file charge"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 62 │         {:ok, _invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                           ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7157_card-on-file_charge_is_declined_spex.exs:62: CleanerCrmSpex.Story836.Criterion7157Spex."test Spex: handling a declined card-on-file charge"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices"
+    │
+ 65 │         {:ok, _invoices_live, html} = live(context.conn, ~p"/invoices")
+    │                                                            ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7158_invoice_marked_paid_on_provider_confirmation_spex.exs:65: CleanerCrmSpex.Story836.Criterion7158Spex."test Spex: marking an invoice paid only on provider confirmation"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/invoices/#{context.invoice.id}"
+    │
+ 57 │         {:ok, _invoice_live, html} = live(context.conn, ~p"/invoices/#{context.invoice.id}")
+    │                                                           ~
+    │
+    └─ test/spex/836_invoice_completed_jobs_and_collect_payment/criterion_7158_invoice_marked_paid_on_provider_confirmation_spex.exs:57: CleanerCrmSpex.Story836.Criterion7158Spex."test Spex: marking an invoice paid only on provider confirmation"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders"
+    │
+ 35 │         {:ok, reminders_live, _html} = live(context.conn, ~p"/reminders")
+    │                                                             ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7183_reminder_fires_at_the_configured_lead_time_spex.exs:35: CleanerCrmSpex.Story837.Criterion7183Spex."test Spex: an appointment reminder fires automatically at the configured lead time"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders"
+    │
+ 63 │         {:ok, _reminders_live, html} = live(context.conn, ~p"/reminders")
+    │                                                             ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7185_client_who_prefers_sms_gets_a_text_reminder_spex.exs:63: CleanerCrmSpex.Story837.Criterion7185Spex."test Spex: the automatic reminder is delivered on the client's preferred channel"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders"
+    │
+ 30 │         {:ok, reminders_live, _html} = live(context.conn, ~p"/reminders")
+    │                                                             ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7185_client_who_prefers_sms_gets_a_text_reminder_spex.exs:30: CleanerCrmSpex.Story837.Criterion7185Spex."test Spex: the automatic reminder is delivered on the client's preferred channel"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders"
+    │
+ 29 │         {:ok, reminders_live, _html} = live(context.conn, ~p"/reminders")
+    │                                                             ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7186_reminder_includes_confirm_and_reschedule_actions_spex.exs:29: CleanerCrmSpex.Story837.Criterion7186Spex."test Spex: every reminder gives the client confirm and reschedule actions"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders/confirm/#{context.notification.token}"
+    │
+ 38 │           |> get(~p"/reminders/confirm/#{context.notification.token}")
+    │                    ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7187_client_confirms_the_appointment_spex.exs:38: CleanerCrmSpex.Story837.Criterion7187Spex."test Spex: confirming via the reminder marks the appointment confirmed"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders/reschedule/#{context.notification.token}"
+    │
+ 38 │           |> get(~p"/reminders/reschedule/#{context.notification.token}")
+    │                    ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7188_client_requests_a_reschedule_spex.exs:38: CleanerCrmSpex.Story837.Criterion7188Spex."test Spex: requesting reschedule via the reminder flags the appointment and notifies the owner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/reminders"
+    │
+ 73 │         {:ok, _reminders_live, html} = live(context.conn, ~p"/reminders")
+    │                                                             ~
+    │
+    └─ test/spex/837_send_automated_appointment_reminders_to_clients/criterion_7189_sms_reminder_is_undeliverable_and_falls_back_to_email_spex.exs:73: CleanerCrmSpex.Story837.Criterion7189Spex."test Spex: an undeliverable SMS reminder falls back to email and flags the owner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 45 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7121_cleaner_clocks_in_and_out_of_an_assigned_job_spex.exs:45: CleanerCrmSpex.Story838.Criterion7121Spex."test Spex: a cleaner clocks in and out of their own assigned job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 66 │         {:ok, ana_job_live, _html} = live(ana_conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7123_cleaner_tries_to_clock_in_on_a_job_not_assigned_to_them_spex.exs:66: CleanerCrmSpex.Story838.Criterion7123Spex."test Spex: a cleaner cannot clock in on another cleaner's job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 57 │         assert context.redirect_path == ~p"/field"
+    │                                           ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7123_cleaner_tries_to_clock_in_on_a_job_not_assigned_to_them_spex.exs:57: CleanerCrmSpex.Story838.Criterion7123Spex."test Spex: a cleaner cannot clock in on another cleaner's job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 51 │           live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7123_cleaner_tries_to_clock_in_on_a_job_not_assigned_to_them_spex.exs:51: CleanerCrmSpex.Story838.Criterion7123Spex."test Spex: a cleaner cannot clock in on another cleaner's job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 58 │         {:ok, timesheet_live, html} = live(context.conn, ~p"/timesheets")
+    │                                                            ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7125_hourly_job_pays_rate_times_worked_hours_spex.exs:58: CleanerCrmSpex.Story838.Criterion7125Spex."test Spex: an hourly job pays the cleaner's rate times the hours worked"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 57 │         {:ok, timesheet_live, html} = live(context.conn, ~p"/timesheets")
+    │                                                            ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7128_per-job_piece_rate_pays_a_fixed_amount_regardless_of_time_spex.exs:57: CleanerCrmSpex.Story838.Criterion7128Spex."test Spex: a piece-rate job pays a fixed amount no matter how long it takes"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 87 │         {:ok, _timesheet_live, html} = live(context.conn, ~p"/timesheets")
+    │                                                             ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7130_running_pay-period_total_builds_as_jobs_complete_spex.exs:87: CleanerCrmSpex.Story838.Criterion7130Spex."test Spex: the pay-period total grows as each of the cleaner's jobs completes"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 58 │         {:ok, timesheet_live, html} = live(context.conn, ~p"/timesheets")
+    │                                                            ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7130_running_pay-period_total_builds_as_jobs_complete_spex.exs:58: CleanerCrmSpex.Story838.Criterion7130Spex."test Spex: the pay-period total grows as each of the cleaner's jobs completes"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 93 │         {:ok, timesheet_live, _html} = live(context.conn, ~p"/timesheets")
+    │                                                             ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7134_owner_exports_a_completed_pay_period_to_csv_spex.exs:93: CleanerCrmSpex.Story838.Criterion7134Spex."test Spex: the owner exports a completed pay period's earnings to CSV"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 91 │         {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/timesheets")
+    │                                                                   ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7137_cleaner_forgets_to_clock_out_spex.exs:91: CleanerCrmSpex.Story838.Criterion7137Spex."test Spex: a cleaner clocks in on a job but never clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 79 │         {:ok, timesheet_live, _html} = live(context.owner_conn, ~p"/timesheets")
+    │                                                                   ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7137_cleaner_forgets_to_clock_out_spex.exs:79: CleanerCrmSpex.Story838.Criterion7137Spex."test Spex: a cleaner clocks in on a job but never clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 71 │         {:ok, _job_live, html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7137_cleaner_forgets_to_clock_out_spex.exs:71: CleanerCrmSpex.Story838.Criterion7137Spex."test Spex: a cleaner clocks in on a job but never clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 58 │         {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/timesheets")
+    │                                                                  ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7137_cleaner_forgets_to_clock_out_spex.exs:58: CleanerCrmSpex.Story838.Criterion7137Spex."test Spex: a cleaner clocks in on a job but never clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 48 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7137_cleaner_forgets_to_clock_out_spex.exs:48: CleanerCrmSpex.Story838.Criterion7137Spex."test Spex: a cleaner clocks in on a job but never clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/timesheets"
+    │
+ 56 │         {:ok, timesheet_live, html} = live(context.owner_conn, ~p"/timesheets")
+    │                                                                  ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7140_export_blocked_while_an_unresolved_time_entry_remains_spex.exs:56: CleanerCrmSpex.Story838.Criterion7140Spex."test Spex: payroll export is blocked while a time entry is unresolved"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 46 │         {:ok, job_live, _html} = live(cleaner_conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/838_track_time_and_per-job_pay_in_one_system/criterion_7140_export_blocked_while_an_unresolved_time_entry_remains_spex.exs:46: CleanerCrmSpex.Story838.Criterion7140Spex."test Spex: payroll export is blocked while a time entry is unresolved"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality/#{context.job.id}"
+    │
+ 71 │         {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality/#{context.job.id}")
+    │                                                                ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7161_cleaner_completes_a_job_with_a_fully_checked_checklist_spex.exs:71: CleanerCrmSpex.Story839.Criterion7161Spex."test Spex: a cleaner checks off every checklist task and completes the job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 45 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7161_cleaner_completes_a_job_with_a_fully_checked_checklist_spex.exs:45: CleanerCrmSpex.Story839.Criterion7161Spex."test Spex: a cleaner checks off every checklist task and completes the job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 45 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7163_cleaner_tries_to_complete_with_unchecked_required_tasks_spex.exs:45: CleanerCrmSpex.Story839.Criterion7163Spex."test Spex: a cleaner tries to finish a job while a required task is still unchecked"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality/#{context.job.id}"
+    │
+ 98 │         {:ok, review_live, _html} = live(context.owner_conn, ~p"/quality/#{context.job.id}")
+    │                                                                ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7165_before_and_after_photos_attached_with_timestamps_spex.exs:98: CleanerCrmSpex.Story839.Criterion7165Spex."test Spex: a cleaner attaches before/after photos with timestamps to a checklist task"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 48 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7165_before_and_after_photos_attached_with_timestamps_spex.exs:48: CleanerCrmSpex.Story839.Criterion7165Spex."test Spex: a cleaner attaches before/after photos with timestamps to a checklist task"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality/#{context.job.id}"
+    │
+ 30 │         {:ok, review_live, _html} = live(context.conn, ~p"/quality/#{context.job.id}")
+    │                                                          ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7168_completed_job_gets_a_quality_score_spex.exs:30: CleanerCrmSpex.Story839.Criterion7168Spex."test Spex: a completed job is scored for quality"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality/scorecards"
+    │
+ 39 │         {:ok, scorecards_live, _html} = live(context.conn, ~p"/quality/scorecards")
+    │                                                              ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7171_owner_reviews_a_cleaners_scorecard_over_time_spex.exs:39: CleanerCrmSpex.Story839.Criterion7171Spex."test Spex: an owner reviews how a cleaner's quality trends across completed jobs"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality/#{context.job.id}"
+    │
+ 30 │         {:ok, review_live, html} = live(context.conn, ~p"/quality/#{context.job.id}")
+    │                                                         ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7174_owner_pulls_up_job_proof_to_answer_a_chargeback_spex.exs:30: CleanerCrmSpex.Story839.Criterion7174Spex."test Spex: an owner pulls up a job's proof-of-work to contest a chargeback"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 46 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/839_review_photo_proof_and_quality_scorecards_per_job/criterion_7176_photo_taken_offline_uploads_when_signal_returns_spex.exs:46: CleanerCrmSpex.Story839.Criterion7176Spex."test Spex: a photo captured with no signal finishes uploading once connectivity returns"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 82 │         {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7193_office_staff_reschedules_a_job_and_it_is_logged_spex.exs:82: CleanerCrmSpex.Story840.Criterion7193Spex."test Spex: office staff reschedules a job and it is logged"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 72 │         {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7193_office_staff_reschedules_a_job_and_it_is_logged_spex.exs:72: CleanerCrmSpex.Story840.Criterion7193Spex."test Spex: office staff reschedules a job and it is logged"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 73 │         {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7195_price_change_records_old_and_new_value_spex.exs:73: CleanerCrmSpex.Story840.Criterion7195Spex."test Spex: a price change records the old and new value"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 65 │         {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7195_price_change_records_old_and_new_value_spex.exs:65: CleanerCrmSpex.Story840.Criterion7195Spex."test Spex: a price change records the old and new value"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 64 │         {:ok, audit_live, _html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7198_nobody_can_alter_or_delete_an_audit_entry_spex.exs:64: CleanerCrmSpex.Story840.Criterion7198Spex."test Spex: nobody can alter or delete an audit entry"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 60 │         {:ok, audit_live, _html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7201_owner_filters_the_trail_to_find_who_moved_a_job_spex.exs:60: CleanerCrmSpex.Story840.Criterion7201Spex."test Spex: owner filters the trail to find who moved a job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/audit"
+    │
+ 77 │         {:ok, _audit_live, html} = live(context.conn, ~p"/audit")
+    │                                                         ~
+    │
+    └─ test/spex/840_see_an_audit_trail_of_schedule_and_record_changes/criterion_7204_automated_recurring_job_generation_is_attributed_to_the_system_spex.exs:77: CleanerCrmSpex.Story840.Criterion7204Spex."test Spex: automated recurring job generation is attributed to the system"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 81 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7124_cleaner_sees_todays_jobs_in_start-time_order_spex.exs:81: CleanerCrmSpex.Story841.Criterion7124Spex."test Spex: the day view orders today's jobs by start time"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 64 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7127_another_cleaners_jobs_are_not_shown_spex.exs:64: CleanerCrmSpex.Story841.Criterion7127Spex."test Spex: the day view excludes a coworker's jobs"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 57 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7132_access_code_appears_on_the_day_of_the_job_spex.exs:57: CleanerCrmSpex.Story841.Criterion7132Spex."test Spex: access codes are revealed on the day of the job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field?date=#{context.tomorrow}"
+    │
+ 59 │           live(context.cleaner_conn, ~p"/field?date=#{context.tomorrow}")
+    │                                        ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7133_access_code_stays_hidden_before_the_job_date_spex.exs:59: CleanerCrmSpex.Story841.Criterion7133Spex."test Spex: access codes stay hidden before the job date"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 60 │         {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                 ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7136_job_card_shows_the_full_get-in-the-door_brief_spex.exs:60: CleanerCrmSpex.Story841.Criterion7136Spex."test Spex: the job card shows the full get-in-the-door brief"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 55 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7139_missing_optional_detail_shows_a_clear_placeholder_spex.exs:55: CleanerCrmSpex.Story841.Criterion7139Spex."test Spex: a missing optional detail shows a clear placeholder"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field?date=#{context.next_thursday}"
+    │
+ 91 │           live(context.cleaner_conn, ~p"/field?date=#{context.next_thursday}")
+    │                                        ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7142_updated_lockbox_code_propagates_to_future_jobs_spex.exs:91: CleanerCrmSpex.Story841.Criterion7142Spex."test Spex: an updated lockbox code propagates to future jobs"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field?date=#{context.next_monday}"
+    │
+ 88 │           live(context.cleaner_conn, ~p"/field?date=#{context.next_monday}")
+    │                                        ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7142_updated_lockbox_code_propagates_to_future_jobs_spex.exs:88: CleanerCrmSpex.Story841.Criterion7142Spex."test Spex: an updated lockbox code propagates to future jobs"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 39 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/841_see_todays_jobs_with_everything_needed_to_get_in_the_door/criterion_7145_day_off_shows_an_empty-day_state_spex.exs:39: CleanerCrmSpex.Story841.Criterion7145Spex."test Spex: a day with no jobs shows an empty-day state"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 45 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7159_checklist_opens_grouped_by_room_spex.exs:45: CleanerCrmSpex.Story842.Criterion7159Spex."test Spex: a cleaner opens her job and sees the checklist grouped by room"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 43 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7160_out-of-scope_task_is_not_on_the_checklist_spex.exs:43: CleanerCrmSpex.Story842.Criterion7160Spex."test Spex: an out-of-scope task never appears on a cleaner's job checklist"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 39 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7162_checking_tasks_advances_progress_spex.exs:39: CleanerCrmSpex.Story842.Criterion7162Spex."test Spex: checking off a checklist task advances the cleaner's visible progress"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7164_before_and_after_photos_attach_to_a_task_spex.exs:41: CleanerCrmSpex.Story842.Criterion7164Spex."test Spex: a cleaner attaches before and after photos as proof for a checklist task"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7166_job_completes_when_all_required_items_are_done_spex.exs:41: CleanerCrmSpex.Story842.Criterion7166Spex."test Spex: a job completes once every required checklist item is done, regardless of optional items"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7169_completion_blocked_with_a_required_task_unchecked_spex.exs:41: CleanerCrmSpex.Story842.Criterion7169Spex."test Spex: a job cannot be marked complete while a required checklist task is unchecked"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 42 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/842_work_each_job_from_a_room-by-room_checklist_with_photo_proof/criterion_7172_photo_taken_offline_uploads_when_signal_returns_spex.exs:42: CleanerCrmSpex.Story842.Criterion7172Spex."test Spex: a checklist photo captured with no signal finishes uploading once connectivity returns"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 59 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7190_moved_job_notifies_the_cleaner_spex.exs:59: CleanerCrmSpex.Story843.Criterion7190Spex."test Spex: a moved job notifies the assigned cleaner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 57 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7191_cancelled_job_notifies_the_cleaner_spex.exs:57: CleanerCrmSpex.Story843.Criterion7191Spex."test Spex: a cancelled job notifies the assigned cleaner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 78 │         {:ok, today_live, html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7192_acknowledging_clears_the_pending_change_spex.exs:78: CleanerCrmSpex.Story843.Criterion7192Spex."test Spex: acknowledging a pending schedule change clears it"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 57 │         {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                 ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7192_acknowledging_clears_the_pending_change_spex.exs:57: CleanerCrmSpex.Story843.Criterion7192Spex."test Spex: acknowledging a pending schedule change clears it"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 71 │         {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                 ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7194_unacknowledged_change_keeps_prompting_spex.exs:71: CleanerCrmSpex.Story843.Criterion7194Spex."test Spex: an unacknowledged schedule change keeps prompting the cleaner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 63 │         {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                 ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7194_unacknowledged_change_keeps_prompting_spex.exs:63: CleanerCrmSpex.Story843.Criterion7194Spex."test Spex: an unacknowledged schedule change keeps prompting the cleaner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 57 │         {:ok, _today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                  ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7194_unacknowledged_change_keeps_prompting_spex.exs:57: CleanerCrmSpex.Story843.Criterion7194Spex."test Spex: an unacknowledged schedule change keeps prompting the cleaner"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 82 │         {:ok, today_live, _html} = live(context.cleaner_conn, ~p"/field")
+    │                                                                 ~
+    │
+    └─ test/spex/843_get_loud_acknowledged_alerts_when_my_schedule_changes/criterion_7197_office_sees_who_has_not_acknowledged_spex.exs:82: CleanerCrmSpex.Story843.Criterion7197Spex."test Spex: the office sees per-job acknowledgment status flip as the cleaner acknowledges"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7126_cleaner_clocks_in_to_their_assigned_job_spex.exs:41: CleanerCrmSpex.Story844.Criterion7126Spex."test Spex: a cleaner clocks in to their own assigned job"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 58 │         assert context.redirect_path == ~p"/field"
+    │                                           ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7129_cleaner_cannot_clock_in_to_a_job_assigned_to_someone_else_spex.exs:58: CleanerCrmSpex.Story844.Criterion7129Spex."test Spex: a cleaner cannot start time on a job assigned to someone else"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 52 │           live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7129_cleaner_cannot_clock_in_to_a_job_assigned_to_someone_else_spex.exs:52: CleanerCrmSpex.Story844.Criterion7129Spex."test Spex: a cleaner cannot start time on a job assigned to someone else"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.next_job.id}"
+    │
+ 59 │         {:ok, next_job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.next_job.id}")
+    │                                                            ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7131_clocking_in_to_a_second_job_while_already_clocked_in_spex.exs:59: CleanerCrmSpex.Story844.Criterion7131Spex."test Spex: a cleaner can be clocked in to only one job at a time"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.smith_job.id}"
+    │
+ 49 │           live(context.conn, ~p"/field/jobs/#{context.smith_job.id}")
+    │                                ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7131_clocking_in_to_a_second_job_while_already_clocked_in_spex.exs:49: CleanerCrmSpex.Story844.Criterion7131Spex."test Spex: a cleaner can be clocked in to only one job at a time"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.next_job.id}"
+    │
+ 74 │         {:ok, next_job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.next_job.id}")
+    │                                                            ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7135_clock_out_then_clock_in_to_the_next_job_spex.exs:74: CleanerCrmSpex.Story844.Criterion7135Spex."test Spex: a cleaner clocks out of one job and into the next"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.smith_job.id}"
+    │
+ 49 │           live(context.conn, ~p"/field/jobs/#{context.smith_job.id}")
+    │                                ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7135_clock_out_then_clock_in_to_the_next_job_spex.exs:49: CleanerCrmSpex.Story844.Criterion7135Spex."test Spex: a cleaner clocks out of one job and into the next"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 60 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7138_hourly_job_earnings_computed_from_clocked_time_spex.exs:60: CleanerCrmSpex.Story844.Criterion7138Spex."test Spex: an hourly job's earnings are computed from the clocked time when the cleaner clocks out"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 43 │         {:ok, job_live, html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                      ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7141_piece-rate_job_shows_its_fixed_rate_up_front_spex.exs:43: CleanerCrmSpex.Story844.Criterion7141Spex."test Spex: a piece-rate job shows its fixed earnings before the cleaner starts"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 68 │         {:ok, field_live, html} = live(context.conn, ~p"/field")
+    │                                                        ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7144_running_pay-period_total_grows_as_jobs_complete_spex.exs:68: CleanerCrmSpex.Story844.Criterion7144Spex."test Spex: the cleaner's pay-period running total grows as jobs complete"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field"
+    │
+ 29 │         {:ok, field_live, html} = live(context.conn, ~p"/field")
+    │                                                        ~
+    │
+    └─ test/spex/844_clock_inout_per_job_and_see_my_earnings_build/criterion_7146_cleaner_sees_the_drive-time_policy_with_their_earnings_spex.exs:29: CleanerCrmSpex.Story844.Criterion7146Spex."test Spex: the cleaner sees the company's drive-time policy alongside their earnings"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 72 │         {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+    │                                                                ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7178_cleaner_files_a_damage_report_from_the_job_screen_spex.exs:72: CleanerCrmSpex.Story845.Criterion7178Spex."test Spex: a cleaner files a damage report directly from the job screen"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7178_cleaner_files_a_damage_report_from_the_job_screen_spex.exs:41: CleanerCrmSpex.Story845.Criterion7178Spex."test Spex: a cleaner files a damage report directly from the job screen"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 80 │         {:ok, review_live, html} = live(context.owner_conn, ~p"/quality")
+    │                                                               ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7179_report_carries_the_filing_time_and_cleaner_automatically_spex.exs:80: CleanerCrmSpex.Story845.Criterion7179Spex."test Spex: a filed report automatically carries who filed it and when"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7179_report_carries_the_filing_time_and_cleaner_automatically_spex.exs:41: CleanerCrmSpex.Story845.Criterion7179Spex."test Spex: a filed report automatically carries who filed it and when"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 78 │         {:ok, review_live, html} = live(context.owner_conn, ~p"/quality")
+    │                                                               ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7180_submitted_report_cannot_be_altered_spex.exs:78: CleanerCrmSpex.Story845.Criterion7180Spex."test Spex: a cleaner cannot edit or delete a report once it has been submitted"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 63 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7180_submitted_report_cannot_be_altered_spex.exs:63: CleanerCrmSpex.Story845.Criterion7180Spex."test Spex: a cleaner cannot edit or delete a report once it has been submitted"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7180_submitted_report_cannot_be_altered_spex.exs:41: CleanerCrmSpex.Story845.Criterion7180Spex."test Spex: a cleaner cannot edit or delete a report once it has been submitted"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 64 │         {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+    │                                                                ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7181_damage_report_without_a_photo_is_blocked_spex.exs:64: CleanerCrmSpex.Story845.Criterion7181Spex."test Spex: a damage report cannot be filed without a photo"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7181_damage_report_without_a_photo_is_blocked_spex.exs:41: CleanerCrmSpex.Story845.Criterion7181Spex."test Spex: a damage report cannot be filed without a photo"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 63 │         {:ok, _review_live, html} = live(context.owner_conn, ~p"/quality")
+    │                                                                ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7182_unsafe-condition_report_can_be_filed_without_a_photo_spex.exs:63: CleanerCrmSpex.Story845.Criterion7182Spex."test Spex: a cleaner can file an unsafe-condition report without attaching a photo"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7182_unsafe-condition_report_can_be_filed_without_a_photo_spex.exs:41: CleanerCrmSpex.Story845.Criterion7182Spex."test Spex: a cleaner can file an unsafe-condition report without attaching a photo"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/quality"
+    │
+ 63 │         {:ok, review_live, _html} = live(context.owner_conn, ~p"/quality")
+    │                                                                ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7184_office_is_notified_when_a_report_is_filed_spex.exs:63: CleanerCrmSpex.Story845.Criterion7184Spex."test Spex: the office is notified as soon as a cleaner files a report"/1
+
+    warning: no route path for CleanerCrmWeb.Router matches "/field/jobs/#{context.job.id}"
+    │
+ 41 │         {:ok, job_live, _html} = live(context.conn, ~p"/field/jobs/#{context.job.id}")
+    │                                                       ~
+    │
+    └─ test/spex/845_report_damage_missing_items_or_unsafe_conditions_from_the_job/criterion_7184_office_is_notified_when_a_report_is_filed_spex.exs:41: CleanerCrmSpex.Story845.Criterion7184Spex."test Spex: the office is notified as soon as a cleaner files a report"/1
+
+
+
+
+ 92) test Spex: substituting one visit does not change the plan's preferred cleaner (CleanerCrmSpex.Story846.Criterion7205Spex)
+     [1m[30mtest/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7205_substitute_for_one_visit_leaves_the_plans_preferred_cleaner_intact_spex.exs:20[0m
+     [31m** (MatchError) no match of right hand side value:
+
+         []
+     [0m
+     [36mcode: [0mgiven_ "a recurring plan generates 2 weekly visits assigned to Alex Morgan", context do
+     [36mstacktrace:[0m
+       test/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7205_substitute_for_one_visit_leaves_the_plans_preferred_cleaner_intact_spex.exs:64: anonymous fn/1 in CleanerCrmSpex.Story846.Criterion7205Spex."test Spex: substituting one visit does not change the plan's preferred cleaner"/1
+       test/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7205_substitute_for_one_visit_leaves_the_plans_preferred_cleaner_intact_spex.exs:44: (test)
+
+
+
+ 93) test Spex: no preferred-cleaner warning appears for a plan without a preference (CleanerCrmSpex.Story846.Criterion7206Spex)
+     [1m[30mtest/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7206_no_warning_when_the_plan_has_no_preferred_cleaner_spex.exs:24[0m
+     [31m** (MatchError) no match of right hand side value:
+
+         []
+     [0m
+     [36mcode: [0mgiven_ "a recurring plan is created for the property with no preferred cleaner set",
+     [36mstacktrace:[0m
+       test/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7206_no_warning_when_the_plan_has_no_preferred_cleaner_spex.exs:67: anonymous fn/1 in CleanerCrmSpex.Story846.Criterion7206Spex."test Spex: no preferred-cleaner warning appears for a plan without a preference"/1
+       test/spex/846_keep_the_same_cleaner_on_the_same_home/criterion_7206_no_warning_when_the_plan_has_no_preferred_cleaner_spex.exs:47: (test)
+
+
+Finished in 1.0 seconds (0.00s async, 1.0s sync)
+[31m100 tests, 93 failures[0m
