@@ -24,7 +24,7 @@ servers:
 
 proxy:
   ssl: true
-  host: crm.desertfirstcleaning.com
+  host: maidfor.cleaning
   app_port: 4000
 
 registry:

@@ -15,7 +15,7 @@ servers:
       network: db_net           # pre-attach so app can reach infra-postgres-1 at start
     proxy:                      # role-level override
       ssl: true
-      host: crm-uat.desertfirstcleaning.com
+      host: uat.maidfor.cleaning
       app_port: 4000
       healthcheck:
         path: /                 # app has no /up; / is 200 for the localhost probe
