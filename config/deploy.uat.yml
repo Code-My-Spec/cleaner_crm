@@ -18,7 +18,7 @@ servers:
       host: uat.maidfor.cleaning
       app_port: 4000
       healthcheck:
-        path: /                 # app has no /up; / is 200 for the localhost probe
+        path: /health
 
 registry:
   server: 10.1.0.2:5000
@@ -31,17 +31,15 @@ builder:
   arch: arm64
   local: true
 
-# Container fetches its own secrets from /cleaner_crm/uat/* in SSM at
-# boot via CleanerCrm.Secrets.load!/1 (config/runtime.exs). The only env
-# Kamal carries is AWS bootstrap creds + APP_ENV.
+# Container decrypts its own secrets from envs/uat.enc.env at boot
+# (rel/overlays/bin/boot, via sops exec-env) using the age key Kamal
+# carries below. App secrets never flow through Kamal itself.
 env:
   clear:
     APP_ENV: uat
-    AWS_REGION: us-east-1
     PORT: "4000"
   secret:
-    - AWS_ACCESS_KEY_ID
-    - AWS_SECRET_ACCESS_KEY
+    - SOPS_AGE_KEY
 
 ssh:
   user: root

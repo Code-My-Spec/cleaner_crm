@@ -47,5 +47,6 @@
         current_scope={assigns[:current_scope]}
       />
     <% end %>
+      {live_render(@conn, CleanerCrmWeb.SupportWidgetLive, id: "codemyspec-support", sticky: true)}
   </body>
 </html>

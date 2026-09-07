@@ -52,6 +52,7 @@ defmodule CleanerCrm.MixProject do
     [
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.8.8"},
+      {:slipstream, "~> 1.1"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.13"},
       {:postgrex, ">= 0.0.0"},
@@ -85,14 +86,8 @@ defmodule CleanerCrm.MixProject do
       {:client_utils, "~> 0.1"},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
       {:sexy_spex, github: "JediLuke/spex", branch: "main", only: :test},
-      # SSM-bootstrap secret loading (CleanerCrm.Secrets) — see the
-      # devops repo's SSM pattern. Uses the app's existing Req as the
-      # ExAws HTTP client (hackney 4.x is already in the tree via
-      # httpoison and conflicts with ExAws's default).
-      {:ex_aws, "~> 2.5"},
-      {:ex_aws_ssm, "~> 2.1"},
       {:boundary, "~> 0.10", runtime: false},
-      {:code_my_spec_generators, "~> 0.1", only: :dev},
+      {:code_my_spec_generators, "~> 0.6", only: :dev},
       {:wallaby, "~> 0.30", only: :test},
       {:req_cassette, "~> 0.5", only: :test}
     ]

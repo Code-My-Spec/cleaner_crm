@@ -41,6 +41,7 @@ defmodule CleanerCrm do
           Clients.Client,
           Clients.Property,
           Codemyspec.Client,
+          CodeMySpec.Widget,
           Users,
           Users.User,
           Users.Scope,

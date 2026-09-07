@@ -44,6 +44,11 @@ defmodule CleanerCrmWeb.Router do
     plug CleanerCrmWeb.RequireOfficeRole
   end
 
+  # Deliberately piped through nothing. The proxy asks this before traffic
+  # moves; a session, an authentication check or a database round-trip here
+  # turns an unrelated outage into a failed deploy.
+  get "/health", CleanerCrmWeb.HealthController, :show
+
   scope "/", CleanerCrmWeb do
     pipe_through :browser
 

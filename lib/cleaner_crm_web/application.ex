@@ -11,6 +11,8 @@ defmodule CleanerCrmWeb.Application do
       CleanerCrmWeb.Telemetry,
       CleanerCrm.Repo,
       {DNSCluster, query: Application.get_env(:cleaner_crm, :dns_cluster_query) || :ignore},
+      {Registry, keys: :unique, name: CleanerCrm.CodeMySpec.WidgetRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: CleanerCrm.CodeMySpec.WidgetSupervisor},
       {Phoenix.PubSub, name: CleanerCrm.PubSub},
       CleanerCrm.Vault,
       CleanerCrm.Integrations.OAuthStateStore,

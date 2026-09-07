@@ -7,10 +7,9 @@
 # Notes:
 # - kamal-proxy serves traffic on :80/:443 directly.
 # - db_net is pre-attached so the container can reach infra-postgres-1 at start.
-# - App secrets are fetched at container boot from AWS SSM
-#   (`/cleaner_crm/prod/*`) by CleanerCrm.Secrets.load!/1 in
-#   config/runtime.exs. Kamal carries only the AWS bootstrap credentials
-#   listed under env.secret below — never app secrets.
+# - App secrets are decrypted at container boot from envs/prod.enc.env
+#   (rel/overlays/bin/boot, via sops exec-env) using the age key Kamal
+#   carries under env.secret below — never app secrets themselves.
 
 service: cleaner-crm
 image: cleaner-crm
@@ -26,6 +25,8 @@ proxy:
   ssl: true
   host: maidfor.cleaning
   app_port: 4000
+  healthcheck:
+    path: /health
 
 registry:
   server: 10.1.0.2:5000
@@ -41,11 +42,9 @@ builder:
 env:
   clear:
     APP_ENV: prod
-    AWS_REGION: us-east-1
     PORT: "4000"
   secret:
-    - AWS_ACCESS_KEY_ID
-    - AWS_SECRET_ACCESS_KEY
+    - SOPS_AGE_KEY
 
 ssh:
   user: root
