@@ -29,7 +29,7 @@ proxy:
     path: /health
 
 registry:
-  server: 10.1.0.2:5000
+  server: 10.0.0.2:5000
   username:
     - KAMAL_REGISTRY_USERNAME
   password:
