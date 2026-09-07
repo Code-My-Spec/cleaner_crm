@@ -48,3 +48,8 @@ env:
 
 ssh:
   user: root
+  <% if ENV["CMS_SSH_KEY_PATH"] %>
+  keys: ["<%= ENV["CMS_SSH_KEY_PATH"] %>"]
+  keys_only: true
+  log_level: debug
+  <% end %>
