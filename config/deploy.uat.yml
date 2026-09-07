@@ -21,7 +21,7 @@ servers:
         path: /                 # app has no /up; / is 200 for the localhost probe
 
 registry:
-  server: localhost:5000
+  server: 10.1.0.2:5000
   username:
     - KAMAL_REGISTRY_USERNAME
   password:
