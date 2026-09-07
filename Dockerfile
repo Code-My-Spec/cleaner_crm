@@ -16,6 +16,12 @@ FROM ${BUILDER_IMAGE} AS builder
 RUN apt-get update -y && apt-get install -y build-essential git curl nodejs npm \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
+ARG SOPS_VERSION=3.9.4
+RUN curl -fsSL -o /usr/local/bin/sops \
+      "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.$(dpkg --print-architecture)" && \
+    chmod +x /usr/local/bin/sops && \
+    sops --version --disable-version-check
+
 WORKDIR /app
 
 RUN mix local.hex --force && mix local.rebar --force
@@ -68,6 +74,7 @@ RUN chown nobody /app
 ENV MIX_ENV="prod"
 ENV PHX_SERVER="true"
 
+COPY --from=builder /usr/local/bin/sops /usr/local/bin/sops
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/cleaner_crm ./
 COPY --chown=nobody:root envs envs
 
