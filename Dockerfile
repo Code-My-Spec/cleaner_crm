@@ -66,9 +66,11 @@ WORKDIR "/app"
 RUN chown nobody /app
 
 ENV MIX_ENV="prod"
+ENV PHX_SERVER="true"
 
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/cleaner_crm ./
+COPY --chown=nobody:root envs envs
 
 USER nobody
 
-CMD ["/app/bin/server"]
+CMD ["/app/bin/boot"]
