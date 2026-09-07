@@ -205,3 +205,11 @@ if config_env() == :prod do
   #
   # See https://swoosh.hexdocs.pm/Swoosh.html#module-installation for details.
 end
+
+# The support widget's socket, and the key it authenticates with. Read at
+# runtime so one image serves every environment.
+config :cleaner_crm,
+  codemyspec_widget_url:
+    System.get_env("CODEMYSPEC_WIDGET_URL") || "wss://codemyspec.com/widget"
+
+config :cleaner_crm, :deploy_key, System.get_env("DEPLOY_KEY")
