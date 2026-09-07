@@ -13,7 +13,7 @@
 #   listed under env.secret below — never app secrets.
 
 service: cleaner-crm
-image: code-my-spec/cleaner_crm
+image: cleaner-crm
 
 servers:
   web:
@@ -28,8 +28,9 @@ proxy:
   app_port: 4000
 
 registry:
-  server: ghcr.io
-  username: johns10
+  server: localhost:5000
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 

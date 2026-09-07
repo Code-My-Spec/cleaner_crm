@@ -5,7 +5,7 @@
 # matches deploy.yml so the multi-arch image labels resolve.
 
 service: cleaner-crm
-image: code-my-spec/cleaner_crm
+image: cleaner-crm
 
 servers:
   web:
@@ -21,8 +21,9 @@ servers:
         path: /                 # app has no /up; / is 200 for the localhost probe
 
 registry:
-  server: ghcr.io
-  username: johns10
+  server: localhost:5000
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 
