@@ -126,4 +126,80 @@ defmodule CleanerCrm.Quoting do
       end
     end)
   end
+
+  ## Lookups for agent tools
+
+  @doc """
+  Gets one of the account's quotes (line items preloaded) or `nil` when
+  there is no such quote in the account or the id is malformed.
+  """
+  def fetch_quote(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id) do
+      Quote
+      |> where([q], q.account_id == ^account_id and q.id == ^uuid)
+      |> preload(:quote_items)
+      |> Repo.one()
+    else
+      :error -> nil
+    end
+  end
+
+  @doc """
+  Lists the account's quotes, newest first, optionally filtered by
+  `:status` (`:draft` | `:sent`), `:client_id`, and limited by `:limit`
+  (default 50). Line items are preloaded.
+  """
+  def list_quotes(%Scope{active_account_id: account_id}, opts)
+      when not is_nil(account_id) and is_list(opts) do
+    Quote
+    |> where([q], q.account_id == ^account_id)
+    |> then(fn q ->
+      case Keyword.get(opts, :status) do
+        nil -> q
+        status -> where(q, [q], q.status == ^status)
+      end
+    end)
+    |> then(fn q ->
+      case Keyword.get(opts, :client_id) do
+        nil -> q
+        client_id -> where(q, [q], q.client_id == ^client_id)
+      end
+    end)
+    |> order_by([q], desc: q.inserted_at)
+    |> limit(^Keyword.get(opts, :limit, 50))
+    |> preload(:quote_items)
+    |> Repo.all()
+  end
+
+  @doc """
+  Prices a visit from the account's rate card without saving anything:
+  base line items for the chosen pricing model, the named add-ons, the
+  frequency's recurring discount and the minimum-visit floor.
+
+  `attrs` takes atom keys `:pricing_model` (`:per_room | :per_sqft | :hourly`),
+  `:bedroom_count`, `:bathroom_count`, `:square_feet`, `:hours`,
+  `:frequency` (`:one_time | :weekly | :biweekly | :monthly`) and
+  `:add_ons` (list of add-on keys). Returns the
+  `CleanerCrm.Booking.Pricing.summary/0` map, plus `:rate_card` (the
+  rate card used).
+  """
+  def estimate_price(%Scope{} = scope, attrs) when is_map(attrs) do
+    rate_card = get_or_create_rate_card(scope)
+
+    lead =
+      struct(
+        CleanerCrm.Booking.Lead,
+        Map.take(attrs, [
+          :pricing_model,
+          :bedroom_count,
+          :bathroom_count,
+          :square_feet,
+          :hours,
+          :frequency,
+          :add_ons
+        ])
+      )
+
+    rate_card |> CleanerCrm.Booking.Pricing.summarize(lead) |> Map.put(:rate_card, rate_card)
+  end
 end

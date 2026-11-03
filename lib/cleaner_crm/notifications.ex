@@ -306,4 +306,75 @@ defmodule CleanerCrm.Notifications do
   # exception for building absolute links in outbound messages — see
   # the `dirty_xrefs` note on the `CleanerCrm` boundary.
   defp reminder_url(path), do: CleanerCrmWeb.Endpoint.url() <> path
+
+  ## Manual reminder
+
+  @doc """
+  Sends the appointment reminder for one job to its client right now, on the
+  client's preferred channel (SMS falls back to email), and logs a `:reminder`
+  notification. This messages a real customer. Errors with a string when the
+  job is in another account, has no client, or the client has no usable
+  contact detail.
+  """
+  def send_job_reminder(%Scope{active_account_id: account_id}, %CleanerCrm.Scheduling.Job{} = job)
+      when not is_nil(account_id) do
+    job = Repo.preload(job, :client)
+
+    cond do
+      job.account_id != account_id ->
+        {:error, "job not found"}
+
+      is_nil(job.client) ->
+        {:error, "job has no client to remind"}
+
+      true ->
+        client = job.client
+        token = generate_token()
+        confirm_url = CleanerCrmWeb.Endpoint.url() <> "/reminders/confirm/#{token}"
+        reschedule_url = CleanerCrmWeb.Endpoint.url() <> "/reminders/reschedule/#{token}"
+
+        sms =
+          if client.preferred_channel == :sms and is_binary(client.phone) do
+            body =
+              "Cleaning appointment reminder for #{job.scheduled_date} at #{job.start_time}. " <>
+                "Confirm: #{confirm_url} Reschedule: #{reschedule_url}"
+
+            case CleanerCrm.Notifications.Delivery.send_sms(client.phone, body) do
+              {:ok, %{provider_message_id: sid}} -> {:ok, sid}
+              _ -> :fallback
+            end
+          else
+            :fallback
+          end
+
+        case {sms, client.email} do
+          {{:ok, sid}, _} ->
+            insert_manual_reminder(account_id, job, client, :sms, token, sid)
+
+          {:fallback, email} when is_binary(email) and email != "" ->
+            with {:ok, _} <-
+                   ReminderNotifier.deliver_reminder(client, job, confirm_url, reschedule_url) do
+              insert_manual_reminder(account_id, job, client, :email, token, nil)
+            end
+
+          _ ->
+            {:error, "client has no email or deliverable phone number"}
+        end
+    end
+  end
+
+  defp insert_manual_reminder(account_id, job, client, channel, token, sid) do
+    %Notification{account_id: account_id}
+    |> Notification.changeset(%{
+      client_id: client.id,
+      job_id: job.id,
+      kind: :reminder,
+      channel: channel,
+      status: :sent,
+      token: token,
+      provider_message_id: sid,
+      sent_at: DateTime.utc_now()
+    })
+    |> Repo.insert()
+  end
 end

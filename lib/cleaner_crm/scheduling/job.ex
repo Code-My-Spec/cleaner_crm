@@ -60,6 +60,12 @@ defmodule CleanerCrm.Scheduling.Job do
       values: [:scheduled, :in_progress, :completed, :cancelled],
       default: :scheduled
 
+    # The CRM's own reference for this job ("#1042"), per account. Assigned by
+
+    # `CleanerCrm.Scheduling.create_job/3`; never cast from user input.
+
+    field :job_number, :integer
+
     field :agreed_price_cents, :integer
     field :agreed_price, :decimal, virtual: true
 

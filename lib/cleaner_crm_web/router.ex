@@ -32,6 +32,13 @@ defmodule CleanerCrmWeb.Router do
     plug :fetch_current_scope_for_user
   end
 
+  # Agents: the MCP server, authenticated by an API token (`mix crm.api_token`).
+  # No `:accepts` here: the MCP transport negotiates JSON vs. event-stream itself
+  # (a GET for the SSE stream sends only `Accept: text/event-stream`).
+  pipeline :mcp do
+    plug CleanerCrmWeb.McpAuth
+  end
+
   pipeline :webhook do
     plug :accepts, ["json"]
   end
@@ -229,6 +236,14 @@ defmodule CleanerCrmWeb.Router do
 
     get "/pay/:token", PaymentController, :show
     post "/pay/:token", PaymentController, :create
+  end
+
+  scope "/mcp" do
+    pipe_through :mcp
+
+    forward "/", Anubis.Server.Transport.StreamableHTTP.Plug,
+      server: CleanerCrmMcp.Server,
+      request_timeout: :timer.minutes(2)
   end
 
   scope "/webhooks", CleanerCrmWeb do

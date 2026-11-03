@@ -72,6 +72,9 @@ defmodule CleanerCrm.MixProject do
        depth: 1},
       {:swoosh, "~> 1.16"},
       {:req, "~> 0.5"},
+      # Agent-facing MCP server ("code mode": tool_docs + run_script over a Lua sandbox)
+      {:anubis_mcp, "~> 2.2"},
+      {:lua, "~> 1.0"},
       {:oban, "~> 2.18"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},

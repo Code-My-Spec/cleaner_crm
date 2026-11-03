@@ -274,6 +274,24 @@ defmodule CleanerCrm.Users do
   end
 
   @doc """
+  Creates an API token for `user` (for the MCP server) and returns the encoded
+  token. It is not stored in a recoverable form: show it once.
+  """
+  def create_api_token(%User{} = user) do
+    {encoded, user_token} = UserToken.build_api_token(user)
+    Repo.insert!(user_token)
+    encoded
+  end
+
+  @doc "The user an API token belongs to, or nil."
+  def get_user_by_api_token(token) when is_binary(token) do
+    case UserToken.verify_api_token_query(token) do
+      {:ok, query} -> Repo.one(query)
+      :error -> nil
+    end
+  end
+
+  @doc """
   Deletes the signed token with the given context.
   """
   def delete_user_session_token(token) do

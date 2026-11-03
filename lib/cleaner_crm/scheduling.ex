@@ -45,14 +45,69 @@ defmodule CleanerCrm.Scheduling do
   """
   def create_job(%Scope{active_account_id: account_id} = scope, attrs, opts \\ [])
       when not is_nil(account_id) do
-    with {:ok, job} <-
-           %Job{account_id: account_id}
-           |> Job.changeset(derive_client_id(account_id, attrs))
-           |> Repo.insert() do
+    with {:ok, job} <- insert_numbered_job(account_id, derive_client_id(account_id, attrs)) do
       record_job_created(scope, job, Keyword.get(opts, :actor, :user))
       {:ok, job}
     end
   end
+
+  # Job numbers are per account and sequential from 1001. Two jobs created at
+  # the same instant can race for the same number; the unique index catches
+  # that and the insert is retried with the next one.
+  defp insert_numbered_job(account_id, attrs, attempts \\ 3) do
+    changeset =
+      %Job{account_id: account_id, job_number: next_job_number(account_id)}
+      |> Job.changeset(attrs)
+      |> Ecto.Changeset.unique_constraint(:job_number,
+        name: :jobs_account_id_job_number_index
+      )
+
+    case Repo.insert(changeset) do
+      {:error, %Ecto.Changeset{errors: errors}} = error ->
+        if Keyword.has_key?(errors, :job_number) and attempts > 1,
+          do: insert_numbered_job(account_id, attrs, attempts - 1),
+          else: error
+
+      result ->
+        result
+    end
+  end
+
+  defp next_job_number(account_id) do
+    current =
+      Repo.one(from j in Job, where: j.account_id == ^account_id, select: max(j.job_number))
+
+    (current || 1000) + 1
+  end
+
+  @doc """
+  Gets a job by its job number (`1042` or `"#1042"`), cleaner/property/client
+  preloaded. Returns `nil` when the account has no such job.
+  """
+  def get_job_by_number(%Scope{active_account_id: account_id}, number)
+      when not is_nil(account_id) do
+    case parse_job_number(number) do
+      nil ->
+        nil
+
+      n ->
+        Job
+        |> where([j], j.account_id == ^account_id and j.job_number == ^n)
+        |> preload([:cleaner, :client, property: :client])
+        |> Repo.one()
+    end
+  end
+
+  defp parse_job_number(n) when is_integer(n), do: n
+
+  defp parse_job_number(n) when is_binary(n) do
+    case Integer.parse(String.trim_leading(String.trim(n), "#")) do
+      {int, ""} -> int
+      _ -> nil
+    end
+  end
+
+  defp parse_job_number(_), do: nil
 
   # The board's own job form (and a recurring plan's own materialized
   # occurrences, via `Recurrence.job_attrs/1`) only ever carry a
@@ -475,6 +530,140 @@ defmodule CleanerCrm.Scheduling do
 
     "#{slug}-#{System.unique_integer([:positive])}@cleaners.local"
   end
+
+  ## Lookups for agents (non-raising, filterable)
+
+  @doc """
+  Finds jobs for the account, soonest first, cleaner/property/client preloaded.
+
+  Filters (a map with atom keys, all optional): `:from`/`:to` (inclusive
+  `Date`s), `:cleaner_id`, `:client_id`, `:status` (a job status atom; when
+  absent, cancelled jobs are left out), `:unassigned_only` (boolean), and
+  `:limit` (default 50, at most 200).
+  """
+  def search_jobs(%Scope{active_account_id: account_id}, filters \\ %{})
+      when not is_nil(account_id) do
+    limit = filters |> Map.get(:limit, 50) |> max(1) |> min(200)
+
+    Job
+    |> where([j], j.account_id == ^account_id)
+    |> filter_job_status(Map.get(filters, :status))
+    |> filter_job_from(Map.get(filters, :from))
+    |> filter_job_to(Map.get(filters, :to))
+    |> filter_job_cleaner(Map.get(filters, :cleaner_id))
+    |> filter_job_client(Map.get(filters, :client_id))
+    |> filter_job_unassigned(Map.get(filters, :unassigned_only))
+    |> order_by([j], asc: j.scheduled_date, asc: j.start_time, asc: j.job_number)
+    |> limit(^limit)
+    |> preload([:cleaner, :client, property: :client])
+    |> Repo.all()
+  end
+
+  defp filter_job_status(query, nil), do: where(query, [j], j.status != :cancelled)
+  defp filter_job_status(query, status), do: where(query, [j], j.status == ^status)
+  defp filter_job_from(query, nil), do: query
+  defp filter_job_from(query, %Date{} = d), do: where(query, [j], j.scheduled_date >= ^d)
+  defp filter_job_to(query, nil), do: query
+  defp filter_job_to(query, %Date{} = d), do: where(query, [j], j.scheduled_date <= ^d)
+  defp filter_job_cleaner(query, nil), do: query
+  defp filter_job_cleaner(query, id), do: where(query, [j], j.cleaner_id == ^id)
+  defp filter_job_client(query, nil), do: query
+  defp filter_job_client(query, id), do: where(query, [j], j.client_id == ^id)
+  defp filter_job_unassigned(query, true), do: where(query, [j], is_nil(j.cleaner_id))
+  defp filter_job_unassigned(query, _), do: query
+
+  @doc """
+  Fetches a job by id (a UUID string), preloaded, or `nil` when the account
+  has no such job (including a malformed id).
+  """
+  def fetch_job(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    case Ecto.UUID.cast(id) do
+      {:ok, uuid} ->
+        Job
+        |> where([j], j.account_id == ^account_id and j.id == ^uuid)
+        |> preload([:cleaner, :client, property: :client])
+        |> Repo.one()
+
+      :error ->
+        nil
+    end
+  end
+
+  @doc "Lists the account's recurring plans, soonest start first, property/cleaner preloaded."
+  def list_recurring_plans(%Scope{active_account_id: account_id}) when not is_nil(account_id) do
+    RecurringPlan
+    |> where([p], p.account_id == ^account_id)
+    |> order_by([p], asc: p.start_date)
+    |> preload([:cleaner, property: :client])
+    |> Repo.all()
+  end
+
+  @doc "Fetches a recurring plan by id (UUID string), or `nil` when the account has none."
+  def fetch_recurring_plan(%Scope{active_account_id: account_id}, id)
+      when not is_nil(account_id) do
+    case Ecto.UUID.cast(id) do
+      {:ok, uuid} ->
+        RecurringPlan
+        |> where([p], p.account_id == ^account_id and p.id == ^uuid)
+        |> preload([:cleaner, property: :client])
+        |> Repo.one()
+
+      :error ->
+        nil
+    end
+  end
+
+  @doc "Fetches a property (UUID string) in the account, with its client, or `nil`."
+  def fetch_property(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    case Ecto.UUID.cast(id) do
+      {:ok, uuid} ->
+        Property
+        |> where([p], p.account_id == ^account_id and p.id == ^uuid)
+        |> preload(:client)
+        |> Repo.one()
+
+      :error ->
+        nil
+    end
+  end
+
+  @doc "The account's cleaner (a member user) with this integer id, or `nil`."
+  def fetch_cleaner(%Scope{} = scope, id) when is_integer(id) do
+    scope |> list_cleaners() |> Enum.find(&(&1.id == id))
+  end
+
+  @doc "The jobs a recurring plan generated, soonest first, preloaded."
+  def list_plan_jobs(%Scope{active_account_id: account_id}, plan_id)
+      when not is_nil(account_id) do
+    Job
+    |> where([j], j.account_id == ^account_id and j.recurring_plan_id == ^plan_id)
+    |> order_by([j], asc: j.scheduled_date, asc: j.start_time)
+    |> preload([:cleaner, :client, property: :client])
+    |> Repo.all()
+  end
+
+  @doc """
+  A cleaner's time-off blocks within an inclusive date range (either end may
+  be `nil`), soonest first.
+  """
+  def list_availability_blocks_between(
+        %Scope{active_account_id: account_id},
+        cleaner_id,
+        from,
+        to
+      )
+      when not is_nil(account_id) do
+    AvailabilityBlock
+    |> where([b], b.account_id == ^account_id and b.cleaner_id == ^cleaner_id)
+    |> then(&if from, do: where(&1, [b], b.date >= ^from), else: &1)
+    |> then(&if to, do: where(&1, [b], b.date <= ^to), else: &1)
+    |> order_by([b], asc: b.date, asc: b.start_time)
+    |> Repo.all()
+  end
+
+  @doc "The dates a (possibly unsaved) plan's series would occupy, in order."
+  def plan_dates(%RecurringPlan{} = plan),
+    do: plan |> Recurrence.occurrences() |> Enum.map(& &1.date)
 
   ## Cancellation policy (story 851)
 

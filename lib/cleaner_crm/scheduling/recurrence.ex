@@ -17,7 +17,7 @@ defmodule CleanerCrm.Scheduling.Recurrence do
 
   alias CleanerCrm.Scheduling.RecurringPlan
 
-  @step_days %{weekly: 7, biweekly: 14, monthly: 28}
+  @step_days %{weekly: 7, biweekly: 14, every_3_weeks: 21, monthly: 28}
 
   @doc """
   Returns a list of `%{index:, date:}` maps, one per occurrence, in
@@ -29,7 +29,8 @@ defmodule CleanerCrm.Scheduling.Recurrence do
         start_date: %Date{} = start_date,
         occurrence_count: count
       })
-      when recurrence in [:weekly, :biweekly, :monthly] and is_integer(count) and count > 0 do
+      when recurrence in [:weekly, :biweekly, :every_3_weeks, :monthly] and is_integer(count) and
+             count > 0 do
     step = Map.fetch!(@step_days, recurrence)
 
     for index <- 1..count do

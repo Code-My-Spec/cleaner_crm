@@ -407,4 +407,40 @@ defmodule CleanerCrm.Booking do
   defp portal_url(session), do: CleanerCrmWeb.Endpoint.url() <> "/portal/access/#{session.token}"
 
   defp scope_for(%Lead{account_id: account_id}), do: %Scope{active_account_id: account_id}
+
+  ## Agent-facing lead lookups
+
+  @doc """
+  Lists the account's leads, newest first.
+
+  Options: `:status` (a `Lead` status atom), `:limit` (default 25, max 200).
+  """
+  def list_leads(%Scope{active_account_id: account_id}, opts \\ []) when not is_nil(account_id) do
+    limit = opts |> Keyword.get(:limit, 25) |> max(1) |> min(200)
+
+    Lead
+    |> where([l], l.account_id == ^account_id)
+    |> then(fn q ->
+      case Keyword.get(opts, :status) do
+        nil -> q
+        status -> where(q, [l], l.status == ^status)
+      end
+    end)
+    |> order_by([l], desc: l.inserted_at)
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @doc """
+  Fetches a lead in the caller's account: `{:ok, lead}` or `{:error, :not_found}`.
+  """
+  def fetch_lead(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id),
+         %Lead{} = lead <-
+           Repo.one(from l in Lead, where: l.account_id == ^account_id and l.id == ^uuid) do
+      {:ok, lead}
+    else
+      _ -> {:error, :not_found}
+    end
+  end
 end

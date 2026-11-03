@@ -30,7 +30,7 @@ defmodule CleanerCrm.Scheduling.RecurringPlan do
           account_id: Ecto.UUID.t() | nil,
           property_id: Ecto.UUID.t() | nil,
           cleaner_id: integer() | nil,
-          recurrence: :weekly | :biweekly | :monthly | nil,
+          recurrence: :weekly | :biweekly | :every_3_weeks | :monthly | nil,
           start_date: Date.t() | nil,
           occurrence_count: integer() | nil,
           start_time: Time.t() | nil,
@@ -42,7 +42,7 @@ defmodule CleanerCrm.Scheduling.RecurringPlan do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "recurring_plans" do
-    field :recurrence, Ecto.Enum, values: [:weekly, :biweekly, :monthly]
+    field :recurrence, Ecto.Enum, values: [:weekly, :biweekly, :every_3_weeks, :monthly]
     field :start_date, :date
     field :occurrence_count, :integer
     field :start_time, :time, default: ~T[09:00:00]

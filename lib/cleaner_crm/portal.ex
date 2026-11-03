@@ -457,4 +457,39 @@ defmodule CleanerCrm.Portal do
   defp to_12_hour(hour) when hour < 12, do: {hour, "AM"}
   defp to_12_hour(12), do: {12, "PM"}
   defp to_12_hour(hour), do: {hour - 12, "PM"}
+
+  ## Tips (agent tools)
+
+  @doc """
+  Lists the account's tips, newest first, with the cleaner loaded.
+
+  Options: `:cleaner_id`, `:from` / `:to` (`Date`s, inclusive), `:limit` (default 100).
+  """
+  def list_tips(%Scope{active_account_id: account_id}, opts \\ [])
+      when not is_nil(account_id) do
+    Tip
+    |> where([t], t.account_id == ^account_id)
+    |> then(fn q ->
+      case Keyword.get(opts, :cleaner_id) do
+        nil -> q
+        id -> where(q, [t], t.cleaner_id == ^id)
+      end
+    end)
+    |> then(fn q ->
+      case Keyword.get(opts, :from) do
+        nil -> q
+        from -> where(q, [t], t.inserted_at >= ^DateTime.new!(from, ~T[00:00:00]))
+      end
+    end)
+    |> then(fn q ->
+      case Keyword.get(opts, :to) do
+        nil -> q
+        to -> where(q, [t], t.inserted_at < ^DateTime.new!(Date.add(to, 1), ~T[00:00:00]))
+      end
+    end)
+    |> order_by([t], desc: t.inserted_at)
+    |> limit(^Keyword.get(opts, :limit, 100))
+    |> preload(:cleaner)
+    |> Repo.all()
+  end
 end

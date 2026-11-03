@@ -38,6 +38,8 @@ defmodule CleanerCrm do
           Booking,
           Booking.Lead,
           Clients,
+          Imports,
+          Imports.ImportRecord,
           Clients.Client,
           Clients.Property,
           Codemyspec.Client,

@@ -168,4 +168,99 @@ defmodule CleanerCrm.Clients do
         })
     end
   end
+
+  ## Agent-facing lookups
+
+  @doc """
+  Searches the account's clients by name, email or phone.
+
+  The query matches name and email case-insensitively as a substring. When it
+  looks like a phone number, it is also matched against the digits of each
+  stored phone, so `"(928) 598-4841"`, `"9285984841"` and `"+19285984841"` all
+  find the same client.
+
+  Options: `:active` (`true`/`false`, default: both), `:limit` (default 25,
+  max 200).
+  """
+  def search_clients(%Scope{active_account_id: account_id}, query, opts \\ [])
+      when not is_nil(account_id) do
+    limit = opts |> Keyword.get(:limit, 25) |> max(1) |> min(200)
+    query = String.trim(to_string(query || ""))
+
+    base =
+      Client
+      |> where([c], c.account_id == ^account_id)
+      |> order_by([c], asc: c.name)
+      |> limit(^limit)
+
+    base =
+      case Keyword.get(opts, :active) do
+        nil -> base
+        active -> where(base, [c], c.active == ^active)
+      end
+
+    if query == "" do
+      Repo.all(base)
+    else
+      like = "%" <> escape_like(query) <> "%"
+      digits = phone_digits(query)
+
+      conditions =
+        if phone_like?(query) and String.length(digits) >= 3 do
+          dynamic(
+            [c],
+            ilike(c.name, ^like) or ilike(c.email, ^like) or
+              fragment(
+                "regexp_replace(coalesce(?, ''), '\\D', '', 'g') LIKE ?",
+                c.phone,
+                ^("%" <> digits <> "%")
+              )
+          )
+        else
+          dynamic([c], ilike(c.name, ^like) or ilike(c.email, ^like) or ilike(c.phone, ^like))
+        end
+
+      base |> where(^conditions) |> Repo.all()
+    end
+  end
+
+  defp phone_like?(query), do: Regex.match?(~r/^[\d\s().+\-]+$/, query)
+
+  defp phone_digits(query) do
+    digits = String.replace(query, ~r/\D/, "")
+
+    if String.length(digits) == 11 and String.starts_with?(digits, "1"),
+      do: binary_part(digits, 1, 10),
+      else: digits
+  end
+
+  defp escape_like(text), do: String.replace(text, ~r/([\\%_])/, "\\\\\\1")
+
+  @doc """
+  Fetches a client in the caller's account by id: `{:ok, client}` or
+  `{:error, :not_found}` (also for ids that are not valid UUIDs).
+  """
+  def fetch_client(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id),
+         %Client{} = client <-
+           Repo.one(from c in Client, where: c.account_id == ^account_id and c.id == ^uuid) do
+      {:ok, client}
+    else
+      _ -> {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Fetches a property in the caller's account by id: `{:ok, property}` or
+  `{:error, :not_found}` (also for ids that are not valid UUIDs).
+  """
+  def fetch_property(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id),
+         %Property{} = property <-
+           Repo.one(from p in Property, where: p.account_id == ^account_id and p.id == ^uuid) do
+      {:ok, property}
+    else
+      _ -> {:error, :not_found}
+    end
+  end
 end

@@ -301,4 +301,42 @@ defmodule CleanerCrm.TimeTracking do
     |> PayRate.changeset(Map.put(attrs, :cleaner_id, cleaner_id))
     |> Repo.insert_or_update()
   end
+
+  ## Filtered listing
+
+  @doc """
+  Lists the account's time entries, most recent first, with job and cleaner
+  preloaded. Optional filters (atom keys): `:job_id`, `:cleaner_id`,
+  `:from` and `:to` (inclusive `Date`s on the clock-in day, UTC).
+  """
+  def list_time_entries(%Scope{active_account_id: account_id}, filters \\ %{})
+      when not is_nil(account_id) do
+    TimeEntry
+    |> where([t], t.account_id == ^account_id)
+    |> filter_entries(Map.to_list(filters))
+    |> order_by([t], desc: t.clocked_in_at)
+    |> preload([:cleaner, :job])
+    |> Repo.all()
+  end
+
+  defp filter_entries(query, []), do: query
+  defp filter_entries(query, [{_key, nil} | rest]), do: filter_entries(query, rest)
+
+  defp filter_entries(query, [{:job_id, id} | rest]),
+    do: query |> where([t], t.job_id == ^id) |> filter_entries(rest)
+
+  defp filter_entries(query, [{:cleaner_id, id} | rest]),
+    do: query |> where([t], t.cleaner_id == ^id) |> filter_entries(rest)
+
+  defp filter_entries(query, [{:from, %Date{} = d} | rest]) do
+    from_at = DateTime.new!(d, ~T[00:00:00])
+    query |> where([t], t.clocked_in_at >= ^from_at) |> filter_entries(rest)
+  end
+
+  defp filter_entries(query, [{:to, %Date{} = d} | rest]) do
+    to_at = DateTime.new!(Date.add(d, 1), ~T[00:00:00])
+    query |> where([t], t.clocked_in_at < ^to_at) |> filter_entries(rest)
+  end
+
+  defp filter_entries(query, [_ | rest]), do: filter_entries(query, rest)
 end

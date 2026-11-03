@@ -17,7 +17,7 @@ defmodule CleanerCrmWeb do
   those modules here.
   """
 
-  use Boundary, deps: [CleanerCrm], exports: :all
+  use Boundary, deps: [CleanerCrm, CleanerCrmMcp], exports: :all
 
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 

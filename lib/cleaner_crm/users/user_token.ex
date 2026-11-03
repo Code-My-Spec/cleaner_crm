@@ -82,6 +82,33 @@ defmodule CleanerCrm.Users.UserToken do
     build_hashed_token(user, context, user.email)
   end
 
+  @doc """
+  Builds an API token for machine clients (the MCP server). Only its hash is
+  stored; the encoded token is shown once. API tokens do not expire — revoke
+  one by deleting its row.
+  """
+  def build_api_token(user) do
+    build_hashed_token(user, "api", user.email)
+  end
+
+  @doc "The query returning the user an API token belongs to, or `:error` for a malformed token."
+  def verify_api_token_query(token) do
+    case Base.url_decode64(token, padding: false) do
+      {:ok, decoded_token} ->
+        hashed_token = :crypto.hash(@hash_algorithm, decoded_token)
+
+        query =
+          from token in by_token_and_context_query(hashed_token, "api"),
+            join: user in assoc(token, :user),
+            select: user
+
+        {:ok, query}
+
+      :error ->
+        :error
+    end
+  end
+
   defp build_hashed_token(user, context, sent_to) do
     token = :crypto.strong_rand_bytes(@rand_size)
     hashed_token = :crypto.hash(@hash_algorithm, token)

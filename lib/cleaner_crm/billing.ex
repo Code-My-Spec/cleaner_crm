@@ -281,4 +281,119 @@ defmodule CleanerCrm.Billing do
       payment -> payment |> Payment.changeset(%{status: status}) |> Repo.update()
     end
   end
+
+  ## Lookups for agent tools
+
+  @doc """
+  Lists the account's invoices, newest first, with job and client loaded.
+
+  Options: `:status` (`:unpaid | :charge_pending | :paid`), `:client_id`
+  (the invoiced job's client), `:from` / `:to` (`Date`s, inclusive, on the
+  invoice's creation date), `:limit` (default 100).
+  """
+  def list_invoices(%Scope{active_account_id: account_id}, opts)
+      when not is_nil(account_id) and is_list(opts) do
+    Invoice
+    |> where([i], i.account_id == ^account_id)
+    |> filter_invoice_status(Keyword.get(opts, :status))
+    |> filter_invoice_client(Keyword.get(opts, :client_id))
+    |> filter_inserted_between(Keyword.get(opts, :from), Keyword.get(opts, :to))
+    |> order_by([i], desc: i.inserted_at)
+    |> limit(^Keyword.get(opts, :limit, 100))
+    |> preload(job: :client)
+    |> Repo.all()
+  end
+
+  @doc "Gets one of the account's invoices (job and client loaded), or `nil`."
+  def fetch_invoice(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id) do
+      Invoice
+      |> where([i], i.account_id == ^account_id and i.id == ^uuid)
+      |> preload(job: :client)
+      |> Repo.one()
+    else
+      :error -> nil
+    end
+  end
+
+  @doc "The account's invoice for a job, or `nil` when none has been generated."
+  def get_invoice_for_job(%Scope{active_account_id: account_id}, job_id)
+      when not is_nil(account_id) do
+    Invoice
+    |> where([i], i.account_id == ^account_id and i.job_id == ^job_id)
+    |> order_by([i], desc: i.inserted_at)
+    |> limit(1)
+    |> preload(job: :client)
+    |> Repo.one()
+  end
+
+  @doc """
+  Lists the account's payment attempts, newest first.
+
+  Options: `:status` (`:pending | :succeeded | :failed`), `:invoice_id`,
+  `:from` / `:to` (`Date`s, inclusive), `:limit` (default 100).
+  """
+  def list_payments(%Scope{active_account_id: account_id}, opts \\ [])
+      when not is_nil(account_id) do
+    Payment
+    |> where([p], p.account_id == ^account_id)
+    |> filter_payment_status(Keyword.get(opts, :status))
+    |> filter_payment_invoice(Keyword.get(opts, :invoice_id))
+    |> filter_inserted_between(Keyword.get(opts, :from), Keyword.get(opts, :to))
+    |> order_by([p], desc: p.inserted_at)
+    |> limit(^Keyword.get(opts, :limit, 100))
+    |> Repo.all()
+  end
+
+  @doc "Gets one of the account's payments, or `nil`."
+  def fetch_payment(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id) do
+      Payment
+      |> where([p], p.account_id == ^account_id and p.id == ^uuid)
+      |> Repo.one()
+    else
+      :error -> nil
+    end
+  end
+
+  defp filter_invoice_status(query, nil), do: query
+  defp filter_invoice_status(query, status), do: where(query, [i], i.status == ^status)
+
+  defp filter_invoice_client(query, nil), do: query
+
+  defp filter_invoice_client(query, client_id) do
+    from i in query,
+      join: j in Job,
+      on: j.id == i.job_id,
+      where: j.client_id == ^client_id
+  end
+
+  defp filter_payment_status(query, nil), do: query
+  defp filter_payment_status(query, status), do: where(query, [p], p.status == ^status)
+
+  defp filter_payment_invoice(query, nil), do: query
+  defp filter_payment_invoice(query, id), do: where(query, [p], p.invoice_id == ^id)
+
+  defp filter_inserted_between(query, from, to) do
+    query =
+      if from,
+        do: where(query, [r], r.inserted_at >= ^DateTime.new!(from, ~T[00:00:00])),
+        else: query
+
+    if to,
+      do: where(query, [r], r.inserted_at < ^DateTime.new!(Date.add(to, 1), ~T[00:00:00])),
+      else: query
+  end
+
+  @doc "Gets one of the account's jobs by id (client and property loaded), or `nil`."
+  def fetch_job(%Scope{active_account_id: account_id}, id) when not is_nil(account_id) do
+    with {:ok, uuid} <- Ecto.UUID.cast(id) do
+      Job
+      |> where([j], j.account_id == ^account_id and j.id == ^uuid)
+      |> preload([:client, :property])
+      |> Repo.one()
+    else
+      :error -> nil
+    end
+  end
 end

@@ -19,6 +19,10 @@ defmodule CleanerCrmWeb.Application do
       {Oban, Application.fetch_env!(:cleaner_crm, Oban)},
       # Start a worker by calling: CleanerCrm.Worker.start_link(arg)
       # {CleanerCrm.Worker, arg},
+      # The agent-facing MCP server (served over HTTP at /mcp by the endpoint)
+      # `start: true`: it owns no port (the endpoint forwards /mcp to it), so it must run
+      # whenever the endpoint can be called — including tests, where Anubis would otherwise skip it.
+      {CleanerCrmMcp.Server, transport: {:streamable_http, start: true}},
       # Start to serve requests, typically the last entry
       CleanerCrmWeb.Endpoint
     ]

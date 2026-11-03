@@ -68,7 +68,12 @@ defmodule CleanerCrmWeb.ScheduleLive.PlanFormComponent do
           type="select"
           label="Recurrence"
           prompt="Select a cadence"
-          options={[{"Weekly", "weekly"}, {"Biweekly", "biweekly"}, {"Every 4 weeks", "monthly"}]}
+          options={[
+            {"Weekly", "weekly"},
+            {"Biweekly", "biweekly"},
+            {"Every 3 weeks", "every_3_weeks"},
+            {"Every 4 weeks", "monthly"}
+          ]}
         />
         <.input field={@form[:start_date]} type="date" label="Start Date" />
         <.input field={@form[:occurrence_count]} type="number" label="Number of Visits" min="1" />
